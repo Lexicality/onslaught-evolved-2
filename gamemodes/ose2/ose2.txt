@@ -1,0 +1,10 @@
+"ose2"
+{
+	"base"       "base"
+	"version"    "2.0.0"
+	"title"      "Onslaught Evolved 2"
+	"maps"       "^ose_"
+	"info"       "Garry's Mod's finest shooting things gamemode"
+	"menusystem" "1"
+	"category"   "pve"
+}

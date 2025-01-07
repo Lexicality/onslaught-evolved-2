@@ -1,0 +1,73 @@
+@include "garrysmod.fgd"
+
+@SolidClass base(Targetname, Parentname) = func_nobuild :
+	"A trigger volume that prevents players spawning props within it"
+[
+
+]
+
+@PointClass base(Targetname) = sent_spawner :
+	"Legacy - The old NPC spawner"
+[
+	npc(string)
+		: "NPCs To Spawn"
+		: "npc_combine_s npc_manhack npc_hunter"
+		: "Space separated list of NPC types to spawn. A random NPC will be chosen from the list each frame."
+	path(string)
+		: "NPC Target"
+		: "path"
+		: "The targetname to direct freshly spawned NPCs at. Should probably be the main spawn point."
+	spawndelay(float)
+		: "Spawn Delay"
+		:
+		: "Override the delay between each NPC spawned (Please set this to at least 1 second if you override it!)"
+
+	input Enable(void) : "Enables the spawner."
+	input Disable(void) : "Disables the spawner."
+	input SetMaxLiveChildren(integer) : "Sets the maximum number of NPCs that can be alive at any one time from this spawner."
+	input SetSpawnFrequency(float) : "Sets how often (in seconds) a new NPC will be spawned."
+
+	output OnSpawnNPC(string) : "Fired when an NPC is spawned. The activator is the NPC, and the string is the name of the NPC."
+]
+
+@PointClass iconsprite("editor/logic_auto.vmt") = ose_gamerules :
+	"The primary map/game interface"
+[
+	credits(string)
+		: "Map Author"
+		:
+		: "Credits to display in the scoreboard for the map creator (eg 'Disaster Returns 2012')"
+
+	input LoseRound(void) : "If the current battle round should be immediately lost"
+	input WinRound(void) : "If the current battle round should be immediately lost"
+
+	output OnBuild(integer) : "Fired when the build round starts, with the round number"
+	output OnBattle(integer) : "Fired when the battle round starts, with the round number"
+	output OnWin(void) : "Fired when a battle round is won"
+	output OnLoss(void) : "Fired when a battle round is lost"
+]
+
+@PointClass iconsprite("editor/logic_auto.vmt") = ose_npc_manager :
+	"Handles rules for NPC spawning"
+[
+	disablerelationships(boolean)
+		: "Disable Automatic Relationships"
+		: 0
+		: "If the default AI relationship code should be disabled"
+
+	input NPCSpawned(string) : "Must be called when a fresh NPC is spawned so the game can manage it"
+	input PointTemplateSpawned(void) : "It's NPCSpawned, but handles point_template complications"
+
+	output OnNPCLimitChanged(integer) : "Fired with the maxmimum total number of NPCs that can be spawned at once"
+	output OnHunterLimitChanged(integer) : "Fired with the maxmimum total number of hunters that can be spawned at once"
+	output OnNPCSpawnFrequencyChanged(float) : "Fired with the minimum delay between spawns"
+	output OnNPCSpawnEnabled(void) : "Fired when NPCs should start being spawned"
+	output OnNPCSpawnDisabled(void) : "Fired when NPCs should stop being spawned"
+]
+
+@PointClass iconsprite("editor/logic_auto.vmt") = ose_gametime :
+	"Lets the map maker do things based on time"
+[
+	output OnRoundStart(integer) : "Fired when a round starts, with the round time"
+	output OnRoundSecond(integer) : "Fired once a second with the remaining round time"
+]

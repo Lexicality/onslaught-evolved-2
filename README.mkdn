@@ -1,0 +1,3 @@
+# Onslaught Evolved 2 (WIP)
+
+This is a from-the-ground-up rewrite of the classic Onslaught Evolved gamemode.
