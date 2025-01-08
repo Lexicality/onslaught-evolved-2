@@ -15,105 +15,130 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-NPCS                         = {}
-NPCS["npc_combine_s"]        = {
-	{
-		spawnflags = 403204,
-		reward = 100,
-		kvs = {
-			tacticalvariant = "1",
-			additionalequipment = "weapon_smg1",
-			model = "models/combine_soldier.mdl",
-			NumGrenades = "999999",
-			wakeradius = "999999"
-		}
-	},
-	{
-		spawnflags = 403204,
-		reward = 140,
-		kvs = {
-			tacticalvariant = "1",
-			additionalequipment = "weapon_ar2",
-			model = "models/combine_super_soldier.mdl",
-			wakeradius = "999999",
-		}
-	},
-	{
-		spawnflags = 403204,
-		reward = 120,
-		kvs = {
-			tacticalvariant = "1",
-			additionalequipment = "weapon_shotgun",
-			model = "models/combine_soldier_prisonguard.mdl",
-			NumGrenades = "999999",
-			wakeradius = "999999",
-		}
-	}
+--- @class NPCListDefinition
+--- @field Class string
+--- @field KeyValues? {[string]: string}
+--- @field Material? string
+--- @field Model? string
+--- @field Name string
+--- @field Reward integer
+--- @field Skin? integer
+--- @field SpawnFlags? integer
+
+SF_NPC_NO_GRENADE_DROP = 131072
+SF_NPC_NO_AR2_DROP = 262144
+SF_MANHACK_USE_AIR_NODES = 262144
+
+local INFINITE_GRENADES = "999999"
+
+---@param npctab NPCListDefinition
+local function cleanKVs(npctab)
+	local kvs = npctab.KeyValues
+
+	if kvs == nil then
+		npctab.KeyValues = {}
+		return
+	end
+
+	for key, _ in pairs(kvs) do
+		local lowkey = string.lower(key)
+		if lowkey == "squadname" or lowkey == "numgrenades" then
+			kvs[key] = nil
+		end
+	end
+end
+
+local NPCS_TO_COPY = {
+	"CombineElite", "ShotgunSoldier", "npc_antlion", "npc_antlionguard",
+	"npc_combine_s", "npc_fastzombie", "npc_fastzombie_torso", "npc_headcrab",
+	"npc_headcrab_black", "npc_headcrab_fast", "npc_hunter", "npc_manhack",
+	"npc_metropolice", "npc_poisonzombie", "npc_rollermine", "npc_zombie",
+	"npc_zombie_torso", "npc_zombine",
 }
-NPCS["npc_metropolice"]      = {
-	spawnflags = 403204,
-	reward = 50,
-	kvs = {
-		additionalequipment = "weapon_pistol"
-	}
-}
-NPCS["npc_hunter"]           = {
-	spawnflags = 9984,
-	reward = 500,
-}
-NPCS["npc_manhack"]          = {
-	spawnflags = 263940,
-	reward = 50,
-}
-NPCS["npc_zombie"]           = {
-	spawnflags = 1796,
-	reward = 75,
-}
-NPCS["npc_fastzombie"]       = {
-	spawnflags = 1796,
-	reward = 100,
-}
-NPCS["npc_zombine"]          = {
-	spawnflags = 1796,
-	reward = 100,
-}
-NPCS["npc_antlion"]          = {
-	spawnflags = 9984,
-	reward = 100,
-	KEYS =
-	"radius 512"
-}
-NPCS["npc_headcrab"]         = {
-	spawnflags = 1796,
-	reward = 33,
-}
-NPCS["npc_headcrab_fast"]    = {
-	spawnflags = 1796,
-	reward = 40,
-}
-NPCS["npc_antlionguard"]     = {
-	spawnflags = 9988,
-	reward = 700,
-}
-NPCS["npc_rollermine"]       = {
-	spawnflags = 9988,
-	reward = 175,
-	KEYS = "uniformsightdist 1"
-}
-NPCS["npc_poisonzombie"]     = {
-	spawnflags = 9988,
-	reward = 125,
-	KEYS = "crabcount 3"
-}
-NPCS["npc_headcrab_black"]   = {
-	spawnflags = 9988,
-	reward = 120,
-}
-NPCS["npc_zombie_torso"]     = {
-	spawnflags = 1796,
-	reward = 50,
-}
-NPCS["npc_fastzombie_torso"] = {
-	spawnflags = 1796,
-	reward = 75,
-}
+
+function GM:SetupNPCs()
+	-- We can safely edit this table to our heart's content because list.Get
+	-- returns a deep copy
+	--- @type {[string]: NPCListDefinition}
+	local baseNPCs = list.Get("NPC")
+	--- @type {[string]: NPCListDefinition}
+	local gmNPCs = list.GetForEdit("OSENPC")
+	for _, key in ipairs(NPCS_TO_COPY) do
+		local value = baseNPCs[key]
+		cleanKVs(value)
+		gmNPCs[key] = value
+	end
+
+	local npctab;
+
+	npctab = baseNPCs["npc_combine_s"]
+	npctab.Reward = 100
+	npctab.SpawnFlags = SF_NPC_NO_GRENADE_DROP
+	npctab.KeyValues["tacticalvariant"] = "1"
+	npctab.KeyValues["additionalequipment"] = "weapon_smg1"
+	npctab.KeyValues["NumGrenades"] = INFINITE_GRENADES
+
+	npctab = baseNPCs["CombineElite"]
+	npctab.Reward = 140
+	npctab.SpawnFlags = SF_NPC_NO_GRENADE_DROP + SF_NPC_NO_AR2_DROP
+	npctab.KeyValues["tacticalvariant"] = "1"
+	npctab.KeyValues["additionalequipment"] = "weapon_ar2"
+
+	npctab = baseNPCs["ShotgunSoldier"]
+	npctab.Reward = 120
+	npctab.SpawnFlags = SF_NPC_NO_GRENADE_DROP
+	npctab.KeyValues["tacticalvariant"] = "1"
+	npctab.KeyValues["additionalequipment"] = "weapon_shotgun"
+	npctab.KeyValues["NumGrenades"] = INFINITE_GRENADES
+
+	npctab = baseNPCs["npc_metropolice"]
+	npctab.Reward = 50
+	npctab.SpawnFlags = 0
+	npctab.KeyValues["additionalequipment"] = "weapon_pistol"
+
+	npctab = baseNPCs["npc_hunter"]
+	npctab.Reward = 500
+
+	npctab = baseNPCs["npc_manhack"]
+	npctab.Reward = 50
+	npctab.SpawnFlags = SF_MANHACK_USE_AIR_NODES
+
+	npctab = baseNPCs["npc_rollermine"]
+	npctab.Reward = 175
+	npctab.KeyValues["uniformsightdist"] = "1"
+
+	npctab = baseNPCs["npc_zombie"]
+	npctab.Reward = 75
+
+	npctab = baseNPCs["npc_fastzombie"]
+	npctab.Reward = 100
+
+	npctab = baseNPCs["npc_zombine"]
+	npctab.Reward = 100
+
+	npctab = baseNPCs["npc_poisonzombie"]
+	npctab.Reward = 125
+	npctab.KeyValues["crabcount"] = "3"
+
+	npctab = baseNPCs["npc_zombie_torso"]
+	npctab.Reward = 50
+
+	npctab = baseNPCs["npc_fastzombie_torso"]
+	npctab.Reward = 75
+
+	npctab = baseNPCs["npc_headcrab"]
+	npctab.Reward = 33
+
+	npctab = baseNPCs["npc_headcrab_fast"]
+	npctab.Reward = 40
+
+	npctab = baseNPCs["npc_headcrab_black"]
+	npctab.Reward = 120
+
+	npctab = baseNPCs["npc_antlion"]
+	npctab.Reward = 100
+	npctab.KeyValues["radius"] = "512"
+
+	npctab = baseNPCs["npc_antlionguard"]
+	npctab.Reward = 700
+end
