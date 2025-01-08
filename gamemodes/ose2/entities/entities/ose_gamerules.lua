@@ -15,11 +15,4 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-DeriveGamemode("base")
-
-GM.Name = "Onslaught: Evolved 2"
-GM.Author = "Lexi Robinson"
-GM.Email = "lexi@lexi.org.uk"
-GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
-
-GM.TeamBased = false
+DEFINE_BASECLASS("base_osepoint");

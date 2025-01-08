@@ -15,11 +15,20 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-DeriveGamemode("base")
+DEFINE_BASECLASS("base_osepoint");
 
-GM.Name = "Onslaught: Evolved 2"
-GM.Author = "Lexi Robinson"
-GM.Email = "lexi@lexi.org.uk"
-GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
+function ENT:Initialize()
+	hook.Add("BuildStarted", self, self._OnRoundStart)
+	hook.Add("BattleStarted", self, self._OnRoundStart)
+	hook.Add("RoundSecond", self, self._OnRoundSecond)
+end
 
-GM.TeamBased = false
+---@param roundLength number
+function ENT:_OnRoundStart(roundLength)
+	self:TriggerOutput("OnRoundStart", self, tostring(math.floor(roundLength)))
+end
+
+---@param timeLeft number
+function ENT:_OnRoundSecond(timeLeft)
+	self:TriggerOutput("OnroundSecond", self, tostring(math.floor(timeLeft)))
+end

@@ -1,5 +1,4 @@
-"ose2"
-{
+"ose2" {
 	"base"       "base"
 	"version"    "2.0.0"
 	"title"      "Onslaught Evolved 2"
@@ -7,4 +6,186 @@
 	"info"       "Garry's Mod's finest shooting things gamemode"
 	"menusystem" "1"
 	"category"   "pve"
+
+	"copyright"  "2025 Lexi Robinson"
+	"license"    "AGPLv3"
+
+	"settings" {
+		1 {
+			"name" "ose_max_npcs"
+			"text" "ose.convar.max_npcs"
+			"help" "The maximum number of non-manhack non-hunter NPCs that are allowed"
+			"type" "Numeric"
+			"default" "30"
+			"replicate" "0"
+			"singleplayer" "1"
+		}
+
+		2 {
+			"name" "ose_max_manhacks"
+			"text" "ose.convar.max_manhacks"
+			"help" "The maximum number of manhacks that are allowed at once"
+			"type" "Numeric"
+			"default" "7"
+			"replicate" "0"
+			"singleplayer" "1"
+		}
+
+		3 {
+			"name" "ose_max_hunters"
+			"text" "ose.convar.max_hunters"
+			"help" "The maximum number of hunters that are allowed at once"
+			"type" "Numeric"
+			"default" "2"
+			"replicate" "0"
+			"singleplayer" "1"
+		}
+
+		4 {
+			"name" "ose_hunters_scale"
+			"text" "ose.convar.hunters_scale"
+			"help" "If extra hunters should be allowed based on the player count"
+			"type" "CheckBox"
+			"default" "1"
+			"replicate" "0"
+		}
+
+		5 {
+			"name" "ose_spawn_delay"
+			"text" "ose.convar.spawn_delay"
+			"help" "Minimum time between NPC spawns"
+			"type" "Numeric"
+			"default" "0.5"
+			"replicate" "0"
+			"singleplayer" "1"
+		}
+
+		6 {
+			"name" "ose_maxprops"
+			"text" "max_props"
+			"help" "Minimum props per player"
+			"type" "Numeric"
+			"default" "25"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		7 {
+			"name" "ose_cleanup_props"
+			"text" "ose.convar.cleanup_props"
+			"help" "If a player's props should be cleaned up after they disconnect"
+			"type" "CheckBox"
+			"default" "1"
+			"replicate" "1"
+		}
+
+		8 {
+			"name" "ose_cleanup_props_after"
+			"text" "ose.convar.cleanup_props_after"
+			"help" "How long to wait before cleaning up disconnected player's props"
+			"type" "Numeric"
+			"default" "240"
+			"replicate" "0"
+		}
+
+		9 {
+			"name" "ose_build_noclip"
+			"text" "allow_noclip"
+			"help" "If players can noclip during build"
+			"type" "CheckBox"
+			"default" "1"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		10 {
+			"name" "ose_flammable_props"
+			"text" "ose.convar.flammable_props"
+			"help" "If props should ignite when damaged"
+			"type" "CheckBox"
+			"default" "0"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		11 {
+			"name" "ose_starting_money"
+			"text" "ose.convar.starting_money"
+			"help" "How much money players start with"
+			"type" "Numeric"
+			"default" "20000"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		12 {
+			"name" "ose_reward_money"
+			"text" "ose.convar.reward_money"
+			"help" "The base reward for surviving a round"
+			"type" "Numeric"
+			"default" "5000"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		13 {
+			"name" "ose_death_penalty"
+			"text" "ose.convar.death_penalty"
+			"help" "How much to knock off the round reward per death"
+			"type" "Numeric"
+			"default" "1500"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		14 {
+			"name" "ose_build_time"
+			"text" "ose.convar.build_time"
+			"help" "Number of seconds for each build period"
+			"type" "Numeric"
+			"default" "600"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		15 {
+			"name" "ose_battle_time_base"
+			"text" "ose.convar.battle_time_base"
+			"help" "Number of seconds round 1 of the battle phase takes"
+			"type" "Numeric"
+			"default" "900"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		16 {
+			"name" "ose_battle_time_add"
+			"text" "ose.convar.battle_time_add"
+			"help" "Number of seconds to add to the battle time per win"
+			"type" "Numeric"
+			"default" "120"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		17 {
+			"name" "ose_spawn_time_base"
+			"text" "ose.convar.spawn_time_base"
+			"help" "Number of seconds players must wait to respawn"
+			"type" "Numeric"
+			"default" "30"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		18 {
+			"name" "ose_spawn_time_add"
+			"text" "ose.convar.spawn_time_add"
+			"help" "Number of seconds to add per player ot the spawn timer"
+			"type" "Numeric"
+			"default" "10"
+			"replicate" "1"
+		}
+
+	}
 }
