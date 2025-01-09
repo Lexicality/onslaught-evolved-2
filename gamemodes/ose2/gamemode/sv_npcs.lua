@@ -17,6 +17,7 @@
 
 --- @class NPCListDefinition
 --- @field Class string
+--- @field Health? integer
 --- @field KeyValues? {[string]: string}
 --- @field Material? string
 --- @field Model? string
@@ -24,14 +25,19 @@
 --- @field Reward integer
 --- @field Skin? integer
 --- @field SpawnFlags? integer
+--- @field TotalSpawnFlags? integer
 
 SF_NPC_NO_GRENADE_DROP = 131072
 SF_NPC_NO_AR2_DROP = 262144
 SF_MANHACK_USE_AIR_NODES = 262144
 
+-- This is value Hammer uses if you pick "infinite greanades" from the options
+-- list, however it doesn't seem to be an actual magic value, just so many
+-- grenades that they might as well be infinite.
 local INFINITE_GRENADES = "999999"
 
----@param npctab NPCListDefinition
+--- This gets rid of some unhelpful defaults found in the base gmod npc list
+--- @param npctab NPCListDefinition
 local function cleanKVs(npctab)
 	local kvs = npctab.KeyValues
 
@@ -41,6 +47,8 @@ local function cleanKVs(npctab)
 	end
 
 	for key, _ in pairs(kvs) do
+		-- Keyvalues are case insensitive, so helpfully all the values in the
+		-- list are of random case and I have to normalise it to clean them out
 		local lowkey = string.lower(key)
 		if lowkey == "squadname" or lowkey == "numgrenades" then
 			kvs[key] = nil
@@ -56,11 +64,25 @@ local NPCS_TO_COPY = {
 	"npc_zombie_torso", "npc_zombine",
 }
 
+-- These NPCs can only target props on the ground
+local MELEE_ONLY_NPCS = {
+	"npc_antlion", "npc_antlionguard", "npc_fastzombie", "npc_headcrab",
+	"npc_headcrab_black", "npc_headcrab_fast", "npc_poisonzombie", "npc_zombie",
+	"npc_zombine",
+}
+
+-- These NPCs should be given a massive damage boost to make them more dangerous
+local WEAK_NPCS = {
+	"npc_fastzombie", "npc_poisonzombie", "npc_zombie", "npc_zombine"
+}
+
+--- Sets up the various NPC lists for the rest of the gamemode to use
 function GM:SetupNPCs()
-	-- We can safely edit this table to our heart's content because list.Get
-	-- returns a deep copy
+	--- Grab a copy of the base gmod NPC list
 	--- @type {[string]: NPCListDefinition}
 	local baseNPCs = list.Get("NPC")
+
+	--- Store the specific NPCs we wish to have custom spawning in our own list
 	--- @type {[string]: NPCListDefinition}
 	local gmNPCs = list.GetForEdit("OSENPC")
 	for _, key in ipairs(NPCS_TO_COPY) do
@@ -69,76 +91,88 @@ function GM:SetupNPCs()
 		gmNPCs[key] = value
 	end
 
+	-- Make some quick lookup tables
+	local meleeNPCs = list.GetForEdit("OSEMelee")
+	for _, npc in ipairs(MELEE_ONLY_NPCS) do
+		meleeNPCs[npc] = true
+	end
+	local weakNPCs = list.GetForEdit("OSEWeak")
+	for _, npc in ipairs(WEAK_NPCS) do
+		weakNPCs[npc] = true
+	end
+
+
+	-- Apply our customisations
 	local npctab;
 
-	npctab = baseNPCs["npc_combine_s"]
+	npctab = gmNPCs["npc_combine_s"]
 	npctab.Reward = 100
 	npctab.SpawnFlags = SF_NPC_NO_GRENADE_DROP
 	npctab.KeyValues["tacticalvariant"] = "1"
 	npctab.KeyValues["additionalequipment"] = "weapon_smg1"
 	npctab.KeyValues["NumGrenades"] = INFINITE_GRENADES
 
-	npctab = baseNPCs["CombineElite"]
+	npctab = gmNPCs["CombineElite"]
 	npctab.Reward = 140
 	npctab.SpawnFlags = SF_NPC_NO_GRENADE_DROP + SF_NPC_NO_AR2_DROP
 	npctab.KeyValues["tacticalvariant"] = "1"
 	npctab.KeyValues["additionalequipment"] = "weapon_ar2"
 
-	npctab = baseNPCs["ShotgunSoldier"]
+	npctab = gmNPCs["ShotgunSoldier"]
 	npctab.Reward = 120
 	npctab.SpawnFlags = SF_NPC_NO_GRENADE_DROP
 	npctab.KeyValues["tacticalvariant"] = "1"
 	npctab.KeyValues["additionalequipment"] = "weapon_shotgun"
 	npctab.KeyValues["NumGrenades"] = INFINITE_GRENADES
 
-	npctab = baseNPCs["npc_metropolice"]
+	npctab = gmNPCs["npc_metropolice"]
 	npctab.Reward = 50
 	npctab.SpawnFlags = 0
 	npctab.KeyValues["additionalequipment"] = "weapon_pistol"
 
-	npctab = baseNPCs["npc_hunter"]
+	npctab = gmNPCs["npc_hunter"]
 	npctab.Reward = 500
 
-	npctab = baseNPCs["npc_manhack"]
+	npctab = gmNPCs["npc_manhack"]
 	npctab.Reward = 50
 	npctab.SpawnFlags = SF_MANHACK_USE_AIR_NODES
 
-	npctab = baseNPCs["npc_rollermine"]
+	npctab = gmNPCs["npc_rollermine"]
 	npctab.Reward = 175
 	npctab.KeyValues["uniformsightdist"] = "1"
 
-	npctab = baseNPCs["npc_zombie"]
+	npctab = gmNPCs["npc_zombie"]
 	npctab.Reward = 75
 
-	npctab = baseNPCs["npc_fastzombie"]
+	npctab = gmNPCs["npc_fastzombie"]
 	npctab.Reward = 100
 
-	npctab = baseNPCs["npc_zombine"]
+	npctab = gmNPCs["npc_zombine"]
 	npctab.Reward = 100
 
-	npctab = baseNPCs["npc_poisonzombie"]
+	npctab = gmNPCs["npc_poisonzombie"]
 	npctab.Reward = 125
 	npctab.KeyValues["crabcount"] = "3"
 
-	npctab = baseNPCs["npc_zombie_torso"]
+	npctab = gmNPCs["npc_zombie_torso"]
 	npctab.Reward = 50
 
-	npctab = baseNPCs["npc_fastzombie_torso"]
+	npctab = gmNPCs["npc_fastzombie_torso"]
 	npctab.Reward = 75
 
-	npctab = baseNPCs["npc_headcrab"]
+	npctab = gmNPCs["npc_headcrab"]
 	npctab.Reward = 33
 
-	npctab = baseNPCs["npc_headcrab_fast"]
+	npctab = gmNPCs["npc_headcrab_fast"]
 	npctab.Reward = 40
 
-	npctab = baseNPCs["npc_headcrab_black"]
+	npctab = gmNPCs["npc_headcrab_black"]
 	npctab.Reward = 120
 
-	npctab = baseNPCs["npc_antlion"]
+	npctab = gmNPCs["npc_antlion"]
 	npctab.Reward = 100
 	npctab.KeyValues["radius"] = "512"
 
-	npctab = baseNPCs["npc_antlionguard"]
+	npctab = gmNPCs["npc_antlionguard"]
 	npctab.Reward = 700
 end

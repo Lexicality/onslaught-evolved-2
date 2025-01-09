@@ -15,19 +15,23 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+local manhackCvar = GetConVar("ose_max_manhacks")
+
 DEFINE_BASECLASS("base_osepoint");
 
-SPAWNER_SPAWN_MODE_NORMAL = 0
-SPAWNER_SPAWN_MODE_HUNTER = 1
-SPAWNER_SPAWN_MODE_ONCE = 2
+local SPAWN_RADIUS = 200
 
+SPAWNER_SPAWN_MODE_NORMAL = 0
+SPAWNER_SPAWN_MODE_ONCE = 1
+SPAWNER_SPAWN_MODE_HUNTER = 2
+SPAWNER_SPAWN_MODE_MANHACK = 2
 
 --- What is actually going to be spawned
 --- @type string[]
 ENT.m_NPCs = nil
 
 --- Internal spawning mode, for backwards compatability unfortunately
---- @type `SPAWNER_SPAWN_MODE_NORMAL` | `SPAWNER_SPAWN_MODE_HUNTER` | `SPAWNER_SPAWN_MODE_ONCE`
+--- @type `SPAWNER_SPAWN_MODE_NORMAL` | `SPAWNER_SPAWN_MODE_HUNTER` | `SPAWNER_SPAWN_MODE_ONCE` | `SPAWNER_SPAWN_MODE_MANHACK`
 ENT.m_SpawnMode = SPAWNER_SPAWN_MODE_NORMAL
 
 --- Time between each spawn
@@ -54,6 +58,16 @@ ENT.m_SpawnFlags = 0
 --- @type string | nil
 ENT.m_SpawnTargetName = nil
 
+--- If we should be spawning
+--- @type boolean
+ENT.m_Enabled = false
+--- When to stop spawning NPCs
+--- @type number
+ENT.m_MaxLiveChildren = 5
+--- How many have we spawned?
+--- @type number
+ENT.m_CurrentLiveChildren = 0
+
 
 -- TODO this should probs be in a utilities file somewhere
 ---
@@ -75,6 +89,19 @@ function ENT:Initialize()
 
 	self:_handleHunters()
 
+	-- Minor shenanigans
+	if self.m_SpawnMode == SPAWNER_SPAWN_MODE_NORMAL and #self.m_NPCs == 1 and self.m_NPCs[1] == "npc_manhack" then
+		self.m_SpawnMode = SPAWNER_SPAWN_MODE_MANHACK
+	end
+
+	local name = self:GetName()
+	if name == "" then
+		self:SetName("spawner" .. self:MapCreationID())
+	end
+
+	print("Hello I'm spawn platform", self:EntIndex(), "and my NPCs are")
+	PrintTable(self.m_NPCs)
+	print()
 	-- TODO
 end
 
@@ -106,7 +133,9 @@ function ENT:_handleHunters()
 	hunter_spawner:SetPos(self:GetPos())
 	hunter_spawner:SetKeyValue("npc", "npc_hunter")
 	hunter_spawner:SetKeyValue("path", self.m_PathTargetName)
-	hunter_spawner:SetKeyValue("spawndelay", tostring(self.m_TargetSpawnFrequency))
+	if self.m_TargetSpawnFrequency then
+		hunter_spawner:SetKeyValue("spawndelay", tostring(self.m_TargetSpawnFrequency))
+	end
 	hunter_spawner:Spawn()
 	hunter_spawner:Activate()
 end
@@ -160,20 +189,21 @@ function ENT:KeyValue(key, value)
 	if key == "copykeys" then
 		local parsed_value = handleKeyValues(value)
 		if parsed_value == nil then
-			ErrorNoHalt("sent_spawnonce has invalid `copykeys` keyvalue '", value, "'!")
+			ErrorNoHalt("sent_spawnonce has invalid `copykeys` keyvalue '", value, "'!\n")
 			return
 		end
 		self.m_SpawnKeyValues = parsed_value
 	elseif key == "classname" then
 		if value == "sent_spawnonce" then
 			self.m_SpawnMode = SPAWNER_SPAWN_MODE_ONCE
+			self.m_MaxLiveChildren = 1
 		end
 	elseif key == "namecpy" then
 		self.m_SpawnTargetName = value
 	elseif key == "npc" then
 		local parsed_value = handleNPCs(value)
 		if parsed_value == nil then
-			ErrorNoHalt("sent_spawner has invalid `npc` keyvalue '", value, "'!")
+			ErrorNoHalt("sent_spawner has invalid `npc` keyvalue '", value, "'!\n")
 			return
 		end
 		self.m_NPCs = parsed_value
@@ -182,23 +212,212 @@ function ENT:KeyValue(key, value)
 	elseif key == "spawndelay" then
 		local parsed_value = tonumber(value)
 		if parsed_value == nil then
-			ErrorNoHalt("sent_spawner has invalid `spawndelay` keyvalue '", value, "'!")
+			ErrorNoHalt("sent_spawner has invalid `spawndelay` keyvalue '", value, "'!\n")
 			return
 		end
 		self.m_TargetSpawnFrequency = parsed_value
 	elseif key == "spawnflags" then
 		local parsed_value = tonumber(value)
 		if parsed_value == nil then
-			ErrorNoHalt("sent_spawnonce has invalid `spawnflags` keyvalue '", value, "'!")
+			ErrorNoHalt("sent_spawnonce has invalid `spawnflags` keyvalue '", value, "'!\n")
 			return
 		end
 		self.m_SpawnFlags = math.floor(parsed_value)
 	elseif key == "sptime" then
 		local value = tonumber(value)
 		if value == nil then
-			ErrorNoHalt("sent_spawnonce has invalid `sptime` keyvalue '", value, "'!")
+			ErrorNoHalt("sent_spawnonce has invalid `sptime` keyvalue '", value, "'!\n")
 			return
 		end
 		self.m_SpawnFlags = math.floor(value)
 	end
+end
+
+---@param name string
+---@param activator GEntity
+---@param caller GEntity
+---@param value string | nil
+---@return boolean
+function ENT:AcceptInput(name, activator, caller, value)
+	if BaseClass.AddOutputFromAcceptInput(self, name, value) then
+		return true
+	end
+
+	if name == "Enable" then
+		self.m_Enabled = true
+		self:NextThink(CurTime())
+		return true
+	elseif name == "Disable" then
+		self.m_Enabled = false
+		return true
+	elseif name == "SetMaxLiveChildren" and self.m_SpawnMode ~= SPAWNER_SPAWN_MODE_ONCE then
+		local parsed_value = tonumber(value)
+		if parsed_value == nil or parsed_value < 0 then
+			ErrorNoHalt("ose_legacy_npc_spawner got invalid `SetMaxLiveChildren` value '", value, "'!\n")
+			return true
+		end
+
+		self.m_MaxLiveChildren = math.floor(parsed_value)
+		return true
+	elseif name == "SetSpawnFrequency" then
+		local parsed_value = tonumber(value)
+		if parsed_value == nil or parsed_value < 0 then
+			ErrorNoHalt("ose_legacy_npc_spawner got invalid `SetSpawnFrequency` value '", value, "'!\n")
+			return true
+		end
+
+		if self.m_TargetSpawnFrequency ~= nil then
+			self.m_SpawnFrequency = math.max(parsed_value, self.m_TargetSpawnFrequency)
+		else
+			self.m_SpawnFrequency = parsed_value
+		end
+		return true
+	end
+
+	return false
+end
+
+local COMBINE_TYPES = { "CombineElite", "ShotgunSoldier", "npc_combine_s" }
+
+local function calledOnRemove(_npc, spawner)
+	if not IsValid(spawner) then
+		return
+	end
+	spawner.m_CurrentLiveChildren = spawner.m_CurrentLiveChildren - 1
+	spawner:NextThink(CurTime() + spawner.m_SpawnFrequency)
+end
+
+---@param classname string
+function ENT:SpawnNPC(classname)
+	print(self:EntIndex(), "trying to spawn a", classname)
+	-- turbo hack
+	if classname == "npc_manhack" then
+		if #ents.FindByClass("npc_manhack") >= manhackCvar:GetInt() then
+			return
+		end
+	end
+
+	if classname == "npc_combine_s" then
+		classname = COMBINE_TYPES[math.random(#COMBINE_TYPES)]
+	end
+
+	-- Hack - getting using .Get() is very slow because it deep copies the
+	-- table, so technically this will cause trouble if we mutate the data
+	--- @type NPCListDefinition | nil
+	local npcData = list.GetForEdit("OSENPC")[classname]
+
+	if npcData ~= nil then
+		classname = npcData.Class
+	end
+
+	local npc = ents.Create(classname)
+	--- @cast npc GNPC
+	if not IsValid(npc) then
+		ErrorNoHalt("Tried to create invalid npc ", classname, "!!\n")
+		self.m_Enabled = false
+		return
+	end
+
+	local offset = Vector(
+		math.random(-SPAWN_RADIUS, SPAWN_RADIUS),
+		math.random(-SPAWN_RADIUS, SPAWN_RADIUS),
+		10
+	)
+	npc:SetPos(self:GetPos() + offset)
+
+
+	local spawnflags = self.m_SpawnFlags
+
+	if npcData ~= nil then
+		if (npcData.Model) then
+			npc:SetModel(npcData.Model)
+		end
+
+		if (npcData.Material) then
+			npc:SetMaterial(npcData.Material)
+		end
+
+		if (npcData.TotalSpawnFlags) then
+			spawnflags = npcData.TotalSpawnFlags
+		else
+			spawnflags = SF_NPC_LONG_RANGE + SF_NPC_FADE_CORPSE + SF_NPC_ALWAYSTHINK + SF_NPC_NO_WEAPON_DROP
+			if (npcData.SpawnFlags) then
+				spawnflags = spawnflags + npcData.SpawnFlags
+			end
+		end
+
+		if (npcData.KeyValues) then
+			for k, v in pairs(npcData.KeyValues) do
+				npc:SetKeyValue(k, v)
+			end
+		end
+		if (npcData.Skin) then
+			npc:SetSkin(npcData.Skin)
+		end
+	end
+
+	npc:SetKeyValue("spawnflags", tostring(spawnflags))
+	npc:SetKeyValue("target", self.m_PathTargetName)
+
+	npc:SetSquad(self:GetName())
+
+	if self.m_SpawnKeyValues then
+		for k, v in pairs(self.m_SpawnKeyValues) do
+			npc:SetKeyValue(k, v)
+		end
+	end
+
+	if self.m_SpawnTargetName ~= nil then
+		npc:SetName(self.m_SpawnTargetName)
+	else
+		npc:SetName(self:GetName() .. "&" .. npc:GetCreationID())
+	end
+
+	-- TODO: Spawn effects
+
+	npc:Spawn()
+	npc:CallOnRemove("ose", calledOnRemove, self)
+	self.m_CurrentLiveChildren = self.m_CurrentLiveChildren + 1
+	npc:Activate()
+
+	if npcData ~= nil then
+		-- From the sandbox code:
+		-- For those NPCs that set their model/skin in Spawn function
+		-- We have to keep the call above for NPCs that want a model set by Spawn() time
+		-- BAD: They may adversly affect entity collision bounds
+		if (npcData.Model and npc:GetModel():lower() ~= npcData.Model:lower()) then
+			npc:SetModel(npcData.Model)
+		end
+
+		if (npcData.Skin) then
+			npc:SetSkin(npcData.Skin)
+		end
+
+		if (npcData.Health) then
+			npc:SetHealth(npcData.Health)
+			npc:SetMaxHealth(npcData.Health)
+		end
+	end
+
+	npc:DropToFloor()
+	npc:Fire("Wake")
+
+	self:TriggerOutput("OnSpawnNPC", npc, npc:GetName())
+end
+
+function ENT:Think()
+	local now = CurTime()
+	-- TODO: Support sptime here!!!
+	if not self.m_Enabled or self.m_CurrentLiveChildren >= self.m_MaxLiveChildren then
+		-- hibernate
+		self:NextThink(now + 1)
+		return true
+	end
+
+	-- time to spawn
+	local classname = self.m_NPCs[math.random(#self.m_NPCs)]
+	self:SpawnNPC(classname)
+
+	self:NextThink(now + self.m_SpawnFrequency)
+	return true
 end

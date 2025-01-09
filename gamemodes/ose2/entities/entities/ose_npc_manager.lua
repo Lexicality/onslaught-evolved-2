@@ -17,14 +17,47 @@
 
 DEFINE_BASECLASS("base_osepoint");
 
+-- This list is duplicated for performance reasons, but also because I love
+-- causing problems for myself in the future
+local NPC_BUDDIES = {
+	"npc_antlion", "npc_antlionguard", "npc_combine_s", "npc_fastzombie",
+	"npc_fastzombie_torso", "npc_headcrab", "npc_headcrab_black",
+	"npc_headcrab_fast", "npc_hunter", "npc_manhack", "npc_metropolice",
+	"npc_poisonzombie", "npc_rollermine", "npc_zombie", "npc_zombie_torso",
+	"npc_zombine",
+}
+
 --- @type boolean
 ENT.m_DontSetRelationships = false
 
 ---@param npc GNPC
 function ENT:_HandleNPC(npc)
 	npc["_oseNPC"] = true
-	if not self.m_DontSetRelationships then
 
+	-- Would it be better to use custom collisions? Probably not.
+	npc:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
+
+	-- TODO: Other things go here
+
+	if self.m_DontSetRelationships then
+		return
+	end
+
+	local classname = npc:GetClass()
+
+	-- Hate all players with maximum priority
+	npc:AddRelationship("player DT_HT 99")
+	-- Hate props a decent amount
+	if list.HasEntry("OSEMelee", classname) then
+		npc:AddRelationship("ose_be_gnd DT_HT 50")
+	else
+		npc:AddRelationship("ose_be_* DT_HT 50")
+	end
+	-- Like all the other NPCs that'll be around
+	for _, otherClass in ipairs(NPC_BUDDIES) do
+		if otherClass ~= classname then
+			npc:AddRelationship(otherClass .. " DT_LI 1")
+		end
 	end
 end
 

@@ -17,9 +17,13 @@
 
 IncludeCS("shared.lua")
 
+include("sv_npcs.lua")
+
 
 function GM:Initialize()
 	MsgN("Hello from OSE2!")
 	scripted_ents.Alias("sent_spawner", "ose_legacy_npc_spawner")
 	scripted_ents.Alias("sent_spawnonce", "ose_legacy_npc_spawner")
+
+	self:SetupNPCs()
 end
