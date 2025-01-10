@@ -76,6 +76,12 @@ local WEAK_NPCS = {
 	"npc_fastzombie", "npc_poisonzombie", "npc_zombie", "npc_zombine"
 }
 
+-- These NPCs may have been ambiently created and should be removed at the end of the round
+local GENERATED_NPCS = {
+	"npc_fastzombie_torso", "npc_headcrab", "npc_headcrab_black",
+	"npc_headcrab_fast", "npc_manhack", "npc_zombie_torso",
+}
+
 --- Sets up the various NPC lists for the rest of the gamemode to use
 function GM:SetupNPCs()
 	--- Grab a copy of the base gmod NPC list
@@ -99,6 +105,10 @@ function GM:SetupNPCs()
 	local weakNPCs = list.GetForEdit("OSEWeak")
 	for _, npc in ipairs(WEAK_NPCS) do
 		weakNPCs[npc] = true
+	end
+	local generatedNPCs = list.GetForEdit("OSEGenerated")
+	for _, npc in ipairs(GENERATED_NPCS) do
+		generatedNPCs[npc] = true
 	end
 
 

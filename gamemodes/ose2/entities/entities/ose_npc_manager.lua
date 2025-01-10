@@ -17,6 +17,7 @@
 
 local npcCvar = GetConVar("ose_max_npcs")
 local hunterCvar = GetConVar("ose_max_hunters")
+local hunterScaleCvar = GetConVar("ose_hunters_scale")
 local manhackCvar = GetConVar("ose_max_manhacks")
 
 DEFINE_BASECLASS("base_osepoint");
@@ -30,47 +31,88 @@ local NPC_BUDDIES = {
 	"npc_poisonzombie", "npc_rollermine", "npc_zombie", "npc_zombie_torso",
 	"npc_zombine",
 }
-local GENERATED_NPCS = {
-	npc_fastzombie_torso = true,
-	npc_headcrab = true,
-	npc_headcrab_black = true,
-	npc_headcrab_fast = true,
-	npc_manhack = true,
-	npc_zombie_torso = true,
-}
 
+--- @type integer
+ENT.m_NPCCount = 0
+--- @type boolean
+ENT.m_NPCsEnabled = false
+--- @type integer
+ENT.m_HunterLimit = 2
 --- @type boolean
 ENT.m_DontSetRelationships = false
 --- @type boolean
 ENT.m_BattlePhase = false
 
 function ENT:Initialize()
+	if #ents.FindByClass(self:GetClass()) > 1 then
+		ErrorNoHalt("Two NPC managers! Map is corrupted!\n")
+		self:Remove()
+		return
+	end
+
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
+	hook.Add("NPCKilled", self, self._OnNPCKilled)
+	hook.Add("PlayerInitialSpawn", self, self.CalculateHunterLimit)
+	hook.Add("PlayerDisconnected", self, self.CalculateHunterLimit)
+
+	cvars.AddChangeCallback(npcCvar:GetName(), function(name, old, new)
+		if IsValid(self) then
+			self:_OnNPCCvarChanged(new)
+		end
+	end, "ose_npc_manager")
+	cvars.AddChangeCallback(manhackCvar:GetName(), function(name, old, new)
+		if IsValid(self) then
+			self:_OnManhackCvarChanged(new)
+		end
+	end, "ose_npc_manager")
+	cvars.AddChangeCallback(hunterCvar:GetName(), function(name, old, new)
+		if IsValid(self) then
+			self:CalculateHunterLimit()
+		end
+	end, "ose_npc_manager")
 end
 
-function ENT:_OnBattlePhase(round_number)
+function ENT:_OnBattlePhase(roundNum)
 	self.m_BattlePhase = true
-	self:TriggerOutput("OnSpawnEnabled", self, self)
+	self:TriggerOutput("OnNPCLimitChanged", self, self, tostring(npcCvar:GetInt()))
+	self:TriggerOutput("OnManhackLimitChanged", self, self, tostring(manhackCvar:GetInt()))
+	self:TriggerOutput("OnHunterLimitChanged", self, self, tostring(self.m_HunterLimit))
+	self:CheckNPCCount()
 end
 
-function ENT:_OnBuildPhase(round_number)
+function ENT:_OnBuildPhase(roundNum)
 	self.m_BattlePhase = false
+	self.m_NPCsEnabled = false
+	local generatedNPCs = list.GetForEdit("OSEGenerated")
 	for ent in ents.Iterator() do
 		--- @cast ent GEntity
-		if ent["_oseNPC"] or GENERATED_NPCS[ent:GetClass()] then
+		if ent["_oseNPC"] or generatedNPCs[ent:GetClass()] then
 			-- TODO: Fancier death
 			ent:Remove()
 		end
 	end
+	self.m_NPCCount = 0
+end
+
+function ENT:_OnNPCCvarChanged(newValue)
+	self:TriggerOutput("OnNPCLimitChanged", self, self, newValue)
+	self:CheckNPCCount()
+end
+
+function ENT:_OnManhackCvarChanged(newValue)
+	self:TriggerOutput("OnManhackLimitChanged", self, self, newValue)
 end
 
 ---@param npc GNPC
-function ENT:_HandleNPC(npc)
+function ENT:_OnNPCSpawned(npc)
 	npc["_oseNPC"] = true
 
 	-- Would it be better to use custom collisions? Probably not.
 	npc:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
+
+	self.m_NPCCount = self.m_NPCCount + 1
+	self:CheckNPCCount()
 
 	-- TODO: Other things go here
 
@@ -96,6 +138,16 @@ function ENT:_HandleNPC(npc)
 	end
 end
 
+---@param npc GNPC
+---@param attacker GEntity
+---@param inflictor GEntity
+function ENT:_OnNPCKilled(npc, attacker, inflictor)
+	if npc["_oseNPC"] then
+		self.m_NPCCount = self.m_NPCCount - 1
+		self:CheckNPCCount()
+	end
+end
+
 ---@param name string
 ---@param activator GEntity
 ---@param caller GEntity
@@ -109,18 +161,18 @@ function ENT:AcceptInput(name, activator, caller, value)
 	if name == "NPCSpawned" then
 		if IsValid(activator) and activator:IsNPC() then
 			--- @cast activator GNPC
-			self:_HandleNPC(activator)
+			self:_OnNPCSpawned(activator)
 		elseif value ~= nil then
 			for _, ent in ipairs(ents.FindByName(value)) do
 				if ent:IsNPC() then
 					--- @cast ent GNPC
-					self:_HandleNPC(ent)
+					self:_OnNPCSpawned(ent)
 				end
 			end
 		end
 		return true
 	elseif name == "PointTemplateSpawned" then
-		-- TODO
+		ErrorNoHalt("TODO: PointTemplateSpawned!!\n")
 		return false
 	end
 	return false
@@ -133,5 +185,33 @@ function ENT:KeyValue(key, value)
 
 	if key == "disablerelationships" then
 		self.m_DontSetRelationships = tobool(value)
+	end
+end
+
+function ENT:CheckNPCCount()
+	local maxNPCs = npcCvar:GetInt()
+	if self.m_NPCsEnabled then
+		if self.m_NPCCount > maxNPCs then
+			self.m_NPCsEnabled = false
+			self:TriggerOutput("OnSpawnDisabled", self, self)
+		end
+	else
+		if self.m_NPCCount < maxNPCs then
+			self.m_NPCsEnabled = true
+			self:TriggerOutput("OnSpawnEnabled", self, self)
+		end
+	end
+end
+
+function ENT:CalculateHunterLimit()
+	local newLimit = hunterCvar:GetInt()
+
+	if hunterScaleCvar:GetBool() then
+		newLimit = newLimit + math.floor(player.GetCount() / 4)
+	end
+
+	if newLimit ~= self.m_HunterLimit then
+		self.m_HunterLimit = newLimit
+		self:TriggerOutput("OnHunterLimitChanged", self, self, tostring(self.m_HunterLimit))
 	end
 end
