@@ -15,6 +15,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+local npcCvar = GetConVar("ose_max_npcs")
+local hunterCvar = GetConVar("ose_max_hunters")
+local manhackCvar = GetConVar("ose_max_manhacks")
+
 DEFINE_BASECLASS("base_osepoint");
 
 -- This list is duplicated for performance reasons, but also because I love
@@ -26,9 +30,40 @@ local NPC_BUDDIES = {
 	"npc_poisonzombie", "npc_rollermine", "npc_zombie", "npc_zombie_torso",
 	"npc_zombine",
 }
+local GENERATED_NPCS = {
+	npc_fastzombie_torso = true,
+	npc_headcrab = true,
+	npc_headcrab_black = true,
+	npc_headcrab_fast = true,
+	npc_manhack = true,
+	npc_zombie_torso = true,
+}
 
 --- @type boolean
 ENT.m_DontSetRelationships = false
+--- @type boolean
+ENT.m_BattlePhase = false
+
+function ENT:Initialize()
+	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
+	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
+end
+
+function ENT:_OnBattlePhase(round_number)
+	self.m_BattlePhase = true
+	self:TriggerOutput("OnSpawnEnabled", self, self)
+end
+
+function ENT:_OnBuildPhase(round_number)
+	self.m_BattlePhase = false
+	for ent in ents.Iterator() do
+		--- @cast ent GEntity
+		if ent["_oseNPC"] or GENERATED_NPCS[ent:GetClass()] then
+			-- TODO: Fancier death
+			ent:Remove()
+		end
+	end
+end
 
 ---@param npc GNPC
 function ENT:_HandleNPC(npc)
