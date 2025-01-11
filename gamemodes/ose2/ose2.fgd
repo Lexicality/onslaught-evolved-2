@@ -105,6 +105,18 @@
 	output OnNPCSpawnDisabled(void) : "Fired when NPCs should stop being spawned"
 ]
 
+@PointClass iconsprite("editor/logic_multicompare.vmt") = ose_spawner_helper :
+	"Calculates the number of NPCs that should be spawned by the spawners attached to it"
+[
+	lua(string)
+		: "Custom Calculation"
+		:
+		: "Custom lua calculation eg '(input - 2) / spawners'"
+
+	input NPCLimitChanged(integer) : "Called by the ose_npc_manager"
+	output OnNPCLimitChanged(integer) : "Produces the number of NPCs an individual spawner should make"
+]
+
 @PointClass iconsprite("editor/logic_auto.vmt") = ose_gametime :
 	"Lets the map maker do things based on time"
 [
