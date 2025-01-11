@@ -75,7 +75,7 @@
 	credits(string)
 		: "Map Author"
 		:
-		: "Credits to display in the scoreboard for the map creator (eg 'Disaster Returns 2012')"
+		: "battleCredits to display in the scoreboard for the map creator (eg 'Disaster Returns 2012')"
 
 	input LoseRound(void) : "If the current battle round should be immediately lost"
 	input WinRound(void) : "If the current battle round should be immediately lost"
@@ -83,7 +83,7 @@
 	output OnBuild(integer) : "Fired when the build round starts, with the round number"
 	output OnBattle(integer) : "Fired when the battle round starts, with the round number"
 	output OnWin(void) : "Fired when a battle round is won"
-	output OnLoss(void) : "Fired when a battle round is lost"
+	output OnLose(void) : "Fired when a battle round is lost"
 ]
 
 @PointClass iconsprite("editor/logic_auto.vmt") = ose_npc_manager :
