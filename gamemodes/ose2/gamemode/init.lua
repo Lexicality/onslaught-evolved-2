@@ -18,6 +18,7 @@
 IncludeCS("shared.lua")
 
 include("sv_npcs.lua")
+include("sv_rounds.lua")
 
 
 function GM:Initialize()
@@ -26,4 +27,5 @@ function GM:Initialize()
 	scripted_ents.Alias("sent_spawnonce", "ose_legacy_npc_spawner")
 
 	self:SetupNPCs()
+	self:SetupRounds()
 end

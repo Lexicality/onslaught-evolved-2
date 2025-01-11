@@ -75,15 +75,15 @@
 	credits(string)
 		: "Map Author"
 		:
-		: "battleCredits to display in the scoreboard for the map creator (eg 'Disaster Returns 2012')"
+		: "Credits to display in the scoreboard for the map creator (eg 'Disaster Returns 2012')"
 
-	input LoseRound(void) : "If the current battle round should be immediately lost"
-	input WinRound(void) : "If the current battle round should be immediately lost"
+	input LoseRound(void) : "If the current round should be immediately lost"
+	input WinRound(void) : "If the current round should be immediately lost"
 
-	output OnBuild(integer) : "Fired when the build round starts, with the round number"
-	output OnBattle(integer) : "Fired when the battle round starts, with the round number"
-	output OnWin(void) : "Fired when a battle round is won"
-	output OnLose(void) : "Fired when a battle round is lost"
+	output OnBuild(integer) : "Fired when the build phase starts, with the round number"
+	output OnBattle(integer) : "Fired when the battle phase starts, with the round number"
+	output OnWin(void) : "Fired when a battle phase is won"
+	output OnLose(void) : "Fired when a battle phase is lost"
 ]
 
 @PointClass iconsprite("editor/logic_auto.vmt") = ose_npc_manager :
@@ -120,6 +120,6 @@
 @PointClass iconsprite("editor/logic_auto.vmt") = ose_gametime :
 	"Lets the map maker do things based on time"
 [
-	output OnRoundStart(integer) : "Fired when a round starts, with the round time"
-	output OnRoundSecond(integer) : "Fired once a second with the remaining round time"
+	output OnPhaseStart(integer) : "Fired when a round starts, with the phase time"
+	output OnPhaseSecond(integer) : "Fired once a second with the remaining phase time"
 ]
