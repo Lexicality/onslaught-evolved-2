@@ -52,6 +52,8 @@ function GM:StartBuildPhase()
 	MsgAll("Starting the build phase!")
 end
 
+function GM:BuildPhaseStarted(roundNum) end
+
 function GM:StartPrepPhase()
 	self.m_RoundPhase = ROUND_PHASE_PREP
 	self.m_PhaseEnd = CurTime() + 10
@@ -64,6 +66,8 @@ function GM:StartPrepPhase()
 	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
 	MsgAll("Starting the prep phase!")
 end
+
+function GM:PrepPhaseStarted(roundNum) end
 
 function GM:StartBattlePhase()
 	self.m_RoundPhase = ROUND_PHASE_BATTLE
@@ -84,6 +88,8 @@ function GM:StartBattlePhase()
 	MsgAll("Starting the battle phase!")
 end
 
+function GM:BattlePhaseStarted(roundNum) end
+
 function GM:WinRound()
 	-- TODO
 	self.m_Round = self.m_Round + 1
@@ -92,6 +98,8 @@ function GM:WinRound()
 	gamemode.Call("RoundWon")
 	self:StartBuildPhase()
 end
+
+function GM:RoundWon() end
 
 function GM:LoseRound()
 	-- TODO
@@ -103,6 +111,8 @@ function GM:LoseRound()
 	gamemode.Call("RoundLost")
 	self:StartBuildPhase()
 end
+
+function GM:RoundLost() end
 
 function GM:Tick()
 	local now = CurTime()
@@ -120,6 +130,10 @@ function GM:Tick()
 		gamemode.Call("PhaseSecond", self.m_PhaseEnd - now)
 	end
 end
+
+function GM:PhaseStarted(endsAt) end
+
+function GM:PhaseSecond(timeLeft) end
 
 function GM:CheckForLoss()
 	for _, ply in ipairs(player.GetAll()) do
