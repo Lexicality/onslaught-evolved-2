@@ -75,9 +75,9 @@ end
 
 function ENT:_OnBattlePhase(roundNum)
 	self.m_BattlePhase = true
-	self:TriggerOutput("OnNPCLimitChanged", self, self, tostring(npcCvar:GetInt()))
-	self:TriggerOutput("OnManhackLimitChanged", self, self, tostring(manhackCvar:GetInt()))
-	self:TriggerOutput("OnHunterLimitChanged", self, self, tostring(self.m_HunterLimit))
+	self:TriggerOutput("OnNPCLimitChanged", self, tostring(npcCvar:GetInt()))
+	self:TriggerOutput("OnManhackLimitChanged", self, tostring(manhackCvar:GetInt()))
+	self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
 	self:CheckNPCCount()
 end
 
@@ -96,12 +96,12 @@ function ENT:_OnBuildPhase(roundNum)
 end
 
 function ENT:_OnNPCCvarChanged(newValue)
-	self:TriggerOutput("OnNPCLimitChanged", self, self, newValue)
+	self:TriggerOutput("OnNPCLimitChanged", self, newValue)
 	self:CheckNPCCount()
 end
 
 function ENT:_OnManhackCvarChanged(newValue)
-	self:TriggerOutput("OnManhackLimitChanged", self, self, newValue)
+	self:TriggerOutput("OnManhackLimitChanged", self, newValue)
 end
 
 ---@param npc GNPC
@@ -193,12 +193,12 @@ function ENT:CheckNPCCount()
 	if self.m_NPCsEnabled then
 		if self.m_NPCCount > maxNPCs then
 			self.m_NPCsEnabled = false
-			self:TriggerOutput("OnSpawnDisabled", self, self)
+			self:TriggerOutput("OnSpawnDisabled", self)
 		end
 	else
 		if self.m_NPCCount < maxNPCs then
 			self.m_NPCsEnabled = true
-			self:TriggerOutput("OnSpawnEnabled", self, self)
+			self:TriggerOutput("OnSpawnEnabled", self)
 		end
 	end
 end
@@ -212,6 +212,6 @@ function ENT:CalculateHunterLimit()
 
 	if newLimit ~= self.m_HunterLimit then
 		self.m_HunterLimit = newLimit
-		self:TriggerOutput("OnHunterLimitChanged", self, self, tostring(self.m_HunterLimit))
+		self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
 	end
 end

@@ -70,7 +70,7 @@ function ENT:AcceptInput(name, activator, caller, value)
 			return true
 		end
 		local result = math.floor(self.m_Calc(parsedValue, spawners))
-		self:TriggerOutput("OnNPCLimitChanged", self, self, tostring(result))
+		self:TriggerOutput("OnNPCLimitChanged", self, tostring(result))
 		return true
 	end
 	return false

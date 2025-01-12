@@ -31,21 +31,21 @@ function ENT:Initialize()
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
 	hook.Add("RoundWon", self, function(self)
-		self:TriggerOutput("OnWin", self, self)
+		self:TriggerOutput("OnWin", self)
 	end)
 	hook.Add("RoundLost", self, function(self)
-		self:TriggerOutput("OnLose", self, self)
+		self:TriggerOutput("OnLose", self)
 	end)
 end
 
 function ENT:_OnBattlePhase(roundNum)
 	self.m_BattlePhase = true
-	self:TriggerOutput("OnBattle", self, self, tostring(roundNum))
+	self:TriggerOutput("OnBattle", self, tostring(roundNum))
 end
 
 function ENT:_OnBuildPhase(roundNum)
 	self.m_BattlePhase = false
-	self:TriggerOutput("OnBuild", self, self, tostring(roundNum))
+	self:TriggerOutput("OnBuild", self, tostring(roundNum))
 end
 
 ---@param name string
