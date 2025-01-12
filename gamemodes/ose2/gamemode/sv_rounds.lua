@@ -109,11 +109,6 @@ function GM:CheckForLoss()
 	self:LoseRound()
 end
 
--- TODO: Check which death hook to actually use
----@param ply GPlayer
----@param attacker GEntity
----@param dmg GCTakeDamageInfo
-function GM:PlayerDeath(ply, attacker, dmg)
-	-- TODO
-	self:CheckForLoss()
+function GM:PostPlayerDeath(ply)
+	gamemode.Call("CheckForLoss")
 end

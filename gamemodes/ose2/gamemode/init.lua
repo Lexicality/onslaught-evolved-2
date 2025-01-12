@@ -21,7 +21,7 @@ include("sv_npcs.lua")
 include("sv_rounds.lua")
 
 
-function GM:Initialize()
+function GM:OnGamemodeLoaded()
 	MsgN("Hello from OSE2!")
 	scripted_ents.Alias("sent_spawner", "ose_legacy_npc_spawner")
 	scripted_ents.Alias("sent_spawnonce", "ose_legacy_npc_spawner")
