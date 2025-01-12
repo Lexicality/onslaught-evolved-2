@@ -49,6 +49,7 @@ function GM:StartBuildPhase()
 	net.Broadcast()
 	gamemode.Call("BuildPhaseStarted", self.m_Round)
 	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+	MsgAll("Starting the build phase!")
 end
 
 function GM:StartPrepPhase()
@@ -61,6 +62,7 @@ function GM:StartPrepPhase()
 	net.Broadcast()
 	gamemode.Call("PrepPhaseStarted", self.m_Round)
 	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+	MsgAll("Starting the prep phase!")
 end
 
 function GM:StartBattlePhase()
@@ -79,6 +81,7 @@ function GM:StartBattlePhase()
 	net.Broadcast()
 	gamemode.Call("BattlePhaseStarted", self.m_Round)
 	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+	MsgAll("Starting the battle phase!")
 end
 
 function GM:WinRound()
