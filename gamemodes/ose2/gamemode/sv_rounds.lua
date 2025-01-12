@@ -31,6 +31,7 @@ ROUND_PHASE_BATTLE = 2
 
 function GM:SetupRounds()
 	-- Hack - set everything up so the first tick will trigger build round #1
+	--- @type `ROUND_PHASE_BUILD` | `ROUND_PHASE_PREP` | `ROUND_PHASE_BATTLE`
 	self.m_RoundPhase = ROUND_PHASE_BATTLE
 	self.m_Round = 0
 	self.m_PhaseEnd = 0
@@ -40,6 +41,13 @@ end
 function GM:StartBuildPhase()
 	self.m_RoundPhase = ROUND_PHASE_BUILD
 	self.m_PhaseEnd = CurTime() + buildTimeCvar:GetInt()
+
+	for _, ply in ipairs(player.GetAll()) do
+		--- @cast ply GPlayer
+		player_manager.SetPlayerClass(ply, "player_builder")
+		ply:KillSilent()
+		ply:Spawn()
+	end
 
 	-- TODO
 
@@ -57,6 +65,14 @@ function GM:BuildPhaseStarted(roundNum) end
 function GM:StartPrepPhase()
 	self.m_RoundPhase = ROUND_PHASE_PREP
 	self.m_PhaseEnd = CurTime() + 10
+
+	for _, ply in ipairs(player.GetAll()) do
+		--- @cast ply GPlayer
+		-- TODO: Class selection
+		player_manager.SetPlayerClass(ply, "player_soldier")
+		ply:KillSilent()
+		ply:Spawn()
+	end
 
 	net.Start("PrepPhaseStarted")
 	net.WriteUInt(self.m_Round, 8)

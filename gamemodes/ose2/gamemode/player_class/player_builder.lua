@@ -14,15 +14,18 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+AddCSLuaFile()
 
-DeriveGamemode("base")
+DEFINE_BASECLASS("player_default")
 
-GM.Name = "Onslaught: Evolved 2"
-GM.Author = "Lexi Robinson"
-GM.Email = "lexi@lexi.org.uk"
-GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
+--- @class OSEPlayerBuilder : GPlayerClass
+local PLAYER = {}
 
-GM.TeamBased = false
+PLAYER.DisplayName = "#ose.player.builder"
 
-include("player_class/player_builder.lua")
-include("player_class/player_soldier.lua")
+function PLAYER:Loadout()
+	self.Player:RemoveAllAmmo()
+	self.Player:Give("weapon_physgun")
+end
+
+player_manager.RegisterClass("player_builder", PLAYER, "player_default")
