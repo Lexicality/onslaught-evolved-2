@@ -98,11 +98,6 @@ function ENT:Initialize()
 	if name == "" then
 		self:SetName("spawner" .. self:MapCreationID())
 	end
-
-	print("Hello I'm spawn platform", self:EntIndex(), "and my NPCs are")
-	PrintTable(self.m_NPCs)
-	print()
-	-- TODO
 end
 
 ---
@@ -289,7 +284,6 @@ end
 
 ---@param classname string
 function ENT:SpawnNPC(classname)
-	print(self:EntIndex(), "trying to spawn a", classname)
 	-- turbo hack
 	if classname == "npc_manhack" then
 		if #ents.FindByClass("npc_manhack") >= manhackCvar:GetInt() then
