@@ -96,7 +96,11 @@ function ENT:Initialize()
 
 	local name = self:GetName()
 	if name == "" then
-		self:SetName("spawner" .. self:MapCreationID())
+		local id = self:MapCreationID()
+		if id < 0 then
+			id = self:EntIndex()
+		end
+		self:SetName("spawner" .. id)
 	end
 end
 
@@ -180,7 +184,8 @@ end
 ---@param key string
 ---@param value string
 function ENT:KeyValue(key, value)
-	BaseClass.KeyValue(key, value)
+	BaseClass.KeyValue(self, key, value)
+
 	if key == "copykeys" then
 		local parsed_value = handleKeyValues(value)
 		if parsed_value == nil then

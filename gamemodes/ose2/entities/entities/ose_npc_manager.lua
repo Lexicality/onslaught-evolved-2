@@ -52,7 +52,7 @@ function ENT:Initialize()
 
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
-	hook.Add("NPCKilled", self, self._OnNPCKilled)
+	hook.Add("OnNPCKilled", self, self._OnNPCKilled)
 	hook.Add("PlayerInitialSpawn", self, self.CalculateHunterLimit)
 	hook.Add("PlayerDisconnected", self, self.CalculateHunterLimit)
 
@@ -83,9 +83,10 @@ end
 
 function ENT:_OnBuildPhase(roundNum)
 	self.m_BattlePhase = false
+	self:TriggerOutput("OnNPCSpawnDisabled", self)
 	self.m_NPCsEnabled = false
 	local generatedNPCs = list.GetForEdit("OSEGenerated")
-	for ent in ents.Iterator() do
+	for _, ent in ents.Iterator() do
 		--- @cast ent GEntity
 		if ent["_oseNPC"] or generatedNPCs[ent:GetClass()] then
 			-- TODO: Fancier death
@@ -189,16 +190,18 @@ function ENT:KeyValue(key, value)
 end
 
 function ENT:CheckNPCCount()
+	if not self.m_BattlePhase then return end
+
 	local maxNPCs = npcCvar:GetInt()
 	if self.m_NPCsEnabled then
 		if self.m_NPCCount > maxNPCs then
 			self.m_NPCsEnabled = false
-			self:TriggerOutput("OnSpawnDisabled", self)
+			self:TriggerOutput("OnNPCSpawnDisabled", self)
 		end
 	else
 		if self.m_NPCCount < maxNPCs then
 			self.m_NPCsEnabled = true
-			self:TriggerOutput("OnSpawnEnabled", self)
+			self:TriggerOutput("OnNPCSpawnEnabled", self)
 		end
 	end
 end

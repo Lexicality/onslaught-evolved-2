@@ -7,6 +7,11 @@ local function setupNPCManager()
 	--- @type GEntity[], GEntity[], GEntity[]
 	local hunterSpawners, manhackSpawners, npcSpawners = {}, {}, {}
 	for _, ent in ipairs(ents.FindByClass("ose_legacy_npc_spawner")) do
+		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
+		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
+		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
+		ent:SetKeyValue("OnSpawnNPC", "npc_manager,NPCSpawned")
+
 		if ent.m_SpawnMode == SPAWNER_SPAWN_MODE_HUNTER then
 			hunterSpawners[#hunterSpawners + 1] = ent
 		elseif ent.m_SpawnMode == SPAWNER_SPAWN_MODE_MANHACK then
@@ -17,6 +22,11 @@ local function setupNPCManager()
 	end
 	-- TODO: Can I do something about the alisas so I don't have to do this?
 	for _, ent in ipairs(ents.FindByClass("sent_spawner")) do
+		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
+		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
+		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
+		ent:SetKeyValue("OnSpawnNPC", "npc_manager,NPCSpawned")
+
 		if ent.m_SpawnMode == SPAWNER_SPAWN_MODE_HUNTER then
 			hunterSpawners[#hunterSpawners + 1] = ent
 		elseif ent.m_SpawnMode == SPAWNER_SPAWN_MODE_MANHACK then
@@ -25,6 +35,13 @@ local function setupNPCManager()
 			npcSpawners[#npcSpawners + 1] = ent
 		end
 	end
+	for _, ent in ipairs(ents.FindByClass("sent_spawnonce")) do
+		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
+		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
+		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
+		ent:SetKeyValue("OnSpawnNPC", "npc_manager,NPCSpawned")
+	end
+
 	if #hunterSpawners ~= 0 then
 		local helper = ents.Create("ose_spawner_helper")
 		helper:SetName("ose_hunter_helper")

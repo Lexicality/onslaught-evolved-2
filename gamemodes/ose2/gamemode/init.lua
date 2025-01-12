@@ -17,6 +17,7 @@
 
 IncludeCS("shared.lua")
 
+include("sv_entities.lua")
 include("sv_npcs.lua")
 include("sv_rounds.lua")
 

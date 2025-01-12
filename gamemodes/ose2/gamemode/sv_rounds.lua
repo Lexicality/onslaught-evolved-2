@@ -146,5 +146,7 @@ function GM:CheckForLoss()
 end
 
 function GM:PostPlayerDeath(ply)
-	gamemode.Call("CheckForLoss")
+	if self.m_RoundPhase == ROUND_PHASE_BATTLE then
+		gamemode.Call("CheckForLoss")
+	end
 end

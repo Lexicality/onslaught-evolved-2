@@ -43,9 +43,13 @@ function ENT:GetSpawnerCount()
 	if not self.m_tOutputs or not self.m_tOutputs["OnNPCLimitChanged"] then
 		return 0
 	end
-	local ret = 0
+	local dedupedEntities = {}
 	for _, output in pairs(self.m_tOutputs["OnNPCLimitChanged"]) do
-		ret = ret + getOutputCount(output.entities)
+		dedupedEntities[output.entities] = true
+	end
+	local ret = 0
+	for entities, _ in pairs(dedupedEntities) do
+		ret = ret + getOutputCount(entities)
 	end
 	return ret
 end
@@ -69,7 +73,11 @@ function ENT:AcceptInput(name, activator, caller, value)
 		if parsedValue == nil then
 			return true
 		end
-		local result = math.floor(self.m_Calc(parsedValue, spawners))
+		local result = self.m_Calc(parsedValue, spawners)
+		-- this will unfortunately cause weird behaviour if the hunter limit is
+		-- 2 and there are 3 hunter spawners but the alternative is simply "no
+		-- hunters" and a map being harder is better imo
+		result = math.max(1, math.floor(result))
 		self:TriggerOutput("OnNPCLimitChanged", self, tostring(result))
 		return true
 	end
