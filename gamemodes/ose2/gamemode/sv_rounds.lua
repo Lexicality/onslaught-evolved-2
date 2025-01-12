@@ -20,20 +20,25 @@ local battleTimeBaseCvar = GetConVar("ose_battle_time_base")
 local battleTimeaddCvar = GetConVar("ose_battle_time_add")
 
 util.AddNetworkString("BuildPhaseStarted")
+util.AddNetworkString("PrepPhaseStarted")
 util.AddNetworkString("BattlePhaseStarted")
 util.AddNetworkString("RoundWon")
 util.AddNetworkString("RoundLost")
 
+ROUND_PHASE_BUILD = 0
+ROUND_PHASE_PREP = 1
+ROUND_PHASE_BATTLE = 2
+
 function GM:SetupRounds()
 	-- Hack - set everything up so the first tick will trigger build round #1
-	self.m_BattlePhase = true
+	self.m_RoundPhase = ROUND_PHASE_BATTLE
 	self.m_Round = 0
 	self.m_PhaseEnd = 0
 	self.m_LastSecond = 0
 end
 
 function GM:StartBuildPhase()
-	self.m_BattlePhase = false
+	self.m_RoundPhase = ROUND_PHASE_BUILD
 	self.m_PhaseEnd = CurTime() + buildTimeCvar:GetInt()
 
 	-- TODO
@@ -46,8 +51,20 @@ function GM:StartBuildPhase()
 	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
 end
 
+function GM:StartPrepPhase()
+	self.m_RoundPhase = ROUND_PHASE_PREP
+	self.m_PhaseEnd = CurTime() + 10
+
+	net.Start("PrepPhaseStarted")
+	net.WriteUInt(self.m_Round, 8)
+	net.WriteFloat(self.m_PhaseEnd)
+	net.Broadcast()
+	gamemode.Call("PrepPhaseStarted", self.m_Round)
+	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+end
+
 function GM:StartBattlePhase()
-	self.m_BattlePhase = true
+	self.m_RoundPhase = ROUND_PHASE_BATTLE
 	self.m_PhaseEnd = (
 		CurTime()
 		+ battleTimeBaseCvar:GetInt()
@@ -87,10 +104,12 @@ end
 function GM:Tick()
 	local now = CurTime()
 	if self.m_PhaseEnd <= now then
-		if self.m_BattlePhase then
-			self:WinRound()
-		else
+		if self.m_RoundPhase == ROUND_PHASE_BUILD then
+			self:StartPrepPhase()
+		elseif self.m_RoundPhase == ROUND_PHASE_PREP then
 			self:StartBattlePhase()
+		elseif self.m_RoundPhase == ROUND_PHASE_BATTLE then
+			self:WinRound()
 		end
 	end
 	if now - self.m_LastSecond > 1 then

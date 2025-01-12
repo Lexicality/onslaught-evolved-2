@@ -81,6 +81,7 @@
 	input WinRound(void) : "If the current round should be immediately lost"
 
 	output OnBuild(integer) : "Fired when the build phase starts, with the round number"
+	output OnPrep(integer) : "Fired when the battle preparation phase starts, with the round number"
 	output OnBattle(integer) : "Fired when the battle phase starts, with the round number"
 	output OnWin(void) : "Fired when a battle phase is won"
 	output OnLose(void) : "Fired when a battle phase is lost"

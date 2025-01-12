@@ -29,6 +29,7 @@ function ENT:Initialize()
 	end
 
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
+	hook.Add("PrepPhaseStarted", self, self._OnPrepPhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
 	hook.Add("RoundWon", self, function(self)
 		self:TriggerOutput("OnWin", self)
@@ -41,6 +42,10 @@ end
 function ENT:_OnBattlePhase(roundNum)
 	self.m_BattlePhase = true
 	self:TriggerOutput("OnBattle", self, tostring(roundNum))
+end
+
+function ENT:_OnPrepPhase(roundNum)
+	self:TriggerOutput("OnPrep", self, tostring(roundNum))
 end
 
 function ENT:_OnBuildPhase(roundNum)
