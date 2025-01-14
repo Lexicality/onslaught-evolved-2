@@ -27,7 +27,7 @@ function ENT:AcceptInput(name, activator, caller, value)
 end
 
 function ENT:KeyValue(key, value)
-	if self:SetNetworkKeyValue(key, value) then
+	if self["SetNetworkKeyValue"] and self["SetNetworkKeyValue"](key, value) then
 		return
 	end
 	BaseClass.AddOutputFromKeyValue(self, key, value)
