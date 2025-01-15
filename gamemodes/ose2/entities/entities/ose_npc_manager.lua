@@ -124,17 +124,17 @@ function ENT:_OnNPCSpawned(npc)
 	local classname = npc:GetClass()
 
 	-- Hate all players with maximum priority
-	npc:AddRelationship("player DT_HT 99")
+	npc:AddRelationship("player D_HT 99")
 	-- Hate props a decent amount
 	if list.HasEntry("OSEMelee", classname) then
-		npc:AddRelationship("ose_be_gnd DT_HT 50")
+		npc:AddRelationship("ose_be_gnd D_HT 50")
 	else
-		npc:AddRelationship("ose_be_* DT_HT 50")
+		npc:AddRelationship("ose_be_* D_HT 50")
 	end
 	-- Like all the other NPCs that'll be around
 	for _, otherClass in ipairs(NPC_BUDDIES) do
 		if otherClass ~= classname then
-			npc:AddRelationship(otherClass .. " DT_LI 1")
+			npc:AddRelationship(otherClass .. " D_LI 1")
 		end
 	end
 end
