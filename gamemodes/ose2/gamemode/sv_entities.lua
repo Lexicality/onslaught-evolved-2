@@ -110,3 +110,24 @@ end
 function GM:PostCleanupMap()
 	self:SetupEntities()
 end
+
+GM.m_DamageScale = 1
+GM.m_NextDamageCalc = 0
+
+function GM:EntityTakeDamage(target, dmg)
+	local now = CurTime()
+	if self.m_NextDamageCalc <= now then
+		self.m_NextDamageCalc = now + 2
+		-- Once again, a mystery equation from the 1.9 codebase
+		self.m_DamageScale = math.sqrt(player.GetCount()) + 0.01
+	end
+
+	local class = target:GetClass()
+	if target:IsNPC() then
+		-- NPCs take less damage the more players there are
+		dmg:ScaleDamage(1 / self.m_DamageScale)
+	elseif class == "ose_prop" then
+		-- Props take more damage however
+		dmg:ScaleDamage(self.m_DamageScale)
+	end
+end

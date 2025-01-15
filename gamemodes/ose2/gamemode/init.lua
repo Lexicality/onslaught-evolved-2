@@ -16,10 +16,12 @@
 --]]
 
 IncludeCS("shared.lua")
+IncludeCS("sh_props.lua")
 
 include("sv_entities.lua")
 include("sv_npcs.lua")
 include("sv_player.lua")
+include("sv_props.lua")
 include("sv_rounds.lua")
 
 
@@ -30,4 +32,5 @@ function GM:OnGamemodeLoaded()
 
 	self:SetupNPCs()
 	self:SetupRounds()
+	self:SetupProps()
 end
