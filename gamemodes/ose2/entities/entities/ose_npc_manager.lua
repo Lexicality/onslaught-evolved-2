@@ -50,6 +50,14 @@ function ENT:Initialize()
 		return
 	end
 
+	self:SetupHooks()
+end
+
+function ENT:OnReloaded()
+	self:SetupHooks()
+end
+
+function ENT:SetupHooks()
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
 	hook.Add("OnNPCKilled", self, self._OnNPCKilled)

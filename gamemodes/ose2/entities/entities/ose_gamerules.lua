@@ -27,7 +27,14 @@ function ENT:Initialize()
 		self:Remove()
 		return
 	end
+	self:SetupHooks()
+end
 
+function ENT:OnReloaded()
+	self:SetupHooks()
+end
+
+function ENT:SetupHooks()
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
 	hook.Add("PrepPhaseStarted", self, self._OnPrepPhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)

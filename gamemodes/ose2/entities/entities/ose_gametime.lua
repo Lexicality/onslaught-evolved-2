@@ -18,6 +18,14 @@
 DEFINE_BASECLASS("base_osepoint");
 
 function ENT:Initialize()
+	self:SetupHooks()
+end
+
+function ENT:OnReloaded()
+	self:SetupHooks()
+end
+
+function ENT:SetupHooks()
 	hook.Add("BuildStarted", self, self._OnRoundStart)
 	hook.Add("BattleStarted", self, self._OnRoundStart)
 	hook.Add("RoundSecond", self, self._OnRoundSecond)
