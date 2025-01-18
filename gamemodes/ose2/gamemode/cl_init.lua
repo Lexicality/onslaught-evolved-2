@@ -20,6 +20,7 @@ include("shared.lua")
 function GM:Initialize()
 	MsgN("Hello from OSE2!")
 	self:SetupRounds()
+	self:SetupProps()
 end
 
 function GM:SetupRounds()
