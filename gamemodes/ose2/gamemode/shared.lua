@@ -26,3 +26,7 @@ GM.TeamBased = false
 
 include("player_class/player_builder.lua")
 include("player_class/player_soldier.lua")
+
+ROUND_PHASE_BUILD = 0
+ROUND_PHASE_PREP = 1
+ROUND_PHASE_BATTLE = 2
