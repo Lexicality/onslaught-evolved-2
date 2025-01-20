@@ -16,6 +16,7 @@
 --]]
 
 include("shared.lua")
+include("sh_props.lua")
 
 function GM:Initialize()
 	MsgN("Hello from OSE2!")
