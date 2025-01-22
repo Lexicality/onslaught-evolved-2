@@ -41,8 +41,8 @@ ENT.m_SpawnFrequency = 0.5
 --- @type number | nil
 ENT.m_TargetSpawnFrequency = nil
 --- Spicy `sent_spawnonce` behaviour - don't spawn until later in the round
---- @type number | nil
-ENT.m_SpawnTimeLeftTarget = nil
+--- @type number
+ENT.m_SpawnTimeLeftTarget = 0
 
 --- Name of the `path_track` to aim the NPCs at after they spawn
 --- @type string
@@ -67,6 +67,8 @@ ENT.m_MaxLiveChildren = 5
 --- How many have we spawned?
 --- @type number
 ENT.m_CurrentLiveChildren = 0
+--- @type number
+ENT.m_TimeLeft = 0
 
 
 -- TODO this should probs be in a utilities file somewhere
@@ -229,7 +231,12 @@ function ENT:KeyValue(key, value)
 			ErrorNoHalt("sent_spawnonce has invalid `sptime` keyvalue '", value, "'!\n")
 			return
 		end
-		self.m_SpawnFlags = math.floor(value)
+		self.m_SpawnTimeLeftTarget = math.floor(value)
+		if self.m_SpawnTimeLeftTarget > 0 then
+			hook.Add("OnRoundSecond", self, self._OnRoundSecond)
+		else
+			hook.Remove("OnRoundSecond", self)
+		end
 	end
 end
 
@@ -404,10 +411,17 @@ function ENT:SpawnNPC(classname)
 	self:TriggerOutput("OnSpawnNPC", npc, npc:GetName())
 end
 
+function ENT:_OnRoundSecond(timeLeft)
+	self.m_TimeLeft = timeLeft
+end
+
 function ENT:Think()
 	local now = CurTime()
-	-- TODO: Support sptime here!!!
-	if not self.m_Enabled or self.m_CurrentLiveChildren >= self.m_MaxLiveChildren then
+	if
+		not self.m_Enabled
+		or self.m_CurrentLiveChildren >= self.m_MaxLiveChildren
+		or (self.m_SpawnTimeLeftTarget > 0 and self.m_TimeLeft > self.m_SpawnTimeLeftTarget)
+	then
 		-- hibernate
 		self:NextThink(now + 1)
 		return true
