@@ -16,7 +16,6 @@
 --]]
 
 IncludeCS("shared.lua")
-IncludeCS("sh_props.lua")
 
 include("sv_entities.lua")
 include("sv_npcs.lua")

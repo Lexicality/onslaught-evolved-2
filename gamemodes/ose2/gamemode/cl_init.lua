@@ -16,7 +16,6 @@
 --]]
 
 include("shared.lua")
-include("sh_props.lua")
 
 include("cl_hud.lua")
 
