@@ -18,10 +18,17 @@
 include("shared.lua")
 include("sh_props.lua")
 
-function GM:Initialize()
+include("cl_hud.lua")
+
+function GM:OnGamemodeLoaded()
 	MsgN("Hello from OSE2!")
 	self:SetupRounds()
 	self:SetupProps()
+	self:SetupHUD()
+end
+
+function GM:OnReloaded()
+	self:SetupHUD()
 end
 
 function GM:SetupRounds()

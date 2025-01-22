@@ -15,23 +15,4 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-IncludeCS("shared.lua")
-IncludeCS("sh_props.lua")
-
-include("sv_entities.lua")
-include("sv_npcs.lua")
-include("sv_player.lua")
-include("sv_props.lua")
-include("sv_rounds.lua")
-include("sv_syncfiles.lua")
-
-
-function GM:OnGamemodeLoaded()
-	MsgN("Hello from OSE2!")
-	scripted_ents.Alias("sent_spawner", "ose_legacy_npc_spawner")
-	scripted_ents.Alias("sent_spawnonce", "ose_legacy_npc_spawner")
-
-	self:SetupNPCs()
-	self:SetupRounds()
-	self:SetupProps()
-end
+AddCSLuaFile("cl_hud.lua")
