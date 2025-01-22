@@ -106,12 +106,16 @@ local function ccOSESpawn(ply, cmd, args)
 
 	TryFixPropPosition(ply, ent, tr.HitPos)
 
+	hook.Run("PlayerSpawnedProp", ply, model, ent)
+
 	ent:SetSpawnEffect(true)
 
 	undo.Create("Prop")
 	undo.SetPlayer(ply)
 	undo.AddEntity(ent)
 	undo.Finish(propData.Name)
+
+	ply:AddCleanup("props", ent)
 
 	cleanup.Add(ply, "props", ent)
 end
@@ -123,7 +127,14 @@ concommand.Add("ose_spawn", ccOSESpawn)
 ---@return boolean
 function GM:PlayerSpawnProp(ply, model)
 	-- TODO player prop limit goes here
-	return self.m_RoundPhase == ROUND_PHASE_BUILD
+	return self.m_RoundPhase == ROUND_PHASE_BUILD and ply:CheckLimit("props")
+end
+
+---@param ply GPlayer
+---@param model string
+---@param ent GEntity
+function GM:PlayerSpawnedProp(ply, model, ent)
+	ply:AddCount("props", ent)
 end
 
 function GM:PhysgunPickup(ply, ent)

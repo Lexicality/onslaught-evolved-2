@@ -14,21 +14,32 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+include("sandbox/gamemode/player_extension.lua")
 
-DeriveGamemode("base")
+--- @type GPlayer
+local plyMeta = FindMetaTable("Player")
 
-GM.Name = "Onslaught: Evolved 2"
-GM.Author = "Lexi Robinson"
-GM.Email = "lexi@lexi.org.uk"
-GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
+-- gotta override `CheckLimit` to make it more onslaughty
+function plyMeta:CheckLimit(limitName)
+	local c = cvars.Number("ose_max" .. limitName, 0)
+	local count = self:GetCount(limitName)
 
-GM.TeamBased = false
+	local ret = hook.Run("PlayerCheckLimit", self, limitName, count, c)
+	if ret ~= nil then
+		if not ret and SERVER then
+			self:LimitHit(limitName)
+		end
+		return ret
+	end
 
-include("player_class/player_builder.lua")
-include("player_class/player_soldier.lua")
-IncludeCS("sh_props.lua")
-IncludeCS("sh_player_meta.lua")
+	if c < 0 then return true end
 
-ROUND_PHASE_BUILD = 0
-ROUND_PHASE_PREP = 1
-ROUND_PHASE_BATTLE = 2
+	if count >= c then
+		if SERVER then
+			self:LimitHit(limitName)
+		end
+		return false
+	end
+
+	return true
+end

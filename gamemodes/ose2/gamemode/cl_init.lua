@@ -78,3 +78,16 @@ net.Receive("BattlePhaseStarted", function()
 	gamemode.Call("BattlePhaseStarted", roundNum)
 	gamemode.Call("PhaseStarted", phaseEnd)
 end)
+
+---@param name string
+function GM:LimitHit(name)
+	local str = "#SBoxLimit_" .. name
+	local translated = language.GetPhrase(str)
+	if str == translated then
+		-- No translation available, apply our own
+		translated = string.format(language.GetPhrase("hint.hitXlimit"), language.GetPhrase(name))
+	end
+
+	notification.AddLegacy(translated, NOTIFY_ERROR, 6)
+	surface.PlaySound("buttons/button10.wav")
+end
