@@ -59,4 +59,15 @@ function GM:PlayerInitialSpawn(ply, isTransiton)
 		-- TODO: Class selection
 		player_manager.SetPlayerClass(ply, "player_soldier")
 	end
+
+	if self.m_RoundPhase == ROUND_PHASE_BUILD then
+		net.Start("BuildPhaseStarted")
+	elseif self.m_RoundPhase == ROUND_PHASE_PREP then
+		net.Start("PrepPhaseStarted")
+	else
+		net.Start("BattlePhaseStarted")
+	end
+	net.WriteUInt(self.m_Round, 8)
+	net.WriteFloat(self.m_PhaseEnd)
+	net.Broadcast()
 end
