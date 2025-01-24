@@ -15,6 +15,8 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+AddCSLuaFile()
+
 DeriveGamemode("base")
 
 GM.Name = "Onslaught: Evolved 2"
@@ -26,8 +28,8 @@ GM.TeamBased = false
 
 include("player_class/player_builder.lua")
 include("player_class/player_soldier.lua")
-IncludeCS("sh_props.lua")
-IncludeCS("sh_player_meta.lua")
+include("sh_props.lua")
+include("sh_player_meta.lua")
 
 ROUND_PHASE_BUILD = 0
 ROUND_PHASE_PREP = 1

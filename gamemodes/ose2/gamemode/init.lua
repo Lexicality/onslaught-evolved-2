@@ -15,7 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-IncludeCS("shared.lua")
+include("shared.lua")
 
 include("sv_entities.lua")
 include("sv_npcs.lua")
