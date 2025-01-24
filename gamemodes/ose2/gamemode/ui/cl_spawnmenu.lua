@@ -14,6 +14,3 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
-
-AddCSLuaFile("cl_hud.lua")
-AddCSLuaFile("ui/cl_spawnmenu.lua")

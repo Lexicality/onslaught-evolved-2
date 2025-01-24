@@ -18,6 +18,7 @@
 include("shared.lua")
 
 include("cl_hud.lua")
+include("ui/cl_spawnmenu.lua")
 
 function GM:OnGamemodeLoaded()
 	MsgN("Hello from OSE2!")

@@ -15,5 +15,16 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-AddCSLuaFile("cl_hud.lua")
-AddCSLuaFile("ui/cl_spawnmenu.lua")
+local PANEL = {}
+
+function PANEL:Init()
+	self.ToolPanels = {}
+
+	self:LoadTools()
+
+	self:SetFadeTime(0)
+
+	local text = vgui.Create("DLabel")
+end
+
+vgui.Register("OSESideMenu", PANEL, "DPropertySheet")
