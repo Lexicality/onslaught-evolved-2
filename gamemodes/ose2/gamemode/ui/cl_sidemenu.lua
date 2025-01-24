@@ -15,7 +15,11 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-AddCSLuaFile("cl_hud.lua")
-AddCSLuaFile("ui/cl_spawnmenu.lua")
-AddCSLuaFile("ui/cl_propmenu.lua")
-AddCSLuaFile("ui/cl_sidemenu.lua")
+--- @class OSESideMenu : DPropertySheet
+local PANEL = {}
+
+function PANEL:Init()
+	Label("TODO - side stuff goes here", self)
+end
+
+vgui.Register("OSESideMenu", PANEL, "DPropertySheet")

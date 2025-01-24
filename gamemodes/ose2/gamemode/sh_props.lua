@@ -24,13 +24,13 @@ function GM:SetupProps()
 	local GROUP_BEAMS = 3
 	local GROUP_OTHER = 4
 	local GROUP_JUNK = 5
-	local GROUP_SPECIAL = 6
+	-- local GROUP_SPECIAL = 6
 	groups[GROUP_WALLS] = "#ose.group.walls"
 	groups[GROUP_BOXES] = "#ose.group.boxes"
 	groups[GROUP_BEAMS] = "#ose.groups.beams"
 	groups[GROUP_OTHER] = "#ose.groups.other"
 	groups[GROUP_JUNK] = "#ose.groups.junk"
-	groups[GROUP_SPECIAL] = "#ose.groups.special"
+	-- groups[GROUP_SPECIAL] = "#ose.groups.special"
 
 	--- @type {[string]: OSEPropDefinition}
 	local props = list.GetForEdit("OSEProps")

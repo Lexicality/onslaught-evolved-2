@@ -38,6 +38,9 @@ GM.m_PhaseEnd = 0
 --- @type number
 GM.m_LastSecond = 0
 
+--- @type OSESpawnMenu | nil
+_G.g_SpawnMenu = nil
+
 -----------
 -- Types --
 -----------

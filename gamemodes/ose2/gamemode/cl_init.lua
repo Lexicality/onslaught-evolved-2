@@ -18,16 +18,19 @@
 include("shared.lua")
 
 include("cl_hud.lua")
+include("ui/cl_spawnmenu.lua")
 
 function GM:OnGamemodeLoaded()
 	MsgN("Hello from OSE2!")
 	self:SetupRounds()
 	self:SetupProps()
 	self:SetupHUD()
+	self:SetupSpawnMenu()
 end
 
 function GM:OnReloaded()
 	self:SetupHUD()
+	self:SetupSpawnMenu()
 end
 
 --- Called when the user switches languages
@@ -35,6 +38,7 @@ end
 --- @param old string The old language name
 function GM:OnLanguageChanged(new, old)
 	self:SetupHUD()
+	self:SetupSpawnMenu()
 end
 
 cvars.AddChangeCallback(
