@@ -50,6 +50,10 @@ function ENT:Initialize()
 
 	self.m_BaseHealth = self:CalculateBaseHealth()
 	self:SetupHooks()
+
+	if self:GetName() == "" then
+		self:SetName("ose_prop_" .. self:EntIndex())
+	end
 end
 
 function ENT:SetupHooks()
@@ -193,7 +197,6 @@ function ENT:GetPlayerNearbyBonus()
 end
 
 function ENT:OnTakeDamage(dmginfo)
-	print("Ooffer doofer1", self, self:Health(), dmginfo:GetDamage())
 	local attacker = dmginfo:GetAttacker()
 	-- TODO: Turrets, mines
 	if IsValid(attacker) and attacker:IsPlayer() then
@@ -225,8 +228,13 @@ function ENT:OnTakeDamage(dmginfo)
 	self:SetHealth(newHealth)
 
 	if newHealth <= 0 then
-		-- Effect?
-		self:Remove()
+		--- @type GEntity
+		local dissolver = ents.FindByName("ose_dissolve_propdeath")[1]
+		if IsValid(dissolver) then
+			dissolver:Fire("Dissolve", self:GetName())
+		else
+			self:Remove()
+		end
 	elseif cvarFlammible:GetBool() and (newHealth / self:GetMaxHealth()) <= 0.4 then
 		self:Ignite(8, 150)
 	end
@@ -237,7 +245,12 @@ end
 
 function ENT:Touch(ent)
 	if ent:GetClass() == "func_nobuild" then
-		-- TODO: dramatic effect
-		self:Remove()
+		--- @type GEntity
+		local dissolver = ents.FindByName("ose_dissolve_nobuild")[1]
+		if IsValid(dissolver) then
+			dissolver:Fire("Dissolve", self:GetName())
+		else
+			self:Remove()
+		end
 	end
 end

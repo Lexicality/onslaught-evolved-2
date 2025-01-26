@@ -97,7 +97,11 @@ function ENT:_OnBuildPhase(roundNum)
 	for _, ent in ents.Iterator() do
 		--- @cast ent GEntity
 		if ent["_oseNPC"] or generatedNPCs[ent:GetClass()] then
-			-- TODO: Fancier death
+			-- (most) NPCs don't make death noises if they think they're dissolving
+			ent:AddFlags(FL_DISSOLVING)
+			-- It might be possible to make a lua effect for this but we can't
+			-- use the env_entity_dissolver for this because you can't stop it
+			-- very noisily assigning kills
 			ent:Remove()
 		end
 	end

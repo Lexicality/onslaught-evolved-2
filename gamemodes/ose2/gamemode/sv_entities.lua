@@ -94,6 +94,31 @@ local function setupGameRules()
 	end
 end
 
+local function setupDissolvers()
+	if #ents.FindByName("ose_dissolve_nobuild") == 0 then
+		local ent = ents.Create("env_entity_dissolver")
+		ent:SetName("ose_dissolve_nobuild")
+		ent:SetKeyValue("magnitude", "3")
+		ent:SetKeyValue("dissolvetype", "2")
+		ent:Spawn()
+	end
+	if #ents.FindByName("ose_dissolve_propdeath") == 0 then
+		local ent = ents.Create("env_entity_dissolver")
+		ent:SetName("ose_dissolve_propdeath")
+		-- Disolve type Core (blasted away from the origin while disolving)
+		ent:SetKeyValue("dissolvetype", "3")
+		-- Blast at 200 units per second
+		ent:SetKeyValue("magnitude", "200")
+		-- For this effect to look good it should ideally blast away from the
+		-- middle of the map, so grab a random player spawnpoint since those are
+		-- generally somewhere in the middle
+		local spawns = ents.FindByClass("info_player_start")
+		local spawn = spawns[math.random(#spawns)]
+		ent:SetPos(spawn:GetPos())
+		ent:Spawn()
+	end
+end
+
 function GM:SetupEntities()
 	if #ents.FindByClass("ose_npc_manager") == 0 then
 		setupNPCManager()
@@ -101,6 +126,7 @@ function GM:SetupEntities()
 	if #ents.FindByClass("ose_gamerules") == 0 then
 		setupGameRules()
 	end
+	setupDissolvers()
 end
 
 function GM:InitPostEntity()
