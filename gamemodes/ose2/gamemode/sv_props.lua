@@ -84,6 +84,7 @@ local function ccOSESpawn(ply, cmd, args)
 	local start = ply:GetShootPos()
 	local aim = ply:GetAimVector()
 
+	--- @type STrace
 	local trace = {}
 	trace.start = start
 	trace.endpos = start + (aim * 1000)
@@ -92,6 +93,14 @@ local function ccOSESpawn(ply, cmd, args)
 	local tr = util.TraceLine(trace)
 	--- @cast tr STraceResult
 	if not tr.Hit then return end
+
+	for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 10)) do
+		--- @cast ent GEntity
+		if ent:GetClass() == "func_nobuild" then
+			ply:PrintMessage(HUD_PRINTTALK, "Can't park there mate")
+			return
+		end
+	end
 
 	--- @type OSEPropDefinition
 	local propData = list.Get("OSEProps")[model]

@@ -40,6 +40,9 @@ function ENT:Initialize()
 		self:Remove()
 		return
 	end
+	-- Wake the prop so that touch triggers fire for nobuild areas
+	self:PhysWake()
+	-- And immediately go back to sleep
 	self:GetPhysicsObject():EnableMotion(false)
 
 	-- hmm?
