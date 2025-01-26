@@ -29,6 +29,7 @@ function GM:OnGamemodeLoaded()
 end
 
 function GM:OnReloaded()
+	MsgN("OSE2: Client reloaded!")
 	self:SetupHUD()
 	self:SetupSpawnMenu()
 end

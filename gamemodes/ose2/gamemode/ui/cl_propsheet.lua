@@ -14,14 +14,18 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+include("cl_propicon.lua")
 
---- @class OSESideMenu : DPropertySheet
+--- @class OSEPropSheet : DTileLayout
 local PANEL = {}
 
-function PANEL:Init()
-	local label = Label("TODO - side stuff goes here", self)
-	label:SetPos(10, 10)
-	label:SizeToContents()
+--- @param model string
+--- @param prop OSEPropDefinition
+function PANEL:AddProp(model, prop)
+	local icon = vgui.Create("OSEPropIcon", self)
+	--- @cast icon OSEPropIcon
+	icon:Setup(model, prop)
+	self:Add(icon)
 end
 
-vgui.Register("OSESideMenu", PANEL, "DPropertySheet")
+vgui.Register("OSEPropSheet", PANEL, "DTileLayout")

@@ -50,6 +50,11 @@ _G.g_SpawnMenu = nil
 --- @field ModelGroup number
 --- @field SpawnAngle? GAngle
 
+--- @class OSEPropGroupDefinition
+--- @field Name string
+--- @field Icon? string
+--- @field Tooltip? string
+
 --- @class NPCListDefinition
 --- @field Class string
 --- @field Health? integer

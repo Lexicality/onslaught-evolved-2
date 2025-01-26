@@ -17,7 +17,7 @@
 AddCSLuaFile()
 
 function GM:SetupProps()
-	--- @type string[]
+	--- @type OSEPropGroupDefinition[]
 	local groups = list.GetForEdit("OSEGroups")
 	local GROUP_WALLS = 1
 	local GROUP_BOXES = 2
@@ -25,11 +25,26 @@ function GM:SetupProps()
 	local GROUP_OTHER = 4
 	local GROUP_JUNK = 5
 	-- local GROUP_SPECIAL = 6
-	groups[GROUP_WALLS] = "#ose.group.walls"
-	groups[GROUP_BOXES] = "#ose.group.boxes"
-	groups[GROUP_BEAMS] = "#ose.groups.beams"
-	groups[GROUP_OTHER] = "#ose.groups.other"
-	groups[GROUP_JUNK] = "#ose.groups.junk"
+	groups[GROUP_WALLS] = {
+		Name = "#ose.group.walls",
+		Icon = "icon16/door.png",
+	}
+	groups[GROUP_BOXES] = {
+		Name = "#ose.group.boxes",
+		Icon = "icon16/box.png",
+	}
+	groups[GROUP_BEAMS] = {
+		Name = "#ose.groups.beams",
+		Icon = "icon16/pencil.png",
+	}
+	groups[GROUP_OTHER] = {
+		Name = "#ose.groups.other",
+		Icon = "icon16/wrench.png",
+	}
+	groups[GROUP_JUNK] = {
+		Name = "#ose.groups.junk",
+		Icon = "icon16/bin.png",
+	}
 	-- groups[GROUP_SPECIAL] = "#ose.groups.special"
 
 	--- @type {[string]: OSEPropDefinition}

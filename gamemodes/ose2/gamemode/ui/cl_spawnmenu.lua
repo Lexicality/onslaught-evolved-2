@@ -100,6 +100,18 @@ function PANEL:_onTextUnfocus(panel)
 	self:SetKeyboardInputEnabled(false)
 end
 
+--- Compatability for sandbox stuff
+--- @param shouldHang boolean
+function PANEL:HangOpen(shouldHang)
+	self.m_HangOpen = shouldHang
+end
+
+--- Compatability for sandbox stuff
+--- @return boolean
+function PANEL:HangingOpen()
+	return self.m_HangOpen
+end
+
 local MIN_BORDER, MAX_BORDER = 25, 256
 
 function PANEL:PerformLayout()

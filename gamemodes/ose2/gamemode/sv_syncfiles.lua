@@ -16,6 +16,8 @@
 --]]
 
 AddCSLuaFile("cl_hud.lua")
-AddCSLuaFile("ui/cl_spawnmenu.lua")
+AddCSLuaFile("ui/cl_propicon.lua")
 AddCSLuaFile("ui/cl_propmenu.lua")
+AddCSLuaFile("ui/cl_propsheet.lua")
 AddCSLuaFile("ui/cl_sidemenu.lua")
+AddCSLuaFile("ui/cl_spawnmenu.lua")

@@ -14,12 +14,33 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+include("cl_propsheet.lua")
 
 --- @class OSEPropMenu : DPropertySheet
 local PANEL = {}
 
 function PANEL:Init()
-    Label("TODO - props go here", self)
+	local allProps = vgui.Create("OSEPropSheet", self)
+	--- @cast allProps OSEPropSheet
+	self:AddSheet("#ose.group.all", allProps, "icon16/bricks.png")
+	--- @type OSEPropSheet[]
+	local groups = {}
+	for i, group in pairs(list.Get("OSEGroups")) do
+		--- @cast group OSEPropGroupDefinition
+		local groupPanel = vgui.Create("OSEPropSheet", self)
+		--- @cast groupPanel OSEPropSheet
+		self:AddSheet(group.Name, groupPanel, group.Icon, nil, nil, group.Tooltip)
+		groups[i] = groupPanel
+	end
+	for model, prop in pairs(list.Get("OSEProps")) do
+		--- @cast model string
+		--- @cast prop OSEPropDefinition
+		allProps:AddProp(model, prop)
+		local groupPanel = groups[prop.ModelGroup]
+		if groupPanel then
+			groupPanel:AddProp(model, prop)
+		end
+	end
 end
 
 vgui.Register("OSEPropMenu", PANEL, "DPropertySheet")
