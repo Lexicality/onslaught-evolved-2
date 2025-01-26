@@ -97,6 +97,14 @@ net.Receive("BattlePhaseStarted", function()
 	gamemode.Call("PhaseStarted", phaseEnd)
 end)
 
+--- Sandbox Compat
+--- @param str string
+--- @param type number
+--- @param length number
+function GM:AddNotify(str, type, length)
+	notification.AddLegacy(str, type, length)
+end
+
 ---@param name string
 function GM:LimitHit(name)
 	local str = "#SBoxLimit_" .. name
@@ -108,4 +116,40 @@ function GM:LimitHit(name)
 
 	notification.AddLegacy(translated, NOTIFY_ERROR, 6)
 	surface.PlaySound("buttons/button10.wav")
+end
+
+function GM:OnUndo(name, strCustomString)
+	local text = strCustomString
+
+	if not text then
+		local strId = "#Undone_" .. name
+		text = language.GetPhrase(strId)
+		if strId == text then
+			-- No translation available, generate our own
+			text = string.format(
+				language.GetPhrase("hint.undoneX"),
+				language.GetPhrase(name)
+			)
+		end
+	end
+
+	notification.AddLegacy(text, NOTIFY_UNDO, 2)
+
+	surface.PlaySound("buttons/button15.wav")
+end
+
+function GM:OnCleanup(name)
+	local str = "#Cleaned_" .. name
+	local translated = language.GetPhrase(str)
+	if str == translated then
+		-- No translation available, apply our own
+		translated = string.format(
+			language.GetPhrase("hint.cleanedX"),
+			language.GetPhrase(name)
+		)
+	end
+
+	notification.AddLegacy(translated, NOTIFY_CLEANUP, 5)
+
+	surface.PlaySound("buttons/button15.wav")
 end
