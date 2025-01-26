@@ -30,6 +30,22 @@ function GM:OnReloaded()
 	self:SetupHUD()
 end
 
+--- Called when the user switches languages
+--- @param new string The new language name
+--- @param old string The old language name
+function GM:OnLanguageChanged(new, old)
+	self:SetupHUD()
+end
+
+cvars.AddChangeCallback(
+	"gmod_language",
+	function(_, old, new)
+		GAMEMODE:OnLanguageChanged(new, old)
+	end,
+	"OSE OnLanguageChanged"
+)
+
+
 function GM:SetupRounds()
 	--- @type `ROUND_PHASE_BUILD` | `ROUND_PHASE_PREP` | `ROUND_PHASE_BATTLE`
 	self.m_RoundPhase = ROUND_PHASE_BUILD
