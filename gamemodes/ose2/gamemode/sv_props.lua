@@ -48,6 +48,19 @@ local function TryFixPropPosition(ply, ent, hitpos)
 	fixupProp(ply, ent, hitpos, Vector(0, 0, mins.z), Vector(0, 0, maxs.z))
 end
 
+--- The simplest anti-griefing check I could come up with, can easily trigger
+--- false positives
+--- @param ent GEntity
+--- @return boolean
+local function isPropIntersectingPlayer(ent)
+	for _, intersecting in ipairs(ents.FindInSphere(ent:GetPos(), ent:GetModelRadius())) do
+		--- @cast intersecting GEntity
+		if intersecting:IsPlayer() then
+			return true
+		end
+	end
+	return false
+end
 
 ---@param ply GPlayer
 ---@param cmd string
@@ -106,6 +119,10 @@ local function ccOSESpawn(ply, cmd, args)
 
 	TryFixPropPosition(ply, ent, tr.HitPos)
 
+	if isPropIntersectingPlayer(ent) then
+		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+	end
+
 	hook.Run("PlayerSpawnedProp", ply, model, ent)
 
 	ent:SetSpawnEffect(true)
@@ -147,20 +164,6 @@ function GM:OnPhysgunPickup(ply, ent)
 	if ent:GetClass() == "ose_prop" then
 		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 	end
-end
-
---- The simplest anti-griefing check I could come up with, can easily trigger
---- false positives
---- @param ent GEntity
---- @return boolean
-local function isPropIntersectingPlayer(ent)
-	for _, intersecting in ipairs(ents.FindInSphere(ent:GetPos(), ent:GetModelRadius())) do
-		--- @cast intersecting GEntity
-		if intersecting:IsPlayer() then
-			return true
-		end
-	end
-	return false
 end
 
 function GM:PhysgunDrop(ply, ent)
