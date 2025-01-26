@@ -17,6 +17,7 @@
 
 include("shared.lua")
 
+include("cl_effects.lua")
 include("cl_hud.lua")
 include("ui/cl_spawnmenu.lua")
 

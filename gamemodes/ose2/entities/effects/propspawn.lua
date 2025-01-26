@@ -15,10 +15,5 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
-AddCSLuaFile("cl_hud.lua")
-AddCSLuaFile("cl_effects.lua")
-AddCSLuaFile("ui/cl_propicon.lua")
-AddCSLuaFile("ui/cl_propmenu.lua")
-AddCSLuaFile("ui/cl_propsheet.lua")
-AddCSLuaFile("ui/cl_sidemenu.lua")
-AddCSLuaFile("ui/cl_spawnmenu.lua")
+-- Thanks sandbox
+include("sandbox/entities/effects/propspawn.lua")
