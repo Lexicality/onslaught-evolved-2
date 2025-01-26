@@ -25,7 +25,7 @@ function PANEL:Init()
 	self:AddSheet("#ose.group.all", allProps, "icon16/bricks.png")
 	--- @type OSEPropSheet[]
 	local groups = {}
-	for i, group in pairs(list.Get("OSEGroups")) do
+	for i, group in ipairs(list.Get("OSEGroups")) do
 		--- @cast group OSEPropGroupDefinition
 		local groupPanel = vgui.Create("OSEPropSheet", self)
 		--- @cast groupPanel OSEPropSheet
