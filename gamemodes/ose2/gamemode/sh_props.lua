@@ -160,7 +160,7 @@ function GM:SetupProps()
 	props["models/props_c17/display_cooler01a.mdl"] = {
 		SpawnAngle = Angle(0, -90, 0),
 		ModelGroup = GROUP_OTHER,
-		Name = "#ose.props.rack"
+		Name = "#ose.props.display_case"
 	}
 	props["models/props_pipes/concrete_pipe001a.mdl"] = {
 		ModelGroup = GROUP_OTHER,
