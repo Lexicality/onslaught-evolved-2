@@ -16,11 +16,6 @@
 --]]
 AddCSLuaFile()
 
---- @class OSEPropDefinition
---- @field Name string
---- @field ModelGroup number
---- @field SpawnAngle? GAngle
-
 function GM:SetupProps()
 	--- @type string[]
 	local groups = list.GetForEdit("OSEGroups")

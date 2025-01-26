@@ -15,18 +15,6 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
---- @class NPCListDefinition
---- @field Class string
---- @field Health? integer
---- @field KeyValues? {[string]: string}
---- @field Material? string
---- @field Model? string
---- @field Name string
---- @field Reward integer
---- @field Skin? integer
---- @field SpawnFlags? integer
---- @field TotalSpawnFlags? integer
-
 SF_NPC_NO_GRENADE_DROP = 131072
 SF_NPC_NO_AR2_DROP = 262144
 SF_MANHACK_USE_AIR_NODES = 262144

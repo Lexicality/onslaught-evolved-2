@@ -47,11 +47,8 @@ cvars.AddChangeCallback(
 
 
 function GM:SetupRounds()
-	--- @type `ROUND_PHASE_BUILD` | `ROUND_PHASE_PREP` | `ROUND_PHASE_BATTLE`
 	self.m_RoundPhase = ROUND_PHASE_BUILD
-	--- @type integer
 	self.m_Round = 0
-	--- @type number
 	self.m_PhaseEnd = 0.0
 end
 
