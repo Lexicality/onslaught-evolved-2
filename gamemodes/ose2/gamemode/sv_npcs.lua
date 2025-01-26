@@ -67,7 +67,7 @@ local WEAK_NPCS = {
 -- These NPCs may have been ambiently created and should be removed at the end of the round
 local GENERATED_NPCS = {
 	"npc_fastzombie_torso", "npc_headcrab", "npc_headcrab_black",
-	"npc_headcrab_fast", "npc_manhack", "npc_zombie_torso",
+	"npc_headcrab_fast", "npc_manhack", "npc_zombie_torso", "npc_grenade_frag"
 }
 
 --- Sets up the various NPC lists for the rest of the gamemode to use
