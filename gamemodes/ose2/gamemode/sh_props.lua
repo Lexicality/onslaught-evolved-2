@@ -74,12 +74,12 @@ function GM:SetupProps()
 		Name = "#ose.props.blast_door"
 	}
 	props["models/props_wasteland/wood_fence01a.mdl"] = {
-		SpawnAngles = Angle(0, 90, 0),
+		SpawnAngle = Angle(0, 90, 0),
 		ModelGroup = GROUP_WALLS,
 		Name = "#ose.props.fence"
 	}
 	props["models/props_wasteland/wood_fence02a.mdl"] = {
-		SpawnAngles = Angle(0, 90, 0),
+		SpawnAngle = Angle(0, 90, 0),
 		ModelGroup = GROUP_WALLS,
 		Name = "#ose.props.fence"
 	}
@@ -88,7 +88,7 @@ function GM:SetupProps()
 		Name = "#ose.props.vending_machine_door"
 	}
 	props["models/props_c17/shelfunit01a.mdl"] = {
-		SpawnAngles = Angle(0, -90, 0),
+		SpawnAngle = Angle(0, -90, 0),
 		ModelGroup = GROUP_WALLS,
 		Name = "#ose.props.shelf"
 	}
@@ -149,7 +149,7 @@ function GM:SetupProps()
 		Name = "#ose.props.rack"
 	}
 	props["models/props_junk/iBeam01a.mdl"] = {
-		SpawnAngles = Angle(0, -90, 0),
+		SpawnAngle = Angle(0, -90, 0),
 		ModelGroup = GROUP_BEAMS,
 		Name = "#ose.props.i_beam"
 	}
@@ -158,7 +158,7 @@ function GM:SetupProps()
 	-- Other
 	--
 	props["models/props_c17/display_cooler01a.mdl"] = {
-		SpawnAngles = Angle(0, -90, 0),
+		SpawnAngle = Angle(0, -90, 0),
 		ModelGroup = GROUP_OTHER,
 		Name = "#ose.props.rack"
 	}
@@ -167,7 +167,7 @@ function GM:SetupProps()
 		Name = "#ose.props.pipe"
 	}
 	props["models/props_combine/combine_barricade_short01a.mdl"] = {
-		SpawnAngles = Angle(0, 180, 0),
+		SpawnAngle = Angle(0, 180, 0),
 		ModelGroup = GROUP_OTHER,
 		Name = "#ose.props.combine_barricade"
 	}

@@ -83,7 +83,7 @@ local function ccOSESpawn(ply, cmd, args)
 	--- @type OSEPropDefinition
 	local propData = list.Get("OSEProps")[model]
 
-	local ang = Angle(0, ply:EyeAngles().yaw + 80, 0)
+	local ang = Angle(0, ply:EyeAngles().yaw + 180, 0)
 	if propData.SpawnAngle then
 		ang = ang + propData.SpawnAngle
 	end
