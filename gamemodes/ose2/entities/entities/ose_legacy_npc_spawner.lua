@@ -17,6 +17,10 @@
 
 local manhackCvar = GetConVar("ose_max_manhacks")
 
+--- @class SENT_OSESpawner : SENT_OSEBasePoint
+local ENT = ENT --[[@as SENT_OSESpawner]]
+--- @type SENT_OSEBasePoint
+local BaseClass
 DEFINE_BASECLASS("base_osepoint");
 
 local SPAWN_RADIUS = 200

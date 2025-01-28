@@ -14,6 +14,11 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+
+--- @class SENT_OSEGameRules : SENT_OSEBasePoint
+local ENT = ENT --[[@as SENT_OSEGameRules]]
+--- @type SENT_OSEBasePoint
+local BaseClass
 DEFINE_BASECLASS("base_osepoint");
 
 --- @type boolean

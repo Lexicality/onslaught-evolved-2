@@ -15,6 +15,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+--- @class SENT_OSEGameTime : SENT_OSEBasePoint
+local ENT = ENT --[[@as SENT_OSEGameTime]]
+--- @type SENT_OSEBasePoint
+local BaseClass
 DEFINE_BASECLASS("base_osepoint");
 
 function ENT:Initialize()

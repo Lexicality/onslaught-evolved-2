@@ -15,6 +15,11 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+--- @class OSEEFuncNobuild : SENT
+local ENT = ENT --[[@as OSEEFuncNobuild]]
+--- @type SENT
+local BaseClass
+
 DEFINE_BASECLASS("base_brush")
 
 ENT.Type = "brush"

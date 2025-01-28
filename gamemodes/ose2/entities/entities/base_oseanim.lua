@@ -14,8 +14,13 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+
 AddCSLuaFile()
 
+--- @class SENT_OSEBaseAnim : SENT
+local ENT = ENT --[[@as SENT_OSEBaseAnim]]
+--- @type SENT
+local BaseClass
 DEFINE_BASECLASS("base_anim")
 
 function ENT:AcceptInput(name, activator, caller, value)

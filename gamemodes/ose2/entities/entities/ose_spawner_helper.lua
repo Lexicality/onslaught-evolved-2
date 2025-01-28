@@ -15,6 +15,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+--- @class SENT_OSESpawnerHelper : SENT_OSEBasePoint
+local ENT = ENT --[[@as SENT_OSESpawnerHelper]]
+--- @type SENT_OSEBasePoint
+local BaseClass
 DEFINE_BASECLASS("base_osepoint");
 
 --- @type fun(input: integer, spawners: integer): integer

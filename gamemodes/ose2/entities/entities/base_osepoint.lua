@@ -14,6 +14,11 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+
+--- @class SENT_OSEBasePoint : SENT
+local ENT = ENT --[[@as SENT_OSEBasePoint]]
+--- @type SENT
+local BaseClass
 DEFINE_BASECLASS("base_point")
 
 function ENT:AcceptInput(name, activator, caller, value)

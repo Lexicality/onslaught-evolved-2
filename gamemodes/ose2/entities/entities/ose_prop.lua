@@ -18,6 +18,10 @@ local cvarFlammible = GetConVar("ose_flammable_props")
 
 AddCSLuaFile()
 
+--- @class SENT_OSEProp : SENT_OSEBaseAnim
+local ENT = ENT --[[@as SENT_OSEProp]]
+--- @type SENT_OSEBaseAnim
+local BaseClass
 DEFINE_BASECLASS("base_oseanim")
 
 function ENT:SetupDataTables()

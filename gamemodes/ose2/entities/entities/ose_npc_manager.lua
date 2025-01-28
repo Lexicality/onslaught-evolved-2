@@ -20,6 +20,10 @@ local hunterCvar = GetConVar("ose_max_hunters")
 local hunterScaleCvar = GetConVar("ose_hunters_scale")
 local manhackCvar = GetConVar("ose_max_manhacks")
 
+--- @class SENT_OSENPCManager : SENT_OSEBasePoint
+local ENT = ENT --[[@as SENT_OSENPCManager]]
+--- @type SENT_OSEBasePoint
+local BaseClass
 DEFINE_BASECLASS("base_osepoint");
 
 -- This list is duplicated for performance reasons, but also because I love
