@@ -62,6 +62,76 @@ local function isPropIntersectingPlayer(ent)
 	return false
 end
 
+--- Generic(ish) entity spawning code
+--- This started life as DoPlayerEntitySpawn from sandbox and was then mucked
+--- about with a bunch
+--- @param ply GPlayer
+--- @param class string
+--- @param model? string
+--- @param spawnAngle? GAngle
+--- @return GEntity
+local function doSpawn(ply, class, model, spawnAngle)
+	local start = ply:GetShootPos()
+	local aim = ply:GetAimVector()
+
+	--- @type STrace
+	local trace = {}
+	trace.start = start
+	trace.endpos = start + (aim * 1000)
+	trace.filter = ply
+
+	local tr = util.TraceLine(trace)
+	--- @cast tr STraceResult
+	if not tr.Hit then return NULL end
+
+	for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 10)) do
+		--- @cast ent GEntity
+		if ent:GetClass() == "func_nobuild" then
+			ply:PrintMessage(HUD_PRINTTALK, "Can't park there mate")
+			return NULL
+		end
+	end
+
+	local ang = Angle(0, ply:EyeAngles().yaw + 180, 0)
+	if spawnAngle then
+		ang = ang + spawnAngle
+	end
+
+	local ent = ents.Create(class)
+	if not IsValid(ent) then
+		return ent
+	end
+
+	if model then
+		ent:SetModel(model)
+	end
+	ent:SetPos(tr.HitPos)
+	ent:SetAngles(ang)
+	ent:Spawn()
+	ent:Activate()
+	if ent["OSEProp"] then
+		--- @cast ent SENT_OSEProp
+		ent:SetPlayer(ply)
+	end
+
+	-- Attempt to move the object so it sits flush
+	local vFlushPoint = tr.HitPos - (tr.HitNormal * 512)
+	vFlushPoint = ent:NearestPoint(vFlushPoint)
+	vFlushPoint = ent:GetPos() - vFlushPoint
+	vFlushPoint = tr.HitPos + vFlushPoint
+	ent:SetPos(vFlushPoint)
+
+	TryFixPropPosition(ply, ent, tr.HitPos)
+
+	if isPropIntersectingPlayer(ent) then
+		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+	end
+
+	ent:SetSpawnEffect(true)
+
+	return ent
+end
+
 ---@param ply GPlayer
 ---@param cmd string
 ---@param args string[]
@@ -79,62 +149,15 @@ local function ccOSESpawn(ply, cmd, args)
 		return
 	end
 
-	-- This is roughly copy/pasted from sandbox and then mucked about with
-
-	local start = ply:GetShootPos()
-	local aim = ply:GetAimVector()
-
-	--- @type STrace
-	local trace = {}
-	trace.start = start
-	trace.endpos = start + (aim * 1000)
-	trace.filter = ply
-
-	local tr = util.TraceLine(trace)
-	--- @cast tr STraceResult
-	if not tr.Hit then return end
-
-	for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 10)) do
-		--- @cast ent GEntity
-		if ent:GetClass() == "func_nobuild" then
-			ply:PrintMessage(HUD_PRINTTALK, "Can't park there mate")
-			return
-		end
-	end
-
 	--- @type OSEPropDefinition
 	local propData = list.Get("OSEProps")[model]
 
-	local ang = Angle(0, ply:EyeAngles().yaw + 180, 0)
-	if propData.SpawnAngle then
-		ang = ang + propData.SpawnAngle
-	end
-
-	local ent = ents.Create("ose_prop")
-	--- @cast ent SENT_OSEProp
-	ent:SetModel(model)
-	ent:SetPos(tr.HitPos)
-	ent:SetAngles(ang)
-	ent:Spawn()
-	ent:Activate()
-	ent:SetPlayer(ply)
-
-	-- Attempt to move the object so it sits flush
-	local vFlushPoint = tr.HitPos - (tr.HitNormal * 512)
-	vFlushPoint = ent:NearestPoint(vFlushPoint)
-	vFlushPoint = ent:GetPos() - vFlushPoint
-	vFlushPoint = tr.HitPos + vFlushPoint
-	ent:SetPos(vFlushPoint)
-
-	TryFixPropPosition(ply, ent, tr.HitPos)
-
-	if isPropIntersectingPlayer(ent) then
-		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+	local ent = doSpawn(ply, "ose_prop", model, propData.SpawnAngle)
+	if not IsValid(ent) then
+		return
 	end
 
 	hook.Run("PlayerSpawnedProp", ply, model, ent)
-
-	ent:SetSpawnEffect(true)
 
 	undo.Create("Prop")
 	undo.SetPlayer(ply)
