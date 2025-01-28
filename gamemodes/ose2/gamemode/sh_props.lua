@@ -175,7 +175,7 @@ function GM:SetupProps()
 	}
 	props["models/props_junk/TrashDumpster02b.mdl"] = {
 		ModelGroup = GROUP_OTHER,
-		Name = "#ose.props.dumpster"
+		Name = "#ose.props.dumpster_lid"
 	}
 	props["models/props_c17/concrete_barrier001a.mdl"] = {
 		ModelGroup = GROUP_OTHER,
