@@ -55,6 +55,13 @@ _G.g_SpawnMenu = nil
 --- @field Icon? string
 --- @field Tooltip? string
 
+--- @class OSEEntityDefinition
+--- @field Name string The name to display to clients (should probably be #class)
+--- @field DisplayModel string The model to display in the spawn menu
+--- @field DisplaySkin? number The skin to apply to that model (if any)
+--- @field SpawnAngle? GAngle Spawn angles override
+--- @field AllowInBattle boolean If players can spawn this mid-combat
+
 --- @class NPCListDefinition
 --- @field Class string
 --- @field Health? integer
@@ -88,6 +95,7 @@ function ENT:SetNetworkKeyValue(key, value) end
 
 --- @class GEntity
 --- @field _oseNPC? boolean @True if this entity is a NPC that was created by an onslaught spawner
+--- @field _osePlayer? GPlayer @The player who owns this entity (if any)
 
 --- @class GPlayer
 --- @field NextSpawnTime integer @When the base gamemode should next allow the player to spawn

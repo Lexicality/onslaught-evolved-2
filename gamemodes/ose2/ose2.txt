@@ -63,9 +63,19 @@
 		6 {
 			"name" "ose_maxprops"
 			"text" "max_props"
-			"help" "Minimum props per player"
+			"help" "Maximum props per player"
 			"type" "Numeric"
 			"default" "25"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
+		19 {
+			"name" "ose_maxmines"
+			"text" "ose.convar.maxmines"
+			"help" "Maximum mines a player can spawn"
+			"type" "Numeric"
+			"default" "10"
 			"replicate" "1"
 			"singleplayer" "1"
 		}

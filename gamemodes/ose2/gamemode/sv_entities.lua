@@ -148,6 +148,17 @@ function GM:EntityTakeDamage(target, dmg)
 		self.m_DamageScale = math.sqrt(player.GetCount()) + 0.01
 	end
 
+	-- mines, turrets etc
+	local attacker = dmg:GetAttacker()
+	if IsValid(attacker) and not attacker:IsPlayer() and IsValid(attacker._osePlayer) then
+		-- Normally the `combine_mine` does the damage using an `env_explosion`
+		-- but we'd like the player to do the damage using the mine
+		if attacker:GetClass() == "combine_mine" then
+			dmg:SetInflictor(attacker)
+		end
+		dmg:SetAttacker(attacker._osePlayer)
+	end
+
 	local class = target:GetClass()
 	if target:IsNPC() then
 		-- NPCs take less damage the more players there are

@@ -16,6 +16,9 @@
 --]]
 include("cl_propsheet.lua")
 
+--- @class OSEPropDefinition2 : OSEPropDefinition
+--- @field Model string
+
 --- @class OSEPropMenu : DPropertySheet
 local PANEL = {}
 
@@ -32,9 +35,17 @@ function PANEL:Init()
 		self:AddSheet(group.Name, groupPanel, group.Icon, nil, nil, group.Tooltip)
 		groups[i] = groupPanel
 	end
+	-- Provide consistent sorting for props
+	--- @type OSEPropDefinition2[]
+	local props = {}
 	for model, prop in pairs(list.Get("OSEProps")) do
-		--- @cast model string
-		--- @cast prop OSEPropDefinition
+		prop["Model"] = model
+		props[#props + 1] = prop
+	end
+	table.SortByMember(props, "Name", true)
+
+	for _, prop in ipairs(props) do
+		local model = prop.Model
 		allProps:AddProp(model, prop)
 		local groupPanel = groups[prop.ModelGroup]
 		if groupPanel then

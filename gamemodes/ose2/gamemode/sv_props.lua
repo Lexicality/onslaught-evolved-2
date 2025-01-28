@@ -169,10 +169,46 @@ end
 concommand.Add("ose_spawn", ccOSESpawn)
 
 ---@param ply GPlayer
+---@param cmd string
+---@param args string[]
+local function ccOSESpawnEnt(ply, cmd, args)
+	local class = args[1]
+	if not list.HasEntry("OSEEntities", class) then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong")
+		return
+	elseif not IsValid(ply) then
+		print("The server can't spawn things")
+		return
+	end
+	--- @type OSEEntityDefinition
+	local entData = list.Get("OSEEntities")[class]
+
+	if not gamemode.Call("PlayerSpawnEntity", ply, class, entData) then
+		-- no need to notify the player, the hook will do that
+		return
+	end
+
+	local ent = doSpawn(ply, class, nil, entData.SpawnAngle)
+	if not IsValid(ent) then
+		return
+	end
+
+	hook.Run("PlayerSpawnedEntity", ply, class, ent, entData)
+
+	undo.Create(entData.Name)
+	undo.SetPlayer(ply)
+	undo.AddEntity(ent)
+	undo.Finish()
+
+	ply:AddCleanup(class .. "s", ent)
+end
+concommand.Add("ose_spawnent", ccOSESpawnEnt)
+
+---@param ply GPlayer
 ---@param model string
 ---@return boolean
 function GM:PlayerSpawnProp(ply, model)
-	-- TODO player prop limit goes here
 	return self.m_RoundPhase == ROUND_PHASE_BUILD and ply:CheckLimit("props")
 end
 
@@ -181,6 +217,23 @@ end
 ---@param ent GEntity
 function GM:PlayerSpawnedProp(ply, model, ent)
 	ply:AddCount("props", ent)
+end
+
+---@param ply GPlayer
+---@param class string
+---@param entData OSEEntityDefinition
+---@return boolean
+function GM:PlayerSpawnEntity(ply, class, entData)
+	-- TODO: Class-restricted ents
+	return (self.m_RoundPhase == ROUND_PHASE_BUILD or entData.AllowInBattle) and ply:CheckLimit(class)
+end
+
+---@param ply GPlayer
+---@param class string
+---@param ent GEntity
+---@param entData OSEEntityDefinition
+function GM:PlayerSpawnedEntity(ply, class, ent, entData)
+	ply:AddCount(class, ent)
 end
 
 function GM:PhysgunPickup(ply, ent)

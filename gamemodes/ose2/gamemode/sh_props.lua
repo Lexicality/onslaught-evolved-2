@@ -17,6 +17,7 @@
 AddCSLuaFile()
 
 cleanup.Register("props")
+cleanup.Register("ose_mines")
 
 function GM:SetupProps()
 	--- @type OSEPropGroupDefinition[]
@@ -220,5 +221,14 @@ function GM:SetupProps()
 	props["models/props_wasteland/prison_bedframe001b.mdl"] = {
 		ModelGroup = GROUP_JUNK,
 		Name = "#ose.props.bedframe"
+	}
+
+	--- @type {[string]: OSEEntityDefinition}
+	local entities = list.GetForEdit("OSEEntities")
+	entities["ose_mine"] = {
+		Name = "#ose_mine",
+		DisplayModel = "models/props_combine/combine_mine01.mdl",
+		DisplaySkin = 1,
+		AllowInBattle = true,
 	}
 end

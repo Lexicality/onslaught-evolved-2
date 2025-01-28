@@ -18,12 +18,17 @@ AddCSLuaFile()
 
 include("sandbox/gamemode/player_extension.lua")
 
+local LIMIT_TRANSLATIONS = {
+	ose_mine = "mines",
+}
+
 --- @type GPlayer
 local plyMeta = FindMetaTable("Player")
 
 -- gotta override `CheckLimit` to make it more onslaughty
 function plyMeta:CheckLimit(limitName)
-	local c = cvars.Number("ose_max" .. limitName, 0)
+	local cvarName = LIMIT_TRANSLATIONS[limitName] or limitName
+	local c = cvars.Number("ose_max" .. cvarName, 0)
 	local count = self:GetCount(limitName)
 
 	local ret = hook.Run("PlayerCheckLimit", self, limitName, count, c)
