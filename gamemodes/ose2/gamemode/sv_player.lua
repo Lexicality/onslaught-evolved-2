@@ -21,8 +21,6 @@ local noclipCvar = GetConVar("ose_build_noclip")
 local spawnBaseCvar = GetConVar("ose_spawn_time_base")
 local spawnAddCvar = GetConVar("ose_spawn_time_add")
 
----@param ply GPlayer
----@param desiredState boolean
 function GM:PlayerNoClip(ply, desiredState)
 	-- Players can always un-noclip
 	if not desiredState then
@@ -36,9 +34,6 @@ function GM:PlayerNoClip(ply, desiredState)
 	return ply:IsAdmin() or noclipCvar:GetBool()
 end
 
----@param ply GPlayer
----@param attacker GEntity
----@param dmg GCTakeDamageInfo
 function GM:PlayerDeath(ply, attacker, dmg)
 	BaseClass.PlayerDeath(self, ply, attacker, dmg)
 
@@ -48,8 +43,6 @@ function GM:PlayerDeath(ply, attacker, dmg)
 	end
 end
 
----@param ply GPlayer
----@param isTransiton boolean
 function GM:PlayerInitialSpawn(ply, isTransiton)
 	BaseClass.PlayerInitialSpawn(self, ply, isTransiton)
 

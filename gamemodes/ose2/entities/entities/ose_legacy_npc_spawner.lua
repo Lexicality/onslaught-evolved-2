@@ -244,11 +244,6 @@ function ENT:KeyValue(key, value)
 	end
 end
 
----@param name string
----@param activator GEntity
----@param caller GEntity
----@param value string | nil
----@return boolean
 function ENT:AcceptInput(name, activator, caller, value)
 	if BaseClass.AddOutputFromAcceptInput(self, name, value) then
 		return true

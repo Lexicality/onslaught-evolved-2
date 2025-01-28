@@ -63,11 +63,6 @@ function ENT:_OnBuildPhase(roundNum)
 	self:TriggerOutput("OnBuild", self, tostring(roundNum))
 end
 
----@param name string
----@param activator GEntity
----@param caller GEntity
----@param value string | nil
----@return boolean
 function ENT:AcceptInput(name, activator, caller, value)
 	if BaseClass.AddOutputFromAcceptInput(self, name, value) then
 		return true
@@ -76,8 +71,6 @@ function ENT:AcceptInput(name, activator, caller, value)
 	return false
 end
 
----@param key string
----@param value string
 function ENT:KeyValue(key, value)
 	BaseClass.KeyValue(self, key, value)
 
