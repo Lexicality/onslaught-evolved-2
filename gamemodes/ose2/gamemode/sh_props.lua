@@ -16,6 +16,8 @@
 --]]
 AddCSLuaFile()
 
+cleanup.Register("props")
+
 function GM:SetupProps()
 	--- @type OSEPropGroupDefinition[]
 	local groups = list.GetForEdit("OSEGroups")

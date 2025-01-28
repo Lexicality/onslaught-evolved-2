@@ -165,10 +165,7 @@ local function ccOSESpawn(ply, cmd, args)
 	undo.Finish(propData.Name)
 
 	ply:AddCleanup("props", ent)
-
-	cleanup.Add(ply, "props", ent)
 end
-
 concommand.Add("ose_spawn", ccOSESpawn)
 
 ---@param ply GPlayer
