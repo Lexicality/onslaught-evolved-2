@@ -87,7 +87,7 @@ ENT.m_tOutputs = nil
 function ENT:SetNetworkKeyValue(key, value) end
 
 --- @class GEntity
---- @field _oseNPC boolean @True if this entity is a NPC that was created by an onslaught spawner
+--- @field _oseNPC? boolean @True if this entity is a NPC that was created by an onslaught spawner
 
 --- @class GPlayer
 --- @field NextSpawnTime integer @When the base gamemode should next allow the player to spawn
