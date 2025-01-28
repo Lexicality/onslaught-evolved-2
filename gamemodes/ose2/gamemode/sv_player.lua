@@ -38,7 +38,7 @@ function GM:PlayerDeath(ply, attacker, dmg)
 	BaseClass.PlayerDeath(self, ply, attacker, dmg)
 
 	if self.m_RoundPhase == ROUND_PHASE_BATTLE then
-		ply["NextSpawnTime"] = CurTime() + spawnBaseCvar:GetInt() +
+		ply.NextSpawnTime = CurTime() + spawnBaseCvar:GetInt() +
 			(spawnAddCvar:GetInt() * player.GetCount())
 	end
 end

@@ -100,7 +100,7 @@ function ENT:_OnBuildPhase(roundNum)
 	local generatedNPCs = list.GetForEdit("OSEGenerated")
 	for _, ent in ents.Iterator() do
 		--- @cast ent GEntity
-		if ent["_oseNPC"] or generatedNPCs[ent:GetClass()] then
+		if ent._oseNPC or generatedNPCs[ent:GetClass()] then
 			-- (most) NPCs don't make death noises if they think they're dissolving
 			ent:AddFlags(FL_DISSOLVING)
 			-- It might be possible to make a lua effect for this but we can't
@@ -123,7 +123,7 @@ end
 
 ---@param npc GNPC
 function ENT:_OnNPCSpawned(npc)
-	npc["_oseNPC"] = true
+	npc._oseNPC = true
 
 	-- Would it be better to use custom collisions? Probably not.
 	npc:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
@@ -159,7 +159,7 @@ end
 ---@param attacker GEntity
 ---@param inflictor GEntity
 function ENT:_OnNPCKilled(npc, attacker, inflictor)
-	if npc["_oseNPC"] then
+	if npc._oseNPC then
 		self.m_NPCCount = self.m_NPCCount - 1
 		self:CheckNPCCount()
 	end

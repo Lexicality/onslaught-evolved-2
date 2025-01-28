@@ -66,3 +66,28 @@ _G.g_SpawnMenu = nil
 --- @field Skin? integer
 --- @field SpawnFlags? integer
 --- @field TotalSpawnFlags? integer
+
+--- @class EntityOutputDefiniton
+--- @field entities string
+--- @field input string
+--- @field param string
+--- @field delay number
+--- @field time integer
+
+--------------------------
+-- Missing Entity stuff --
+--------------------------
+
+--- @type {[string]: EntityOutputDefiniton[]}?
+ENT.m_tOutputs = nil
+
+--- @param key string
+--- @param value string
+--- @return boolean
+function ENT:SetNetworkKeyValue(key, value) end
+
+--- @class GEntity
+--- @field _oseNPC boolean @True if this entity is a NPC that was created by an onslaught spawner
+
+--- @class GPlayer
+--- @field NextSpawnTime integer @When the base gamemode should next allow the player to spawn

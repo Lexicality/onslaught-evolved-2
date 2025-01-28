@@ -111,13 +111,13 @@ local function ccOSESpawn(ply, cmd, args)
 	end
 
 	local ent = ents.Create("ose_prop")
+	--- @cast ent SENT_OSEProp
 	ent:SetModel(model)
 	ent:SetPos(tr.HitPos)
 	ent:SetAngles(ang)
 	ent:Spawn()
 	ent:Activate()
-
-	ent["SetPlayer"](ent, ply)
+	ent:SetPlayer(ply)
 
 	-- Attempt to move the object so it sits flush
 	local vFlushPoint = tr.HitPos - (tr.HitNormal * 512)
