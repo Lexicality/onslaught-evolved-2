@@ -30,6 +30,9 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Entity", 0, "Player")
 end
 
+--- If this is a prop or prop-derived entity
+ENT.OSEProp = true
+
 if CLIENT then return end
 
 --- @type GEntity

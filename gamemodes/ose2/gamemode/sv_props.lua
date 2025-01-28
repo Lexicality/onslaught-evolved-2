@@ -166,17 +166,17 @@ end
 function GM:PhysgunPickup(ply, ent)
 	-- TODO: teams? prop protection?
 
-	return not ent:CreatedByMap()
+	return not ent:CreatedByMap() and ent["OSEProp"]
 end
 
 function GM:OnPhysgunPickup(ply, ent)
-	if ent:GetClass() == "ose_prop" then
+	if ent["OSEProp"] then
 		ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 	end
 end
 
 function GM:PhysgunDrop(ply, ent)
-	if ent:GetClass() == "ose_prop" then
+	if ent["OSEProp"] then
 		if not isPropIntersectingPlayer(ent) then
 			ent:SetCollisionGroup(COLLISION_GROUP_NONE)
 		end
