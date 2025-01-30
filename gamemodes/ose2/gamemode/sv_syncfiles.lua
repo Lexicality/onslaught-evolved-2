@@ -17,6 +17,7 @@
 
 AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_effects.lua")
+AddCSLuaFile("ui/cl_entityicon.lua")
 AddCSLuaFile("ui/cl_propicon.lua")
 AddCSLuaFile("ui/cl_propmenu.lua")
 AddCSLuaFile("ui/cl_propsheet.lua")

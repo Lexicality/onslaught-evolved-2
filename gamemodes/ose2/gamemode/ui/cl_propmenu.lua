@@ -19,6 +19,9 @@ include("cl_propsheet.lua")
 --- @class OSEPropDefinition2 : OSEPropDefinition
 --- @field Model string
 
+--- @class OSEEntityDefinition2 : OSEEntityDefinition
+--- @field Class string
+
 --- @class OSEPropMenu : DPropertySheet
 local PANEL = {}
 
@@ -50,6 +53,28 @@ function PANEL:Init()
 		local groupPanel = groups[prop.ModelGroup]
 		if groupPanel then
 			groupPanel:AddProp(model, prop)
+		end
+	end
+
+	--- @type OSEEntityDefinition2[]
+	local entities = {}
+	for model, ent in pairs(list.Get("OSEEntities")) do
+		ent["Class"] = model
+		entities[#entities + 1] = ent
+	end
+	table.SortByMember(entities, "Name", true)
+
+	for _, ent in ipairs(entities) do
+		local class = ent.Class
+		-- TODO: Should entities be in the "all" tab? Going with "no" to start off with
+		-- allEnts:AddEnt(class, ent)
+		local groupPanel = groups[ent.ModelGroup]
+		if groupPanel then
+			groupPanel:AddEntity(class, ent)
+		else
+			ErrorNoHalt("Entity ", class, " has invalid group '", ent.ModelGroup, "' set!")
+			-- Gotta put it somewhere I guess
+			allProps:AddEntity(class, ent)
 		end
 	end
 end

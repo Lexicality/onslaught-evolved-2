@@ -61,6 +61,7 @@ _G.g_SpawnMenu = nil
 --- @field DisplaySkin? number The skin to apply to that model (if any)
 --- @field SpawnAngle? GAngle Spawn angles override
 --- @field AllowInBattle boolean If players can spawn this mid-combat
+--- @field ModelGroup number
 
 --- @class NPCListDefinition
 --- @field Class string

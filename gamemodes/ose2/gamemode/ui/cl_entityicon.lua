@@ -14,28 +14,24 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
-include("cl_entityicon.lua")
-include("cl_propicon.lua")
 
---- @class OSEPropSheet : DTileLayout
+--- @class OSEEntityIcon : OSEPropIcon
+--- @field m_Class string
 local PANEL = {}
-
---- @param model string
---- @param prop OSEPropDefinition
-function PANEL:AddProp(model, prop)
-	local icon = vgui.Create("OSEPropIcon", self)
-	--- @cast icon OSEPropIcon
-	icon:Setup(model, prop)
-	self:Add(icon)
-end
 
 --- @param class string
 --- @param ent OSEEntityDefinition
-function PANEL:AddEntity(class, ent)
-	local icon = vgui.Create("OSEEntityIcon", self)
-	--- @cast icon OSEEntityIcon
-	icon:Setup(class, ent)
-	self:Add(icon)
+function PANEL:Setup(class, ent)
+	self.m_Class = class
+	self:SetModel(ent.DisplayModel, ent.DisplaySkin)
+	-- TODO: calculate cost
+	self:SetTooltip(ent.Name)
+	self:InvalidateLayout(true)
 end
 
-vgui.Register("OSEPropSheet", PANEL, "DTileLayout")
+function PANEL:DoClick()
+	surface.PlaySound("ui/buttonclickrelease.wav")
+	RunConsoleCommand("ose_spawnent", self.m_Class)
+end
+
+vgui.Register("OSEEntityIcon", PANEL, "OSEPropIcon")

@@ -27,7 +27,7 @@ function GM:SetupProps()
 	local GROUP_BEAMS = 3
 	local GROUP_OTHER = 4
 	local GROUP_JUNK = 5
-	-- local GROUP_SPECIAL = 6
+	local GROUP_SPECIAL = 6
 	groups[GROUP_WALLS] = {
 		Name = "#ose.group.walls",
 		Icon = "icon16/door.png",
@@ -48,7 +48,11 @@ function GM:SetupProps()
 		Name = "#ose.groups.junk",
 		Icon = "icon16/bin.png",
 	}
-	-- groups[GROUP_SPECIAL] = "#ose.groups.special"
+	groups[GROUP_SPECIAL] = {
+		Name = "#ose.groups.special",
+		Icon = "icon16/wand.png",
+	}
+
 
 	--- @type {[string]: OSEPropDefinition}
 	local props = list.GetForEdit("OSEProps")
@@ -230,5 +234,6 @@ function GM:SetupProps()
 		DisplayModel = "models/props_combine/combine_mine01.mdl",
 		DisplaySkin = 1,
 		AllowInBattle = true,
+		ModelGroup = GROUP_SPECIAL,
 	}
 end

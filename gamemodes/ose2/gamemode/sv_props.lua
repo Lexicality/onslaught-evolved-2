@@ -175,7 +175,7 @@ local function ccOSESpawnEnt(ply, cmd, args)
 	local class = args[1]
 	if not list.HasEntry("OSEEntities", class) then
 		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong")
+		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong (" .. class .. ")")
 		return
 	elseif not IsValid(ply) then
 		print("The server can't spawn things")
