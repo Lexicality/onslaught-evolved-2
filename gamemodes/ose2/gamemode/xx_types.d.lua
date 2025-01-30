@@ -82,6 +82,22 @@ _G.g_SpawnMenu = nil
 --- @field delay number
 --- @field time integer
 
+--- @class ToolMenuOptionDefinition
+--- @field ItemName string
+--- @field Text string
+--- @field Command string
+--- @field CPanelFunction? function
+
+--- @class ToolTabCategoryDefinition : {[integer]: ToolMenuOptionDefinition}
+--- @field ItemName string
+--- @field Text string
+
+--- @class ToolTabDefinition
+--- @field Icon? string
+--- @field Label string
+--- @field Name string
+--- @field Items ToolTabCategoryDefinition[]
+
 --------------------------
 -- Missing Entity stuff --
 --------------------------

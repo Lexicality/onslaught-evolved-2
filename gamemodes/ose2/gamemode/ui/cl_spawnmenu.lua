@@ -196,6 +196,11 @@ function PANEL:ForceClose()
 	self:Close(true)
 end
 
+-- argh
+function PANEL:GetToolMenu()
+	return self.m_SideMenu
+end
+
 -- Note to self: This derives from `EditablePanel` rather than `Panel` because
 -- it's the root element in the spawn menu hierarchy and there needs to be an
 -- `EditablePanel` in there somewhere. Normally this comes from a `DFrame` but
@@ -208,13 +213,21 @@ function GM:SetupSpawnMenu()
 		g_SpawnMenu = nil
 	end
 
-	-- TODO: Tool chaos goes here
+	-- Sandbox tool setup
+	hook.Call("PreReloadToolsMenu", self)
+	spawnmenu.ClearToolMenus()
+	hook.Call("AddGamemodeToolMenuTabs", self)
+	hook.Call("AddToolMenuTabs", self)
+	hook.Call("AddGamemodeToolMenuCategories", self)
+	hook.Call("AddToolMenuCategories", self)
+	hook.Call("PopulateToolMenu", self)
 
 	g_SpawnMenu = vgui.Create("OSESpawnMenu")
 	if IsValid(g_SpawnMenu) then
 		g_SpawnMenu:SetVisible(false)
 		hook.Call("SpawnMenuCreated", self, g_SpawnMenu)
 	end
+	hook.Call("PostReloadToolsMenu", self)
 end
 
 concommand.Add("spawnmenu_reload", function() GAMEMODE:SetupSpawnMenu() end)
@@ -241,4 +254,36 @@ end
 
 function GM:SpawnMenuOpen()
 	return self.m_RoundPhase == ROUND_PHASE_BUILD
+end
+
+function GM:AddGamemodeToolMenuTabs()
+	-- I'm renaming Utilities to Settings here because utilities really doesn't
+	-- make sense in this context
+	spawnmenu.AddToolTab("Utilities", "#ose.spawnmenu.tab.settings", "icon16/computer_edit.png")
+end
+
+local SETTINGS_TAB = "Utilities"
+function GM:PopulateToolMenu()
+	local tools = spawnmenu.GetTools()
+	--- @cast tools ToolTabDefinition[]
+	for _, tab in ipairs(tools) do
+		-- Make sure the settings tab doesn't include the sandbox settings
+		if tab.Name == SETTINGS_TAB then
+			local categories = {}
+			for i, category in ipairs(tab.Items) do
+				--- @type ToolTabCategoryDefinition
+				local items = {
+					ItemName = category.ItemName,
+					Text = category.Text,
+				}
+				for _, item in ipairs(category) do
+					if not item.ItemName:StartsWith("Sandbox") then
+						items[#items + 1] = item
+					end
+				end
+				categories[i] = items
+			end
+			tab.Items = categories
+		end
+	end
 end
