@@ -19,16 +19,10 @@ local cvarFlammible = GetConVar("ose_flammable_props")
 AddCSLuaFile()
 
 --- @class SENT_OSEProp : SENT_OSEBaseAnim
---- @field SetPlayer fun(self: SENT_OSEProp, player: GPlayer): nil @Sets the player who owns this prop
---- @field GetPlayer fun(self: SENT_OSEProp): GPlayer @Returns the player who owns the prop if there is one, NULL otherwise
 local ENT = ENT --[[@as SENT_OSEProp]]
 --- @type SENT_OSEBaseAnim
 local BaseClass
 DEFINE_BASECLASS("base_oseanim")
-
-function ENT:SetupDataTables()
-	self:NetworkVar("Entity", 0, "Player")
-end
 
 --- If this is a prop or prop-derived entity
 ENT.OSEProp = true

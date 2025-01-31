@@ -109,10 +109,7 @@ local function doSpawn(ply, class, model, spawnAngle)
 	ent:SetAngles(ang)
 	ent:Spawn()
 	ent:Activate()
-	if ent["OSEProp"] then
-		--- @cast ent SENT_OSEProp
-		ent:SetPlayer(ply)
-	end
+	ent:SetCreator(ply)
 
 	-- Attempt to move the object so it sits flush
 	local vFlushPoint = tr.HitPos - (tr.HitNormal * 512)

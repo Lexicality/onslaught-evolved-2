@@ -65,7 +65,7 @@ function ENT:_OnPrepPhase(roundNum)
 	mine:SetAngles(self:GetAngles())
 	self:SetParent(mine)
 	self:DeleteOnRemove(mine)
-	mine._osePlayer = self:GetPlayer()
+	mine:SetCreator(self:GetCreator())
 
 	mine:Spawn()
 	mine:Activate()

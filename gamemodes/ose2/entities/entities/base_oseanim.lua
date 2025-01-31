@@ -23,6 +23,13 @@ local ENT = ENT --[[@as SENT_OSEBaseAnim]]
 local BaseClass
 DEFINE_BASECLASS("base_anim")
 
+function ENT:SetupDataTables()
+	-- The wiki says it's not safe to use the NW2 vars on Lua entities so we're
+	-- gonna overwrite the Get/SetCreator methods in sh_entity_meta.lua here
+	-- with the rather more efficient DTVar system
+	self:NetworkVar("Entity", 0, "Creator")
+end
+
 function ENT:AcceptInput(name, activator, caller, value)
 	if BaseClass.AddOutputFromAcceptInput(self, name, value) then
 		return true

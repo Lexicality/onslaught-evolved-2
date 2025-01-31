@@ -17,26 +17,21 @@
 
 AddCSLuaFile()
 
-DeriveGamemode("base")
+--- @type GEntity
+local entMeta = FindMetaTable("Entity")
 
-GM.Name = "Onslaught: Evolved 2"
-GM.Author = "Lexi Robinson"
-GM.Email = "lexi@lexi.org.uk"
-GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
+function entMeta:SetCreator(ply)
+	-- Nominally I could get away with this:
+	-- self:SetDTEntity(31, ply)
+	-- But that runs the risk of causing chaos when running on other people's
+	-- servers with arbitrary whatever code interacting in strange ways
 
-GM.TeamBased = false
+	-- NOTE: The wiki says it's dangerous to run this on Lua entities, so check
+	-- `base_oseanim` for where I'm overriding this for all of OSE2's entities.
+	-- If you include your own entities, dealing with this is your problem.
+	self:SetNW2Entity("Creator", ply)
+end
 
-include("player_class/player_builder.lua")
-include("player_class/player_engineer.lua")
-include("player_class/player_pyro.lua")
-include("player_class/player_scout.lua")
-include("player_class/player_sniper.lua")
-include("player_class/player_soldier.lua")
--- include("player_class/player_support.lua")
-include("sh_props.lua")
-include("sh_entity_meta.lua")
-include("sh_player_meta.lua")
-
-ROUND_PHASE_BUILD = 0
-ROUND_PHASE_PREP = 1
-ROUND_PHASE_BATTLE = 2
+function entMeta:GetCreator()
+	return self:GetNW2Entity("Creator", NULL)
+end

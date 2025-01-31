@@ -150,13 +150,16 @@ function GM:EntityTakeDamage(target, dmg)
 
 	-- mines, turrets etc
 	local attacker = dmg:GetAttacker()
-	if IsValid(attacker) and not attacker:IsPlayer() and IsValid(attacker._osePlayer) then
-		-- Normally the `combine_mine` does the damage using an `env_explosion`
-		-- but we'd like the player to do the damage using the mine
-		if attacker:GetClass() == "combine_mine" then
-			dmg:SetInflictor(attacker)
+	if IsValid(attacker) and not attacker:IsPlayer() then
+		local ply = attacker:GetCreator()
+		if IsValid(ply) then
+			-- Normally the `combine_mine` does the damage using an `env_explosion`
+			-- but we'd like the player to do the damage using the mine
+			if attacker:GetClass() == "combine_mine" then
+				dmg:SetInflictor(attacker)
+			end
+			dmg:SetAttacker(ply)
 		end
-		dmg:SetAttacker(attacker._osePlayer)
 	end
 
 	local class = target:GetClass()
