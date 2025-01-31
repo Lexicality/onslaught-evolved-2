@@ -17,25 +17,25 @@
 
 AddCSLuaFile()
 
-DeriveGamemode("base")
+DEFINE_BASECLASS("player_default")
 
-GM.Name = "Onslaught: Evolved 2"
-GM.Author = "Lexi Robinson"
-GM.Email = "lexi@lexi.org.uk"
-GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
+--- @class OSEPlayerScout : GPlayerClass
+local PLAYER = {}
 
-GM.TeamBased = false
+PLAYER.DisplayName = "#ose.player.scout"
+-- Gotta go fast
+PLAYER.WalkSpeed = 650
+PLAYER.RunSpeed = 650
+PLAYER.JumpPower = 260
 
-include("player_class/player_builder.lua")
-include("player_class/player_engineer.lua")
-include("player_class/player_pyro.lua")
-include("player_class/player_scout.lua")
-include("player_class/player_sniper.lua")
-include("player_class/player_soldier.lua")
--- include("player_class/player_support.lua")
-include("sh_props.lua")
-include("sh_player_meta.lua")
 
-ROUND_PHASE_BUILD = 0
-ROUND_PHASE_PREP = 1
-ROUND_PHASE_BATTLE = 2
+function PLAYER:Loadout()
+	self.Player:RemoveAllAmmo()
+	self.Player:Give("weapon_crowbar")
+	self.Player:Give("weapon_pistol")
+	self.Player:GiveAmmo(144, "Pistol")
+	-- TODO Scattergun goes here
+	self.Player:SwitchToDefaultWeapon()
+end
+
+player_manager.RegisterClass("player_scout", PLAYER, "player_default")
