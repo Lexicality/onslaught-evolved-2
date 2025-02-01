@@ -17,9 +17,11 @@
 
 AddCSLuaFile()
 
-DEFINE_BASECLASS("player_default")
+--- @type OSEPlayerBase
+local BaseClass
+DEFINE_BASECLASS("player_osebase")
 
---- @class OSEPlayerSupport : GPlayerClass
+--- @class OSEPlayerSupport : OSEPlayerBase
 local PLAYER = {}
 
 PLAYER.DisplayName = "#ose.player.support"
@@ -43,4 +45,4 @@ function PLAYER:Loadout()
 	self.Player:SwitchToDefaultWeapon()
 end
 
-player_manager.RegisterClass("player_support", PLAYER, "player_default")
+player_manager.RegisterClass("player_support", PLAYER, "player_osebase")

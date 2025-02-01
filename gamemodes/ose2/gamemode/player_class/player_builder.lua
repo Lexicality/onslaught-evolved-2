@@ -16,9 +16,11 @@
 --]]
 AddCSLuaFile()
 
-DEFINE_BASECLASS("player_default")
+--- @type OSEPlayerBase
+local BaseClass
+DEFINE_BASECLASS("player_osebase")
 
---- @class OSEPlayerBuilder : GPlayerClass
+--- @class OSEPlayerBuilder : OSEPlayerBase
 local PLAYER = {}
 
 PLAYER.DisplayName = "#ose.player.builder"
@@ -28,4 +30,4 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_physgun")
 end
 
-player_manager.RegisterClass("player_builder", PLAYER, "player_default")
+player_manager.RegisterClass("player_builder", PLAYER, "player_osebase")

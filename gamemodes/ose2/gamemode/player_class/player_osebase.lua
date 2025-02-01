@@ -17,27 +17,11 @@
 
 AddCSLuaFile()
 
---- @type OSEPlayerBase
+--- @type GPlayerClass
 local BaseClass
-DEFINE_BASECLASS("player_osebase")
+DEFINE_BASECLASS("player_default")
 
---- @class OSEPlayerScout : OSEPlayerBase
+--- @class OSEPlayerBase : GPlayerClass
 local PLAYER = {}
 
-PLAYER.DisplayName = "#ose.player.scout"
--- Gotta go fast
-PLAYER.WalkSpeed = 650
-PLAYER.RunSpeed = 650
-PLAYER.JumpPower = 260
-
-
-function PLAYER:Loadout()
-	self.Player:RemoveAllAmmo()
-	self.Player:Give("weapon_crowbar")
-	self.Player:Give("weapon_pistol")
-	self.Player:GiveAmmo(144, "Pistol")
-	-- TODO Scattergun goes here
-	self.Player:SwitchToDefaultWeapon()
-end
-
-player_manager.RegisterClass("player_scout", PLAYER, "player_osebase")
+player_manager.RegisterClass("player_osebase", PLAYER, "player_default")
