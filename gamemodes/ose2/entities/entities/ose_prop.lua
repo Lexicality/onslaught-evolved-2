@@ -51,7 +51,7 @@ function ENT:Initialize()
 	-- hmm?
 	self:SetUnFreezable(true)
 
-	self.m_BaseHealth = self:CalculateBaseHealth()
+	self.m_BaseHealth = hook.Run("LookupPropHealth", self:GetCreator(), self:GetModel())
 	self:SetupHooks()
 
 	if self:GetName() == "" then
@@ -164,13 +164,6 @@ function ENT:OnRemove()
 	if IsValid(self.m_BullsEye) then
 		self.m_BullsEye:Remove()
 	end
-end
-
---- @return number
-function ENT:CalculateBaseHealth()
-	local mass = self:GetPhysicsObject():GetMass()
-	local size = self:BoundingRadius() / 50
-	return math.Clamp(mass * size, 200, 800)
 end
 
 ENT.m_CachedPlayerBonus = 1
