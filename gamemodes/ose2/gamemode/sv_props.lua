@@ -271,3 +271,10 @@ function GM:OnPhysgunReload(physgun, ply)
 	--- @cast target SENT_OSEProp
 	target:RemovePretty()
 end
+
+---@param ply GPlayer
+---@param undo SUndo
+function GM:CanUndo(ply, undo)
+	-- Don't let players accidentally destroy their own stuff mid-battle
+	return self.m_RoundPhase == ROUND_PHASE_BUILD
+end
