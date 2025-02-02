@@ -209,5 +209,15 @@
 			"singleplayer" "1"
 		}
 
+		21 {
+			"name" "ose_refund_multiplier"
+			"text" "ose.convar.refund_multiplier"
+			"help" "How much to multiply refund values by"
+			"type" "Numeric"
+			"default" "1"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
 	}
 }

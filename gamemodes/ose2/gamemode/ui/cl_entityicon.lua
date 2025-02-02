@@ -24,8 +24,10 @@ local PANEL = {}
 function PANEL:Setup(class, ent)
 	self.m_Class = class
 	self:SetModel(ent.DisplayModel, ent.DisplaySkin)
-	-- TODO: calculate cost
-	self:SetTooltip(ent.Name)
+	local price = hook.Run("LookupEntityPrice", LocalPlayer(), class, ent)
+	local priceText = language.GetPhrase("ose.spawnmenu.price_tooltip")
+	local name = language.GetPhrase(ent.Name)
+	self:SetTooltip(string.format(priceText, name, price))
 	self:InvalidateLayout(true)
 end
 

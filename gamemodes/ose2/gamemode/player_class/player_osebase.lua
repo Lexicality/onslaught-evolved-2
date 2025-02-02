@@ -24,4 +24,13 @@ DEFINE_BASECLASS("player_default")
 --- @class OSEPlayerBase : GPlayerClass
 local PLAYER = {}
 
+function PLAYER:SetupDataTables()
+	self.Player:NetworkVar("Int", 0, "MoneyVar")
+end
+
+function PLAYER:Init()
+	-- Ensure the money var is up to date
+	self.Player:GetMoney(true)
+end
+
 player_manager.RegisterClass("player_osebase", PLAYER, "player_default")

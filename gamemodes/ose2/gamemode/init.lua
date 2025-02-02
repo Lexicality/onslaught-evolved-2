@@ -18,6 +18,7 @@
 include("shared.lua")
 
 include("sv_entities.lua")
+include("sv_money.lua")
 include("sv_npcs.lua")
 include("sv_player.lua")
 include("sv_props.lua")

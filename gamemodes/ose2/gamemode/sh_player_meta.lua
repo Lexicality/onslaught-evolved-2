@@ -22,7 +22,7 @@ local LIMIT_TRANSLATIONS = {
 	ose_mine = "mines",
 }
 
---- @type GPlayer
+--- @class GPlayer
 local plyMeta = FindMetaTable("Player")
 
 -- gotta override `CheckLimit` to make it more onslaughty
@@ -49,4 +49,60 @@ function plyMeta:CheckLimit(limitName)
 	end
 
 	return true
+end
+
+local MONEY_KEY = "OSEMoney"
+
+--- Gets the player's current money
+--- @param fromDatabase? true # If true (and the server)
+--- @return integer
+function plyMeta:GetMoney(fromDatabase)
+	if CLIENT or not fromDatabase then
+		return self:GetMoneyVar()
+	end
+	local money = tonumber(self:GetPData(MONEY_KEY, nil))
+	if money == nil then
+		money = hook.Run("GetStartingMoney", self)
+		self:SetMoney(money)
+	else
+		-- Make sure the money var stays in sync
+		self:SetMoneyVar(money)
+	end
+	return money
+end
+
+--- Updates the player's money
+--- @param amount integer
+function plyMeta:SetMoney(amount)
+	if CLIENT then return end
+	self:SetPData(MONEY_KEY, amount)
+	self:SetMoneyVar(amount)
+end
+
+local INT32_MAX = 2147483647
+
+--- Adds an arbitrary amount of money to the player.
+--- The amount may be negative.
+--- @param amount integer
+--- @return integer # The amount of money the user now has
+function plyMeta:AddMoney(amount)
+	local money = self:GetMoney(true)
+	money = money + amount
+	if money < 0 then
+		money = 0
+	elseif money > INT32_MAX then
+		-- shouldn't happen, potentially could if some server admin does
+		-- something very silly though
+		money = INT32_MAX
+	end
+	self:SetMoney(money)
+	return money
+end
+
+--- Checks if the player can afford to buy something
+--- @param amount integer
+--- @return boolean
+function plyMeta:CanAfford(amount)
+	local money = self:GetMoney()
+	return money >= amount
 end

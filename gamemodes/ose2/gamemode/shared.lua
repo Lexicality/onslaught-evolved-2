@@ -31,14 +31,16 @@ include("player_class/player_osebase.lua")
 
 include("player_class/player_builder.lua")
 include("player_class/player_engineer.lua")
+include("player_class/player_osebase.lua")
 include("player_class/player_pyro.lua")
 include("player_class/player_scout.lua")
 include("player_class/player_sniper.lua")
 include("player_class/player_soldier.lua")
 -- include("player_class/player_support.lua")
-include("sh_props.lua")
 include("sh_entity_meta.lua")
+include("sh_money.lua")
 include("sh_player_meta.lua")
+include("sh_props.lua")
 
 ROUND_PHASE_BUILD = 0
 ROUND_PHASE_PREP = 1

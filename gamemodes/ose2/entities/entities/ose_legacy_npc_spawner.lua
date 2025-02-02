@@ -359,6 +359,9 @@ function ENT:SpawnNPC(classname)
 		if (npcData.Skin) then
 			npc:SetSkin(npcData.Skin)
 		end
+
+		-- Since we have this on hand, let's save time later
+		npc._oseReward = npcData.Reward
 	end
 
 	npc:SetKeyValue("spawnflags", tostring(spawnflags))

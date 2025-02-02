@@ -61,7 +61,8 @@ _G.g_SpawnMenu = nil
 --- @field DisplaySkin? number The skin to apply to that model (if any)
 --- @field SpawnAngle? GAngle Spawn angles override
 --- @field AllowInBattle boolean If players can spawn this mid-combat
---- @field ModelGroup number
+--- @field ModelGroup number What tab to diplay under
+--- @field Price integer How much the players have to pay to spawn this
 
 --- @class NPCListDefinition
 --- @field Class string
@@ -112,6 +113,18 @@ function ENT:SetNetworkKeyValue(key, value) end
 
 --- @class GEntity
 --- @field _oseNPC? boolean @True if this entity is a NPC that was created by an onslaught spawner
+--- @field _osePropValue? integer @How much the player paid for this prop (if it's a prop)
+
+--- @class GNPC
+--- @field _oseReward? integer @If we've got a pre-calculated reward for this NPC
 
 --- @class GPlayer
 --- @field NextSpawnTime integer @When the base gamemode should next allow the player to spawn
+
+--- @class GPlayer
+local ply = {}
+--- @return integer
+function ply:GetMoneyVar() end
+
+--- @param money integer
+function ply:SetMoneyVar(money) end

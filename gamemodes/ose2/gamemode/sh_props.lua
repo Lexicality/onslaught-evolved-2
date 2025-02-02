@@ -235,5 +235,6 @@ function GM:SetupProps()
 		DisplaySkin = 1,
 		AllowInBattle = true,
 		ModelGroup = GROUP_SPECIAL,
+		Price = 300,
 	}
 end

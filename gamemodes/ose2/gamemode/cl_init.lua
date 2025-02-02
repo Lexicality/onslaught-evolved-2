@@ -26,6 +26,11 @@ function GM:OnGamemodeLoaded()
 	self:SetupRounds()
 	self:SetupProps()
 	self:SetupHUD()
+end
+
+function GM:InitPostEntity()
+	-- This needs to be here because otherwise we can't create the temporary
+	-- physobjects needed for the prop price calculation
 	self:SetupSpawnMenu()
 end
 

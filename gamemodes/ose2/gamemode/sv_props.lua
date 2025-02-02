@@ -15,6 +15,8 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+local refundMultiplierCvar = GetConVar("ose_refund_multiplier")
+
 -- A little hacky function to help prevent spawning props partially inside walls
 -- From Sandbox
 local function fixupProp(ply, ent, hitpos, mins, maxs)
@@ -152,6 +154,14 @@ local function ccOSESpawn(ply, cmd, args)
 		return
 	end
 
+	--- @type number
+	local price = hook.Run("LookupPropPrice", ply, model)
+	if not ply:CanAfford(price) then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "You don't have enough money!")
+		return
+	end
+
 	--- @type OSEPropDefinition
 	local propData = list.Get("OSEProps")[model]
 
@@ -159,6 +169,10 @@ local function ccOSESpawn(ply, cmd, args)
 	if not IsValid(ent) then
 		return
 	end
+
+	ent._osePropValue = price
+	-- TODO: money notification?
+	ply:AddMoney(-price)
 
 	hook.Run("PlayerSpawnedProp", ply, model, ent)
 
@@ -192,10 +206,22 @@ local function ccOSESpawnEnt(ply, cmd, args)
 		return
 	end
 
+	--- @type number
+	local price = hook.Run("LookupEntityPrice", ply, class, entData)
+	if not ply:CanAfford(price) then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "You don't have enough money!")
+		return
+	end
+
 	local ent = doSpawn(ply, class, nil, entData.SpawnAngle)
 	if not IsValid(ent) then
 		return
 	end
+
+	ent._osePropValue = price
+	-- TODO: money notification?
+	ply:AddMoney(-price)
 
 	hook.Run("PlayerSpawnedEntity", ply, class, ent, entData)
 
@@ -277,4 +303,21 @@ end
 function GM:CanUndo(ply, undo)
 	-- Don't let players accidentally destroy their own stuff mid-battle
 	return self.m_RoundPhase == ROUND_PHASE_BUILD
+end
+
+function GM:EntityRemoved(ent, fullUpdate)
+	-- Refund the player when their stuff gets deleted during the build phase
+	if self.m_RoundPhase ~= ROUND_PHASE_BUILD then
+		return
+	end
+	local refundM = refundMultiplierCvar:GetFloat()
+	if refundM <= 0 then
+		return
+	end
+	local owner = ent:GetCreator()
+	local amount = ent._osePropValue
+	if IsValid(owner) and isnumber(amount) then
+		-- TODO: money notification?
+		owner:AddMoney(amount * refundM)
+	end
 end

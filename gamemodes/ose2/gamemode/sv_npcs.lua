@@ -15,6 +15,10 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+--- @type SGM
+local BaseClass
+DEFINE_BASECLASS("gamemode_base")
+
 SF_NPC_NO_GRENADE_DROP = 131072
 SF_NPC_NO_AR2_DROP = 262144
 SF_MANHACK_USE_AIR_NODES = 262144
@@ -23,6 +27,8 @@ SF_MANHACK_USE_AIR_NODES = 262144
 -- list, however it doesn't seem to be an actual magic value, just so many
 -- grenades that they might as well be infinite.
 local INFINITE_GRENADES = "999999"
+
+local DEFAULT_NPC_REWARD = 50
 
 --- This gets rid of some unhelpful defaults found in the base gmod npc list
 --- @param npctab NPCListDefinition
@@ -173,4 +179,66 @@ function GM:SetupNPCs()
 
 	npctab = gmNPCs["npc_antlionguard"]
 	npctab.Reward = 700
+end
+
+--- Works out what type a NPC is
+--- @param npc GNPC
+--- @return string
+function GM:GetNPCType(npc)
+	local npcClass = npc:GetClass()
+	-- There's some much more complex code in the base gamemode for handling
+	-- other types of NPCs (eg citizen medics) but we don't have those as
+	-- enemies so I'm going to worry about them (until it's a problem I guess)
+	if npcClass == "npc_combine_s" then
+		-- Try to figure out what kind of combine it actually was
+		local model = npc:GetModel()
+		local skin = npc:GetSkin()
+		if model == "models/combine_soldier.mdl" and skin == 1 then
+			npcClass = "ShotgunSoldier"
+		elseif model == "models/combine_super_soldier.mdl" then
+			npcClass = "CombineElite"
+			-- The prison guards aren't actually in the NPC list
+			-- elseif model == "models/combine_soldier_prisonguard.mdl" then
+			-- 	if skin == 0 then
+			-- 		npcClass = "CombinePrison"
+			-- 	elseif skin == 1 then
+			-- 		npcClass = "PrisonShotgunner"
+			-- 	end
+		end
+	end
+	return npcClass
+end
+
+function GM:OnNPCKilled(npc, attacker, inflictor)
+	BaseClass.OnNPCKilled(self, npc, attacker, inflictor)
+
+	-- I'm not bothering with the vehicle normalisation here because there are
+	-- no vehicles in this gamemode
+
+	if not IsValid(attacker) or not attacker:IsPlayer() then
+		return
+	elseif npc:Disposition(attacker) == D_LI then
+		-- No reward for betrayals
+		return
+	end
+	--- @cast attacker GPlayer
+
+	-- Has the spawner helped us out?
+	if isnumber(npc._oseReward) then
+		-- TODO: money notification?
+		attacker:AddMoney(npc._oseReward)
+		return
+	end
+
+	-- Work out what the NPC is worth to the player
+	--- @type string
+	local npcClass = hook.Call("GetNPCType", self, npc)
+	local reward = DEFAULT_NPC_REWARD
+	-- I really don't like the deepcopy cost of `list.Get` so I'm going to live dangerously
+	local npcData = list.GetForEdit("OSENPC")[npcClass]
+	if npcData and npcData.Reward then
+		reward = npcData.Reward
+	end
+	-- TODO: money notification?
+	attacker:AddMoney(reward)
 end

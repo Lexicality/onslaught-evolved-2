@@ -122,6 +122,18 @@ function GM:CalculatePropPrice(player, round, model, basePrice)
 	return basePrice
 end
 
+--- Calculates the price a player should pay for an entity this round
+--- This value should *NOT* change inside a round
+--- @param player GPlayer
+--- @param round integer
+--- @param entity string
+--- @param basePrice integer
+--- @return integer
+function GM:CalculateEntityPrice(player, round, entity, basePrice)
+	-- No tweaks by default
+	return basePrice
+end
+
 --- INTERNAL: Does the work to calculate a prop's health
 --- @param player GPlayer
 --- @param model string
@@ -140,4 +152,14 @@ function GM:LookupPropPrice(player, model)
 	--- @type integer
 	local basePrice = hook.Call("CalculatePropBasePrice", self, model)
 	return hook.Call("CalculatePropPrice", self, player, self.m_Round, model, basePrice)
+end
+
+--- INTERNAL: Does the work to calculate a entity's price
+--- @param player GPlayer
+--- @param entity string
+--- @param entData OSEEntityDefinition
+--- @return integer
+function GM:LookupEntityPrice(player, entity, entData)
+	local basePrice = math.floor(entData.Price * priceMultiplierCvar:GetFloat())
+	return hook.Call("CalculateEntityPrice", self, player, self.m_Round, entity, basePrice)
 end
