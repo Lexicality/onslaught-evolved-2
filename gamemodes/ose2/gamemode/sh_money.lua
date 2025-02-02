@@ -62,6 +62,9 @@ local function doPropCalc(model)
 
 	local mass = physobj:GetMass()
 	local size = ent:BoundingRadius() / 50
+
+	ent:Remove()
+
 	return math.Clamp(mass * size, MIN_PROP_VALUE, MAX_PROP_VALUE)
 end
 
@@ -71,7 +74,7 @@ local function doCachedPropCalc(model)
 		return cachedValue
 	end
 	local value = doPropCalc(model)
-	cachedValue[model] = value
+	propCache[model] = value
 	return value
 end
 
