@@ -17,6 +17,8 @@
 
 AddCSLuaFile()
 
+local priceMultiplierCvar = GetConVar("ose_price_multiplier")
+
 function GM:SetupBuyables()
 	-- Ammo etc goes here
 end
@@ -30,7 +32,6 @@ local propCache = {}
 local FALLBACK_PROP_VALUE = 1000
 local MIN_PROP_VALUE = 200
 local MAX_PROP_VALUE = 800 -- TODO: Why is the max less than the fallback?!
-local PROP_PRICE_MULTIPLIER = 1.05
 
 local function doPropCalc(model)
 	--- @type GEntity
@@ -90,12 +91,11 @@ end
 --- @param model string
 --- @return integer price
 function GM:CalculatePropBasePrice(model)
-	local baseHealth = doCachedPropCalc(model)
-	local price = baseHealth * PROP_PRICE_MULTIPLIER
+	local price = doCachedPropCalc(model)
 	-- TODO: Do we want the option to tweak/override individual prop prices?
 	-- The original gamemode has this as an option but it never actually uses it
 	-- and it seems like annoying complexity that we probably don't need
-	return math.floor(price)
+	return math.floor(price * priceMultiplierCvar:GetFloat())
 end
 
 --- Calculates the health that a player's spawned prop should have this round

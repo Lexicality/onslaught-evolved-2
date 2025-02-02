@@ -197,5 +197,17 @@
 			"replicate" "1"
 		}
 
+		// 19 is higher up. TODO: Rebalance the numbers x_x
+
+		20 {
+			"name" "ose_price_multiplier"
+			"text" "ose.convar.price_multiplier"
+			"help" "How much to multiply all prices by"
+			"type" "Numeric"
+			"default" "1.05"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
 	}
 }
