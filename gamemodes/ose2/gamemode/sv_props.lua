@@ -141,7 +141,7 @@ local function ccOSESpawn(ply, cmd, args)
 	elseif not IsValid(ply) then
 		print("The server can't spawn things")
 		return
-	elseif not gamemode.Call("PlayerSpawnProp", ply, model) then
+	elseif not hook.Run("PlayerSpawnProp", ply, model) then
 		-- no need to notify the player, the hook will do that
 		return
 	end
@@ -181,7 +181,7 @@ local function ccOSESpawnEnt(ply, cmd, args)
 	--- @type OSEEntityDefinition
 	local entData = list.Get("OSEEntities")[class]
 
-	if not gamemode.Call("PlayerSpawnEntity", ply, class, entData) then
+	if not hook.Run("PlayerSpawnEntity", ply, class, entData) then
 		-- no need to notify the player, the hook will do that
 		return
 	end

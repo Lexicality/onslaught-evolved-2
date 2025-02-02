@@ -80,22 +80,22 @@ end
 net.Receive("BuildPhaseStarted", function()
 	local roundNum = net.ReadUInt(8)
 	local phaseEnd = net.ReadFloat()
-	gamemode.Call("BuildPhaseStarted", roundNum)
-	gamemode.Call("PhaseStarted", phaseEnd)
+	hook.Run("BuildPhaseStarted", roundNum)
+	hook.Run("PhaseStarted", phaseEnd)
 end)
 
 net.Receive("PrepPhaseStarted", function()
 	local roundNum = net.ReadUInt(8)
 	local phaseEnd = net.ReadFloat()
-	gamemode.Call("PrepPhaseStarted", roundNum)
-	gamemode.Call("PhaseStarted", phaseEnd)
+	hook.Run("PrepPhaseStarted", roundNum)
+	hook.Run("PhaseStarted", phaseEnd)
 end)
 
 net.Receive("BattlePhaseStarted", function()
 	local roundNum = net.ReadUInt(8)
 	local phaseEnd = net.ReadFloat()
-	gamemode.Call("BattlePhaseStarted", roundNum)
-	gamemode.Call("PhaseStarted", phaseEnd)
+	hook.Run("BattlePhaseStarted", roundNum)
+	hook.Run("PhaseStarted", phaseEnd)
 end)
 
 --- Sandbox Compat

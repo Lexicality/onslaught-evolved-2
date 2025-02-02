@@ -50,8 +50,8 @@ function GM:StartBuildPhase()
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
-	gamemode.Call("BuildPhaseStarted", self.m_Round)
-	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+	hook.Call("BuildPhaseStarted", self, self.m_Round)
+	hook.Call("PhaseStarted", self, self.m_PhaseEnd)
 	MsgAll("Starting the build phase!")
 end
 
@@ -73,8 +73,8 @@ function GM:StartPrepPhase()
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
-	gamemode.Call("PrepPhaseStarted", self.m_Round)
-	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+	hook.Call("PrepPhaseStarted", self, self.m_Round)
+	hook.Call("PhaseStarted", self, self.m_PhaseEnd)
 	MsgAll("Starting the prep phase!")
 end
 
@@ -94,8 +94,8 @@ function GM:StartBattlePhase()
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
-	gamemode.Call("BattlePhaseStarted", self.m_Round)
-	gamemode.Call("PhaseStarted", self.m_PhaseEnd)
+	hook.Call("BattlePhaseStarted", self, self.m_Round)
+	hook.Call("PhaseStarted", self, self.m_PhaseEnd)
 	MsgAll("Starting the battle phase!")
 end
 
@@ -106,7 +106,7 @@ function GM:WinRound()
 	self.m_Round = self.m_Round + 1
 	net.Start("RoundWon")
 	net.Broadcast()
-	gamemode.Call("RoundWon")
+	hook.Call("RoundWon", self)
 	self:StartBuildPhase()
 end
 
@@ -119,7 +119,7 @@ function GM:LoseRound()
 	end
 	net.Start("RoundLost")
 	net.Broadcast()
-	gamemode.Call("RoundLost")
+	hook.Call("RoundLost", self)
 	self:StartBuildPhase()
 end
 
@@ -138,7 +138,7 @@ function GM:Tick()
 	end
 	if now - self.m_LastSecond > 1 then
 		self.m_LastSecond = now
-		gamemode.Call("PhaseSecond", self.m_PhaseEnd - now)
+		hook.Call("PhaseSecond", self, self.m_PhaseEnd - now)
 	end
 end
 
@@ -158,6 +158,6 @@ end
 
 function GM:PostPlayerDeath(ply)
 	if self.m_RoundPhase == ROUND_PHASE_BATTLE then
-		gamemode.Call("CheckForLoss")
+		hook.Call("CheckForLoss", self)
 	end
 end
