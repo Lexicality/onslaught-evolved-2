@@ -237,4 +237,11 @@ function GM:SetupProps()
 		ModelGroup = GROUP_SPECIAL,
 		Price = 300,
 	}
+
+	for mdl, _ in pairs(props) do
+		util.PrecacheModel(mdl)
+	end
+	for _, ent in pairs(entities) do
+		util.PrecacheModel(ent.DisplayModel)
+	end
 end

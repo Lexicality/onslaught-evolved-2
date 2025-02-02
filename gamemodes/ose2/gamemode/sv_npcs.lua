@@ -76,6 +76,16 @@ local GENERATED_NPCS = {
 	"npc_headcrab_fast", "npc_manhack", "npc_zombie_torso", "npc_grenade_frag"
 }
 
+local NPC_MODELS = {
+	"models/combine_soldier.mdl", "models/combine_super_soldier.mdl",
+	"models/combine_soldier_prisonguard.mdl", "models/police.mdl",
+	"models/hunter.mdl", "models/manhack.mdl", "models/zombie/classic.mdl",
+	"models/zombie/fast.mdl", "models/zombie/zombie_soldier.mdl",
+	"models/antlion.mdl", "models/headcrabclassic.mdl", "models/headcrab.mdl",
+	"models/antlion_guard.mdl", "models/roller.mdl", "models/zombie/poison.mdl",
+	"models/headcrabblack.mdl", "models/zombie/classic.mdl",
+	"models/zombie/fast.mdl",
+}
 --- Sets up the various NPC lists for the rest of the gamemode to use
 function GM:SetupNPCs()
 	--- Grab a copy of the base gmod NPC list
@@ -179,6 +189,10 @@ function GM:SetupNPCs()
 
 	npctab = gmNPCs["npc_antlionguard"]
 	npctab.Reward = 700
+
+	for _, mdl in ipairs(NPC_MODELS) do
+		util.PrecacheModel(mdl)
+	end
 end
 
 --- Works out what type a NPC is
