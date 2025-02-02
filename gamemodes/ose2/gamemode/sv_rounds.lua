@@ -40,8 +40,12 @@ function GM:StartBuildPhase()
 	for _, ply in ipairs(player.GetAll()) do
 		--- @cast ply GPlayer
 		player_manager.SetPlayerClass(ply, "player_builder")
-		ply:KillSilent()
-		ply:Spawn()
+		if ply:Alive() then
+			ply:KillSilent()
+			ply:Spawn()
+		else
+			ply.NextSpawnTime = 0
+		end
 	end
 
 	-- TODO
