@@ -62,6 +62,12 @@ local function isPropIntersectingPlayer(ent)
 	return false
 end
 
+--- @param undo SUndo
+--- @param ent SENT_OSEProp
+local function fancyUndo(undo, ent)
+	ent:RemovePretty()
+end
+
 --- Generic(ish) entity spawning code
 --- This started life as DoPlayerEntitySpawn from sandbox and was then mucked
 --- about with a bunch
@@ -158,7 +164,7 @@ local function ccOSESpawn(ply, cmd, args)
 
 	undo.Create("Prop")
 	undo.SetPlayer(ply)
-	undo.AddEntity(ent)
+	undo.AddFunction(fancyUndo, ent)
 	undo.Finish(propData.Name)
 
 	ply:AddCleanup("props", ent)
@@ -195,7 +201,7 @@ local function ccOSESpawnEnt(ply, cmd, args)
 
 	undo.Create(entData.Name)
 	undo.SetPlayer(ply)
-	undo.AddEntity(ent)
+	undo.AddFunction(fancyUndo, ent)
 	undo.Finish()
 
 	ply:AddCleanup(class .. "s", ent)
