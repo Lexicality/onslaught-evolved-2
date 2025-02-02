@@ -135,17 +135,6 @@ function GM:HUDDrawRoundData()
 		textVOffset
 	)
 	surface.DrawText(text)
-
-
-	-- draw.DrawText(
-	-- text,
-	-- HUD_TEXT_FONT, (ScrW() / 2) - 30, ScrH() - 70, HUD_TEXT_COLOUR)
-
-	-- draw.RoundedBox(8, 265, ScrH() - 108, 200, 81, HUD_BACKGROUND_COLOUR)
-	-- draw.RoundedBox(8, ScrW() / 2 - 50, ScrH() - 90, 200, 70, HUD_BACKGROUND_COLOUR)
-	-- draw.DrawText("10  10", "OSEHudTimer", (ScrW() / 2) - 50, 20, HUD_TEXT_COLOUR)
-	-- draw.DrawText(":", "OSEHudTimerColon", (ScrW() / 2) + 1, 20, HUD_TEXT_COLOUR)
-	-- draw.DrawText("SUIT", HUD_TEXT_FONT, 323, ScrH() - 170, HUD_TEXT_BRIGHT_COLOUR)
 end
 
 --- @param phaseEnd number

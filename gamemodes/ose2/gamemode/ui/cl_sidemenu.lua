@@ -25,7 +25,6 @@ local PANEL = {}
 
 function PANEL:Init()
 	self:SetupTools()
-	PrintTable(spawnmenu.GetTools())
 end
 
 function PANEL:SetupTools()
