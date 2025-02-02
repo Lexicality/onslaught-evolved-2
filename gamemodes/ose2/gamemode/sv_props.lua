@@ -253,3 +253,15 @@ function GM:PhysgunDrop(ply, ent)
 		ent:GetPhysicsObject():EnableMotion(false)
 	end
 end
+
+function GM:OnPhysgunReload(physgun, ply)
+	-- TODO: teams? prop protection?
+	local tr = ply:GetEyeTrace()
+	--- @cast tr STraceResult
+	local target = tr.Entity
+	if not target or not IsValid(target) or not target["OSEProp"] then
+		return
+	end
+	--- @cast target SENT_OSEProp
+	target:RemovePretty()
+end

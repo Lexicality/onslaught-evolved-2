@@ -224,19 +224,23 @@ function ENT:OnTakeDamage(dmginfo)
 	self:SetHealth(newHealth)
 
 	if newHealth <= 0 then
-		--- @type GEntity
-		local dissolver = ents.FindByName("ose_dissolve_propdeath")[1]
-		if IsValid(dissolver) then
-			dissolver:Fire("Dissolve", self:GetName())
-		else
-			self:Remove()
-		end
+		self:RemovePretty()
 	elseif cvarFlammible:GetBool() and (newHealth / self:GetMaxHealth()) <= 0.4 then
 		self:Ignite(8, 150)
 	end
 
 	-- Return the amount of damage we took for the hooks
 	return damage
+end
+
+function ENT:RemovePretty()
+	--- @type GEntity
+	local dissolver = ents.FindByName("ose_dissolve_propdeath")[1]
+	if IsValid(dissolver) then
+		dissolver:Fire("Dissolve", self:GetName())
+	else
+		self:Remove()
+	end
 end
 
 function ENT:Touch(ent)
