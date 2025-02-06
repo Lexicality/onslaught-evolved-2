@@ -25,8 +25,6 @@ AddCSLuaFile("ui/cl_propsheet.lua")
 AddCSLuaFile("ui/cl_sidemenu.lua")
 AddCSLuaFile("ui/cl_spawnmenu.lua")
 
-print("wat")
-
 -- Gonna need to automate this at some point (probably soon)
 resource.AddFile("materials/lambda/killicons/combine_mine_killicon.vmt")
 resource.AddFile("materials/lambda/killicons/env_explosion_killicon.vmt")
