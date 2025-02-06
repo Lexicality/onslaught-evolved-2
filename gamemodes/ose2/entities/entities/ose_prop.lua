@@ -224,13 +224,17 @@ function ENT:OnTakeDamage(dmginfo)
 	self:SetHealth(newHealth)
 
 	if newHealth <= 0 then
-		self:RemovePretty()
+		self:Die()
 	elseif cvarFlammible:GetBool() and (newHealth / self:GetMaxHealth()) <= 0.4 then
 		self:Ignite(8, 150)
 	end
 
 	-- Return the amount of damage we took for the hooks
 	return damage
+end
+
+function ENT:Die()
+	self:RemovePretty()
 end
 
 function ENT:RemovePretty()

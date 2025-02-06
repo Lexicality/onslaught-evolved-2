@@ -80,6 +80,16 @@
 			"singleplayer" "1"
 		}
 
+		22 {
+			"name" "ose_maxturrets"
+			"text" "ose.convar.maxturrets"
+			"help" "Max turrets a player can spawn"
+			"type" "Numeric"
+			"default" "2"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
 		7 {
 			"name" "ose_cleanup_props"
 			"text" "ose.convar.cleanup_props"

@@ -237,6 +237,24 @@ function GM:SetupProps()
 		ModelGroup = GROUP_SPECIAL,
 		Price = 300,
 	}
+	entities["ose_turret"] = {
+		Name = "#ose_turret",
+		DisplayModel = "models/combine_turrets/floor_turret.mdl",
+		DisplaySkin = 0,
+		-- TODO:
+		-- The automatic spawnicon position/angles/etc is completely broken for
+		-- the turret model.
+		-- Happily the default one is not, but that's only set for the default
+		-- skin, which means we can't use the citizen turret skin unless I can
+		-- figure out how the defaults are set and create ones for the skins
+		-- This camerea position is pretty acceptable:
+		-- {"ang":"{20 270 0}","pos":"[-5 200 105]","mdl_ang":"{0 130 0}","fov":16.08}
+		-- DisplaySkin = 1,
+		AllowInBattle = true,
+		ModelGroup = GROUP_SPECIAL,
+		Price = 700,
+		SpawnAngle = Angle(0, 180, 0),
+	}
 
 	for mdl, _ in pairs(props) do
 		util.PrecacheModel(mdl)

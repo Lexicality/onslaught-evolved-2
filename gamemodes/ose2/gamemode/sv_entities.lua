@@ -163,10 +163,19 @@ function GM:EntityTakeDamage(target, dmg)
 	end
 
 	local class = target:GetClass()
+	-- For turrets, redirect damage to their prop
+	if class == "npc_turret_floor" then
+		local parent = target._oseSpawner
+		if parent and IsValid(parent) then
+			parent:TakeDamageInfo(dmg)
+			return
+		end
+	end
+
 	if target:IsNPC() then
 		-- NPCs take less damage the more players there are
 		dmg:ScaleDamage(1 / self.m_DamageScale)
-	elseif class == "ose_prop" then
+	elseif target["OSEProp"] then
 		-- Props take more damage however
 		dmg:ScaleDamage(self.m_DamageScale)
 	end
