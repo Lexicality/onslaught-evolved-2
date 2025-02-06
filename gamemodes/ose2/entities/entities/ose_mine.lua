@@ -33,17 +33,15 @@ local BOUNCEBOMB_HOOK_RANGE = 64
 
 function ENT:Initialize()
 	self:SetModel(MINE_MODEL)
-	-- Look citizen-ey
-	self:SetSkin(math.random(MINE_CITIZEN_SKIN_MIN, MINE_CITIZEN_SKIN_MAX))
 	-- Pop the hooks up to look authentic
 	self:SetPoseParameter("blendstates", BOUNCEBOMB_HOOK_RANGE)
 	if CLIENT then
 		self:InvalidateBoneCache()
+		return
 	end
-
-	if SERVER then
-		BaseClass.Initialize(self)
-	end
+	-- Look citizen-ey
+	self:SetSkin(math.random(MINE_CITIZEN_SKIN_MIN, MINE_CITIZEN_SKIN_MAX))
+	BaseClass.Initialize(self)
 end
 
 if CLIENT then return end
@@ -69,6 +67,9 @@ function ENT:_OnPrepPhase(roundNum)
 
 	mine:Spawn()
 	mine:Activate()
+	-- Override the automatic skin with the one on the preview so it looks more
+	-- seamless to the players
+	mine:SetSkin(self:GetSkin())
 	self.m_Mine = mine
 end
 
