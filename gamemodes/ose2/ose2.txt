@@ -14,7 +14,7 @@
 		1 {
 			"name" "ose_max_npcs"
 			"text" "ose.convar.max_npcs"
-			"help" "The maximum number of non-manhack non-hunter NPCs that are allowed"
+			"help" "The max number of non-manhack non-hunter NPCs that are allowed"
 			"type" "Numeric"
 			"default" "30"
 			"replicate" "0"
@@ -24,7 +24,7 @@
 		2 {
 			"name" "ose_max_manhacks"
 			"text" "ose.convar.max_manhacks"
-			"help" "The maximum number of manhacks that are allowed at once"
+			"help" "The max number of manhacks that are allowed at once"
 			"type" "Numeric"
 			"default" "7"
 			"replicate" "0"
@@ -34,7 +34,7 @@
 		3 {
 			"name" "ose_max_hunters"
 			"text" "ose.convar.max_hunters"
-			"help" "The maximum number of hunters that are allowed at once"
+			"help" "The max number of hunters that are allowed at once"
 			"type" "Numeric"
 			"default" "2"
 			"replicate" "0"
@@ -63,7 +63,7 @@
 		6 {
 			"name" "ose_maxprops"
 			"text" "max_props"
-			"help" "Maximum props per player"
+			"help" "Max props per player"
 			"type" "Numeric"
 			"default" "25"
 			"replicate" "1"
@@ -73,7 +73,7 @@
 		19 {
 			"name" "ose_maxmines"
 			"text" "ose.convar.maxmines"
-			"help" "Maximum mines a player can spawn"
+			"help" "Max mines a player can spawn"
 			"type" "Numeric"
 			"default" "10"
 			"replicate" "1"

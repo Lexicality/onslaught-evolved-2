@@ -24,7 +24,7 @@
 
 	input Enable(void) : "Enables the spawner."
 	input Disable(void) : "Disables the spawner."
-	input SetMaxLiveChildren(integer) : "Sets the maximum number of NPCs that can be alive at any one time from this spawner."
+	input SetMaxLiveChildren(integer) : "Sets the max number of NPCs that can be alive at any one time from this spawner."
 	input SetSpawnFrequency(float) : "Sets how often (in seconds) a new NPC will be spawned."
 
 	output OnSpawnNPC(string) : "Fired when an NPC is spawned. The activator is the NPC, and the string is the name of the NPC."
@@ -98,9 +98,9 @@
 	input NPCSpawned(string) : "Must be called when a fresh NPC is spawned so the game can manage it"
 	input PointTemplateSpawned(void) : "It's NPCSpawned, but handles point_template complications"
 
-	output OnNPCLimitChanged(integer) : "Fired with the maxmimum total number of NPCs that can be spawned at once"
-	output OnHunterLimitChanged(integer) : "Fired with the maxmimum total number of hunters that can be spawned at once"
-	output OnManhackLimitChanged(integer) : "Fired with the maxmimum total number of manhacks that can be spawned at once"
+	output OnNPCLimitChanged(integer) : "Fired with the max total number of NPCs that can be spawned at once"
+	output OnHunterLimitChanged(integer) : "Fired with the max total number of hunters that can be spawned at once"
+	output OnManhackLimitChanged(integer) : "Fired with the max total number of manhacks that can be spawned at once"
 	output OnNPCSpawnFrequencyChanged(float) : "Fired with the minimum delay between spawns"
 	output OnNPCSpawnEnabled(void) : "Fired when NPCs should start being spawned"
 	output OnNPCSpawnDisabled(void) : "Fired when NPCs should stop being spawned"
