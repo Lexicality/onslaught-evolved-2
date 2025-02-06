@@ -114,6 +114,7 @@ function ENT:SetNetworkKeyValue(key, value) end
 --- @class GEntity
 --- @field _oseNPC? boolean @True if this entity is a NPC that was created by an onslaught spawner
 --- @field _osePropValue? integer @How much the player paid for this prop (if it's a prop)
+--- @field _oseSpawner? GEntity @If this entity was spawned by something else eg ose_mine
 
 --- @class GNPC
 --- @field _oseReward? integer @If we've got a pre-calculated reward for this NPC
