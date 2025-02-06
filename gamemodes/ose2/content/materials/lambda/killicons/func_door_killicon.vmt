@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "lambda/killicons/func_door_killicon"
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+}

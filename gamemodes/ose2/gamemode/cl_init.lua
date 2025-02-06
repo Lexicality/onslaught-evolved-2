@@ -17,6 +17,7 @@
 
 include("shared.lua")
 
+include("cl_deathnotice.lua")
 include("cl_effects.lua")
 include("cl_hud.lua")
 include("ui/cl_spawnmenu.lua")
@@ -26,6 +27,7 @@ function GM:OnGamemodeLoaded()
 	self:SetupRounds()
 	self:SetupProps()
 	self:SetupHUD()
+	self:SetupKillIcons()
 end
 
 function GM:InitPostEntity()
