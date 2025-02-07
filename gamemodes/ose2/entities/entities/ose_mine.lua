@@ -47,14 +47,12 @@ end
 if CLIENT then return end
 
 function ENT:_OnPrepPhase(roundNum)
+	-- Get rid of the old mine
+	self:RemoveMine()
+
 	-- Make us not get in the way of the actual mine
 	self:SetNoDraw(true)
 	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
-
-	if IsValid(self.m_Mine) then
-		self:SetParent(NULL)
-		self.m_Mine:Remove()
-	end
 
 	local mine = ents.Create("combine_mine")
 	mine:SetKeyValue("Modification", "1")
@@ -74,7 +72,7 @@ function ENT:_OnPrepPhase(roundNum)
 	self.m_Mine = mine
 end
 
-function ENT:_OnBuildPhase(roundNum)
+function ENT:RemoveMine()
 	if IsValid(self.m_Mine) then
 		-- Prevent some weird snapback behaviours when de-parented
 		local pos = self.m_Mine:GetPos()
@@ -83,6 +81,10 @@ function ENT:_OnBuildPhase(roundNum)
 
 		self.m_Mine:Remove()
 	end
+end
+
+function ENT:_OnBuildPhase(roundNum)
+	self:RemoveMine()
 	self:SetNoDraw(false)
 	BaseClass._OnBuildPhase(self, roundNum)
 end
@@ -90,4 +92,18 @@ end
 -- just in case
 function ENT:OnTakeDamage(dmginfo)
 	-- do nothing
+end
+
+function ENT:OnHitNobuild()
+	if IsValid(self.m_Mine) then
+		local vel = self.m_Mine:GetVelocity()
+		self:RemoveMine()
+		self:SetNoDraw(false)
+		self:SetMoveType(MOVETYPE_VPHYSICS)
+		local phys = self:GetPhysicsObject()
+		phys:EnableMotion(true)
+		phys:Wake()
+		phys:AddVelocity(vel)
+	end
+	BaseClass.OnHitNobuild(self)
 end

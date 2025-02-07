@@ -243,14 +243,18 @@ function ENT:RemovePretty()
 	end
 end
 
+function ENT:OnHitNobuild()
+	--- @type GEntity
+	local dissolver = ents.FindByName("ose_dissolve_nobuild")[1]
+	if IsValid(dissolver) then
+		dissolver:Fire("Dissolve", self:GetName())
+	else
+		self:Remove()
+	end
+end
+
 function ENT:Touch(ent)
 	if ent:GetClass() == "func_nobuild" then
-		--- @type GEntity
-		local dissolver = ents.FindByName("ose_dissolve_nobuild")[1]
-		if IsValid(dissolver) then
-			dissolver:Fire("Dissolve", self:GetName())
-		else
-			self:Remove()
-		end
+		self:OnHitNobuild()
 	end
 end
