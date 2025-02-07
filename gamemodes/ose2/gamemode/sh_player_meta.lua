@@ -51,6 +51,19 @@ function plyMeta:CheckLimit(limitName)
 	return true
 end
 
+-- backup functions for when the player doesn't have a class
+--- Returns the value in the money DTVar
+--- @return integer
+function plyMeta:GetMoneyVar()
+	return self["GetDTInt"](self, 0)
+end
+
+--- Updates the player's money DTVar
+--- @param amount integer
+function plyMeta:SetMoneyVar(amount)
+	self["SetDTInt"](self, 0, amount)
+end
+
 local MONEY_KEY = "OSEMoney"
 
 --- Gets the player's current money
