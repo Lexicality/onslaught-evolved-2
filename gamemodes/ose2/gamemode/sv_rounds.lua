@@ -67,9 +67,8 @@ function GM:StartPrepPhase()
 
 	for _, ply in ipairs(player.GetAll()) do
 		--- @cast ply GPlayer
-		-- TODO: Class selection
-		player_manager.SetPlayerClass(ply, "player_soldier")
 		ply:KillSilent()
+		-- Spawning the player will change them to the correct class
 		ply:Spawn()
 	end
 

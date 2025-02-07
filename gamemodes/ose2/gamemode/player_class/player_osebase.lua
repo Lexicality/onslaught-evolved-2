@@ -26,6 +26,7 @@ local PLAYER = {}
 
 function PLAYER:SetupDataTables()
 	self.Player:NetworkVar("Int", 0, "MoneyVar")
+	self.Player:NetworkVar("Int", 1, "TargetClassID")
 end
 
 function PLAYER:Init()

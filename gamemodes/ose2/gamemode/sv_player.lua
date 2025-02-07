@@ -15,6 +15,8 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+--- @type SGM
+local BaseClass
 DEFINE_BASECLASS("gamemode_base")
 
 local noclipCvar = GetConVar("ose_build_noclip")
@@ -43,14 +45,25 @@ function GM:PlayerDeath(ply, attacker, dmg)
 	end
 end
 
+function GM:PlayerSpawn(ply, isTransiton)
+	if self.m_RoundPhase ~= ROUND_PHASE_BUILD and ply:GetTargetClassID() ~= ply:GetClassID() then
+		player_manager.SetPlayerClass(ply, ply:GetTargetClass())
+	end
+
+	BaseClass.PlayerSpawn(self, ply, isTransiton)
+end
+
 function GM:PlayerInitialSpawn(ply, isTransiton)
 	BaseClass.PlayerInitialSpawn(self, ply, isTransiton)
 
 	if self.m_RoundPhase == ROUND_PHASE_BUILD then
 		player_manager.SetPlayerClass(ply, "player_builder")
 	else
-		-- TODO: Class selection
+		-- TODO: Do we want to try and save the class the player was last time
+		-- they played and set them to it? Per server? Global client
+		-- `ose_preferredclass` cvar? Much to ponder.
 		player_manager.SetPlayerClass(ply, "player_soldier")
+		ply:SetTargetClassID(ply:GetClassID())
 	end
 
 	if self.m_RoundPhase == ROUND_PHASE_BUILD then
@@ -63,4 +76,28 @@ function GM:PlayerInitialSpawn(ply, isTransiton)
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
+end
+
+local VALID_CLASSES = {
+	player_engineer = false, -- TODO: All the SWEPs!
+	player_pyro = false,  -- TODO: Flamethrower
+	player_scout = true,
+	player_sniper = true,
+	player_soldier = true,
+	player_support = false, -- TODO: Work out how to actually do this one
+}
+
+--- Checks if a player class is usable
+--- @param class string @Arbitrary text input from the user
+--- @return boolean
+function GM:IsValidPlayerClass(class)
+	return VALID_CLASSES[class] or false
+end
+
+--- Checks if a player is allowed to choose a certain class
+--- @param ply GPlayer @The player who wants to switch to this class
+--- @param class string @The pre-validated class, eg `player_soldier`
+--- @return boolean
+function GM:PlayerCanChooseClass(ply, class)
+	return true
 end

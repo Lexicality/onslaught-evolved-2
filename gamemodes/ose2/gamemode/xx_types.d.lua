@@ -129,3 +129,11 @@ function ply:GetMoneyVar() end
 
 --- @param money integer
 function ply:SetMoneyVar(money) end
+
+--- Returns the class ID the player wants to be next time they spawn in battle mode
+--- @return integer
+function ply:GetTargetClassID() end
+
+--- Sets the class ID the player wants to be next time they spawn in battle mode
+--- @param targetClass integer
+function ply:SetTargetClassID(targetClass) end
