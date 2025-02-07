@@ -58,6 +58,7 @@ local function doPropCalc(model)
 	local physobj = ent:GetPhysicsObject()
 	if not IsValid(physobj) then
 		ErrorNoHalt("Can't calculate values for missing model '", model, "'!")
+		ent:Remove()
 		return FALLBACK_PROP_VALUE
 	end
 
