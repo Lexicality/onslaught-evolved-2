@@ -256,13 +256,14 @@ function GM:SpawnMenuOpen()
 	return self.m_RoundPhase == ROUND_PHASE_BUILD
 end
 
+-- I'm renaming Utilities to Settings here because utilities really doesn't make
+-- sense in this context
+local SETTINGS_TAB = "Utilities"
+
 function GM:AddGamemodeToolMenuTabs()
-	-- I'm renaming Utilities to Settings here because utilities really doesn't
-	-- make sense in this context
-	spawnmenu.AddToolTab("Utilities", "#ose.spawnmenu.tab.settings", "icon16/computer_edit.png")
+	spawnmenu.AddToolTab(SETTINGS_TAB, "#ose.spawnmenu.tab.settings", "icon16/computer_edit.png")
 end
 
-local SETTINGS_TAB = "Utilities"
 function GM:PopulateToolMenu()
 	local tools = spawnmenu.GetTools()
 	--- @cast tools ToolTabDefinition[]
