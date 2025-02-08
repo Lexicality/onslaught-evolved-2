@@ -77,15 +77,6 @@ ENT.m_TimeLeft = 0
 
 -- TODO this should probs be in a utilities file somewhere
 ---
-local function table_find(table, value)
-	for i, v in ipairs(table) do
-		if v == value then
-			return i
-		end
-	end
-
-	return nil
-end
 
 
 function ENT:Initialize()
@@ -117,7 +108,7 @@ function ENT:_handleHunters()
 		return
 	end
 
-	local hunter_idx = table_find(self.m_NPCs, "npc_hunter")
+	local hunter_idx = table.Find(self.m_NPCs, "npc_hunter")
 	if hunter_idx == nil then
 		return
 	end
@@ -131,7 +122,7 @@ function ENT:_handleHunters()
 	-- Purge any hunters from our table (there may be more than one!)
 	repeat
 		table.remove(self.m_NPCs, hunter_idx)
-		hunter_idx = table_find(self.m_NPCs, "npc_hunter")
+		hunter_idx = table.Find(self.m_NPCs, "npc_hunter")
 	until hunter_idx == nil
 
 	local hunter_spawner = ents.Create("ose_legacy_npc_spawner")

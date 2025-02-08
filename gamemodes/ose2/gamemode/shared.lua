@@ -26,6 +26,9 @@ GM.Website = "https://github.com/Lexicality/onslaught-evolved-2"
 
 GM.TeamBased = false
 
+-- Fixes might be used by other files
+include("sh_fixes.lua")
+
 -- Base must be included before all others
 include("player_class/player_osebase.lua")
 
