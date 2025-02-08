@@ -300,7 +300,7 @@ function ENT:SpawnNPC(classname)
 	-- Hack - getting using .Get() is very slow because it deep copies the
 	-- table, so technically this will cause trouble if we mutate the data
 	--- @type NPCListDefinition | nil
-	local npcData = list.GetForEdit("OSENPC")[classname]
+	local npcData = list.GetEntry("OSENPC", classname)
 
 	if npcData ~= nil then
 		classname = npcData.Class

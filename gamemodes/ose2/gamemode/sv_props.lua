@@ -141,13 +141,14 @@ end
 ---@param cmd string
 ---@param args string[]
 local function ccOSESpawn(ply, cmd, args)
+	if not IsValid(ply) then
+		print("The server can't spawn things")
+		return
+	end
 	local model = args[1]
 	if not list.HasEntry("OSEProps", model) then
 		-- TODO: sensible notification
 		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong")
-		return
-	elseif not IsValid(ply) then
-		print("The server can't spawn things")
 		return
 	elseif not hook.Run("PlayerSpawnProp", ply, model) then
 		-- no need to notify the player, the hook will do that
@@ -163,7 +164,7 @@ local function ccOSESpawn(ply, cmd, args)
 	end
 
 	--- @type OSEPropDefinition
-	local propData = list.Get("OSEProps")[model]
+	local propData = list.GetEntry("OSEProps", model)
 
 	local ent = doSpawn(ply, "ose_prop", model, propData.SpawnAngle)
 	if not IsValid(ent) then
@@ -189,19 +190,18 @@ concommand.Add("ose_spawn", ccOSESpawn)
 ---@param cmd string
 ---@param args string[]
 local function ccOSESpawnEnt(ply, cmd, args)
-	local class = args[1]
-	if not list.HasEntry("OSEEntities", class) then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong (" .. class .. ")")
-		return
-	elseif not IsValid(ply) then
+	if not IsValid(ply) then
 		print("The server can't spawn things")
 		return
 	end
+	local class = args[1]
 	--- @type OSEEntityDefinition
-	local entData = list.Get("OSEEntities")[class]
-
-	if not hook.Run("PlayerSpawnEntity", ply, class, entData) then
+	local entData = list.GetEntry("OSEEntities", class)
+	if not entData then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong (" .. class .. ")")
+		return
+	elseif not hook.Run("PlayerSpawnEntity", ply, class, entData) then
 		-- no need to notify the player, the hook will do that
 		return
 	end

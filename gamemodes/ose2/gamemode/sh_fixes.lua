@@ -32,3 +32,16 @@ function table.Find(table, value)
 	end
 	return nil
 end
+
+--- Returns a single item from a list which may or may not exist
+--- @param listid string
+--- @param key string
+--- @return any | nil
+function list.GetEntry(listid, key)
+	local list = list.GetForEdit(listid)
+	local value = list[key]
+	if (istable(value)) then
+		value = table.Copy(value)
+	end
+	return value
+end
