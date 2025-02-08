@@ -28,6 +28,7 @@ function GM:OnGamemodeLoaded()
 	self:SetupProps()
 	self:SetupHUD()
 	self:SetupKillIcons()
+	self:SetupClasses()
 end
 
 function GM:InitPostEntity()

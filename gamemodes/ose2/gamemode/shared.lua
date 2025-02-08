@@ -42,6 +42,7 @@ include("player_class/player_soldier.lua")
 -- include("player_class/player_support.lua")
 include("sh_entity_meta.lua")
 include("sh_money.lua")
+include("sh_player.lua")
 include("sh_player_meta.lua")
 include("sh_props.lua")
 

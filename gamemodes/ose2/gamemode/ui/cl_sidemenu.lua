@@ -14,8 +14,11 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
+
 include("sandbox/gamemode/spawnmenu/controlpanel.lua")
 include("sandbox/gamemode/spawnmenu/toolpanel.lua")
+include("cl_classquickmenu.lua")
+
 -- HACK, the tool menus depend on this existing no matter what
 CreateClientConVar("gmod_toolmode", "")
 
@@ -24,6 +27,11 @@ CreateClientConVar("gmod_toolmode", "")
 local PANEL = {}
 
 function PANEL:Init()
+	self:AddSheet(
+		"#ose.spawnmenu.tab.class",
+		vgui.Create("OSEClassQuickMenu"),
+		"icon16/user.png"
+	)
 	self:SetupTools()
 end
 

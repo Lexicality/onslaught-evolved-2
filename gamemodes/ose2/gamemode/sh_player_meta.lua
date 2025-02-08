@@ -120,3 +120,19 @@ function plyMeta:CanAfford(amount)
 	local money = self:GetMoney()
 	return money >= amount
 end
+
+--- Returns the class the player wants to be next time they spawn in battle mode
+--- @return string # eg `player_soldier`
+function plyMeta:GetTargetClass()
+	local id = self:GetTargetClassID()
+	if id == 0 then
+		return "player_soldier"
+	end
+	return util.NetworkIDToString(id)
+end
+
+--- Sets the class the player wants to be next time they spawn in battle mode
+--- @param targetClass string # validated classname, eg `player_soldier`
+function plyMeta:SetTargetClass(targetClass)
+	self:SetTargetClassID(util.NetworkStringToID(targetClass))
+end

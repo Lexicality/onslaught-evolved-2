@@ -34,4 +34,5 @@ function GM:OnGamemodeLoaded()
 	self:SetupNPCs()
 	self:SetupRounds()
 	self:SetupProps()
+	self:SetupClasses()
 end

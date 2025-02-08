@@ -15,6 +15,8 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --]]
 
+--- @type SGM
+local BaseClass
 DEFINE_BASECLASS("gamemode_base")
 
 local noclipCvar = GetConVar("ose_build_noclip")
@@ -43,15 +45,27 @@ function GM:PlayerDeath(ply, attacker, dmg)
 	end
 end
 
+function GM:PlayerSpawn(ply, isTransiton)
+	if self.m_RoundPhase ~= ROUND_PHASE_BUILD and ply:GetTargetClassID() ~= ply:GetClassID() then
+		player_manager.SetPlayerClass(ply, ply:GetTargetClass())
+	end
+
+	BaseClass.PlayerSpawn(self, ply, isTransiton)
+end
+
 function GM:PlayerInitialSpawn(ply, isTransiton)
 	BaseClass.PlayerInitialSpawn(self, ply, isTransiton)
 
-	if self.m_RoundPhase == ROUND_PHASE_BUILD then
-		player_manager.SetPlayerClass(ply, "player_builder")
-	else
-		-- TODO: Class selection
-		player_manager.SetPlayerClass(ply, "player_soldier")
-	end
+	-- We need the player to have a consistent class from here on out and it
+	-- doesn't really matter what that class is.
+	-- If we set them as a builder and it's the build phase, everything is good.
+	-- However, if we're mid battle, `PlayerSpawn` which is called immediately
+	-- after this will notice they're the wrong class and fix that
+	player_manager.SetPlayerClass(ply, "player_builder")
+	-- TODO: Do we want to try and save the class the player was last time they
+	-- played and set them to it? Per server? Global client `ose_preferredclass`
+	-- cvar? Much to ponder.
+	ply:SetTargetClass("player_soldier")
 
 	if self.m_RoundPhase == ROUND_PHASE_BUILD then
 		net.Start("BuildPhaseStarted")
@@ -64,3 +78,34 @@ function GM:PlayerInitialSpawn(ply, isTransiton)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
 end
+
+---@param ply GPlayer
+---@param cmd string
+---@param args string[]
+local function ccOSEChooseClass(ply, cmd, args)
+	if not IsValid(ply) then
+		print("No classes for the server, stupid")
+		return
+	end
+	local class = args[1]
+	--- @type OSEClassDefinition
+	local classData = list.GetEntry("OSEClasses", class)
+	if not classData or not classData.Selectable then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong (" .. class .. ")")
+		return
+	elseif class == ply:GetTargetClass() then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "You're already a " .. class .. "!")
+		return
+	elseif not hook.Run("PlayerCanChooseClass", ply, class, classData) then
+		-- TODO: sensible notification
+		ply:PrintMessage(HUD_PRINTTALK, "You can't choose that class!")
+		return
+	end
+
+	ply:SetTargetClass(class)
+	-- TODO: sensible notification
+	ply:PrintMessage(HUD_PRINTTALK, "You will spawn as a " .. class .. " next time!")
+end
+concommand.Add("ose_chooseclass", ccOSEChooseClass, nil, "Picks what class to spawn as in the battle phase")

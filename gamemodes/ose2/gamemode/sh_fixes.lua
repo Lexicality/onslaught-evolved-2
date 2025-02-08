@@ -45,3 +45,31 @@ function list.GetEntry(listid, key)
 	end
 	return value
 end
+
+if CLIENT then
+	if (system.IsLinux()) then
+		surface.CreateFont("DermaDefaultBold", {
+			-- On my system at least, you need to specify bold in the font name
+			-- or the damn thing doesn't show up as bold which is very silly but
+			-- what can you do
+			font     = "DejaVu Sans Bold",
+			size     = 14,
+			weight   = 800,
+			extended = true
+		})
+
+		surface.CreateFont("DermaHeading", {
+			font     = "DejaVu Sans Bold",
+			size     = 16,
+			weight   = 800,
+			extended = true
+		})
+	else
+		surface.CreateFont("DermaHeading", {
+			font     = "Tahoma",
+			size     = 15,
+			weight   = 800,
+			extended = true
+		})
+	end
+end

@@ -76,6 +76,12 @@ _G.g_SpawnMenu = nil
 --- @field SpawnFlags? integer
 --- @field TotalSpawnFlags? integer
 
+--- @class OSEClassDefinition
+--- @field Name string
+--- @field Description string
+--- @field Selectable boolean
+--- @field Icon string
+
 --- @class EntityOutputDefiniton
 --- @field entities string
 --- @field input string
@@ -129,3 +135,11 @@ function ply:GetMoneyVar() end
 
 --- @param money integer
 function ply:SetMoneyVar(money) end
+
+--- Returns the class ID the player wants to be next time they spawn in battle mode
+--- @return integer
+function ply:GetTargetClassID() end
+
+--- Sets the class ID the player wants to be next time they spawn in battle mode
+--- @param targetClass integer
+function ply:SetTargetClassID(targetClass) end

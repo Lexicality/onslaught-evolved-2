@@ -84,6 +84,8 @@ function GM:SetupHUD()
 
 	self.hud_MoneyPhrase = language.GetPhrase("ose.hud.money")
 	self.hud_MoneyLast = 0
+
+	self.hud_ClassLast = -1
 end
 
 function GM:HUDPaint()
@@ -91,6 +93,7 @@ function GM:HUDPaint()
 	self:HUDDrawRoundData()
 	self:HUDDrawTimer()
 	self:HUDDrawMoney()
+	self:HUDDrawClass()
 end
 
 function GM:HUDDrawRoundData()
@@ -237,5 +240,66 @@ function GM:HUDDrawMoney()
 		textOffset + PADDING_W,
 		textOffset + PADDING_H + 3
 	)
+	surface.DrawText(text)
+end
+
+function GM:HUDDrawClass()
+	local classID
+	local lpl = LocalPlayer()
+	if self.m_RoundPhase == ROUND_PHASE_BUILD then
+		classID = lpl:GetTargetClassID()
+	else
+		classID = lpl:GetClassID()
+	end
+
+	surface.SetFont(HUD_TEXT_FONT)
+
+	if classID == 0 then
+		return
+	elseif classID ~= self.hud_ClassLast then
+		self.hud_ClassLast = classID
+		local className = util.NetworkIDToString(classID)
+		--- @type OSEClassDefinition
+		local classData = list.GetEntry("OSEClasses", className)
+		if classData == nil then
+			self.hud_ClassText = ""
+			return
+		end
+		local text = language.GetPhrase(classData.Name)
+		self.hud_ClassText = text
+		self.hud_ClassWidth, self.hud_ClassHeight = surface.GetTextSize(text)
+	elseif not self.hud_ClassText then
+		return
+	end
+
+
+	local sWidth = ScrW()
+	local text, textWidth, textHeight = self.hud_ClassText, self.hud_ClassWidth, self.hud_ClassHeight
+
+	local topPadding = 20
+	local rightPadding = 20
+
+	local PADDING_H = 5
+	local PADDING_W = 15
+
+	local textX = sWidth - rightPadding - textWidth - PADDING_W
+	local textY = topPadding + PADDING_H + 3
+
+	draw.RoundedBox(
+		8,
+		textX - PADDING_W,
+		topPadding,
+		textWidth + PADDING_W * 2,
+		textHeight + PADDING_H * 2,
+		HUD_BACKGROUND_COLOUR
+	)
+
+	surface.SetTextColor(
+		HUD_TEXT_COLOUR.r,
+		HUD_TEXT_COLOUR.g,
+		HUD_TEXT_COLOUR.b,
+		HUD_TEXT_COLOUR.a
+	)
+	surface.SetTextPos(textX, textY)
 	surface.DrawText(text)
 end
