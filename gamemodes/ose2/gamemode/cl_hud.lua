@@ -83,6 +83,7 @@ function GM:SetupHUD()
 	self.hud_TimerHeight = h
 
 	self.hud_MoneyPhrase = language.GetPhrase("ose.hud.money")
+	self.hud_MoneyLast = 0
 end
 
 function GM:HUDPaint()
@@ -202,25 +203,20 @@ function GM:HUDDrawTimer()
 	surface.DrawText(":")
 end
 
-local lastMoney = -1
-local lastTextWidth = 0
-local lastTextHeight = 0
-
 function GM:HUDDrawMoney()
 	local textOffset = 20
 	local money = LocalPlayer():GetMoney()
 	local text = string.format(self.hud_MoneyPhrase, money)
 
 	surface.SetFont(HUD_TEXT_FONT)
-	if money ~= lastMoney then
-		lastTextWidth, lastTextHeight = surface.GetTextSize(text)
-		lastMoney = money
+	if money ~= self.hud_MoneyLast then
+		self.hud_MoneyWidth, self.hud_MoneyHeight = surface.GetTextSize(text)
+		self.hud_MoneyLast = money
 	end
-	local textWidth = lastTextWidth
-	local textHeight = lastTextHeight
+	local textWidth = self.hud_MoneyWidth
+	local textHeight = self.hud_MoneyHeight
 	local PADDING_H = 5
 	local PADDING_W = 15
-	local widthHalf = textWidth / 2
 
 	draw.RoundedBox(
 		8,
@@ -239,7 +235,7 @@ function GM:HUDDrawMoney()
 	)
 	surface.SetTextPos(
 		textOffset + PADDING_W,
-		textOffset + PADDING_H
+		textOffset + PADDING_H + 3
 	)
 	surface.DrawText(text)
 end
