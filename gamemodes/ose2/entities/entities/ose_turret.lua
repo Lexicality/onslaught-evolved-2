@@ -24,7 +24,7 @@ local ENT = ENT --[[@as SENT_OSETurret]]
 local BaseClass
 DEFINE_BASECLASS("ose_prop")
 
-local TURRET_MODEL = "models/combine_turrets/floor_turret.mdl"
+local TURRET_MODEL = Model("models/combine_turrets/floor_turret.mdl")
 local TURRET_CITIZEN_SKIN_MIN = 1
 local TURRET_CITIZEN_SKIN_MAX = 2
 -- TODO: Configurable?
