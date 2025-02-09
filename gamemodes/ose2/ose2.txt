@@ -90,6 +90,16 @@
 			"singleplayer" "1"
 		}
 
+		23 {
+			"name" "ose_maxhealthchargers"
+			"text" "ose.convar.maxhealthchargers"
+			"help" "Max health dispensers a player can spawn"
+			"type" "Numeric"
+			"default" "1"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
 		7 {
 			"name" "ose_cleanup_props"
 			"text" "ose.convar.cleanup_props"

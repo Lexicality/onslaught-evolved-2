@@ -20,7 +20,8 @@ include("sandbox/gamemode/player_extension.lua")
 
 local LIMIT_TRANSLATIONS = {
 	ose_mine = "mines",
-	ose_turret = "turrets"
+	ose_turret = "turrets",
+	ose_health_charger = "healthchargers",
 }
 
 --- @class GPlayer
