@@ -33,6 +33,10 @@ PLAYER.MaxHealth = 90
 PLAYER.StartHealth = 90
 
 
+PLAYER.ValidAmmo = {
+	-- TODO
+}
+
 function PLAYER:Loadout()
 	self.Player:RemoveAllAmmo()
 	self.Player:Give("weapon_crowbar")

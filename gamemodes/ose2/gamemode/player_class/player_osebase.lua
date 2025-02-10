@@ -24,6 +24,9 @@ DEFINE_BASECLASS("player_default")
 --- @class OSEPlayerBase : GPlayerClass
 local PLAYER = {}
 
+--- @type string[]
+PLAYER.ValidAmmo = {}
+
 function PLAYER:SetupDataTables()
 	self.Player:NetworkVar("Int", 0, "MoneyVar")
 	self.Player:NetworkVar("Int", 1, "TargetClassID")
@@ -32,6 +35,14 @@ end
 function PLAYER:Init()
 	-- Ensure the money var is up to date
 	self.Player:GetMoney(true)
+end
+
+--- Checks if this class can buy this ammo type
+--- @param ammoName string
+--- @param ammoData OSEAmmoDefinition
+--- @return boolean
+function PLAYER:CanBuyAmmo(ammoName, ammoData)
+	return table.Find(self.ValidAmmo, ammoName) ~= nil
 end
 
 player_manager.RegisterClass("player_osebase", PLAYER, "player_default")

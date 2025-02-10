@@ -30,6 +30,11 @@ PLAYER.WalkSpeed = 650
 PLAYER.RunSpeed = 650
 PLAYER.JumpPower = 260
 
+PLAYER.ValidAmmo = {
+	"ammo_pistol",
+	-- "ammo_heavy_buckshot",
+}
+
 
 function PLAYER:Loadout()
 	self.Player:RemoveAllAmmo()

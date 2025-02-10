@@ -31,6 +31,12 @@ PLAYER.JumpPower = 210
 PLAYER.MaxHealth = 150
 PLAYER.StartHealth = 150
 
+PLAYER.ValidAmmo = {
+	"ammo_pistol",
+	"ammo_grenade",
+	-- "ammo_flamer",
+}
+
 
 function PLAYER:Loadout()
 	self.Player:RemoveAllAmmo()

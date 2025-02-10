@@ -35,6 +35,12 @@ PLAYER.StartHealth = 200
 PLAYER.MaxArmor = 100
 PLAYER.StartArmor = 100
 
+PLAYER.ValidAmmo = {
+	"ammo_ar2",
+	"ammo_pistol",
+	"ammo_ar2alt",
+	"ammo_grenade",
+}
 
 function PLAYER:Loadout()
 	self.Player:RemoveAllAmmo()

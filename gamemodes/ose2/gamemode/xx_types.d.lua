@@ -82,6 +82,13 @@ _G.g_SpawnMenu = nil
 --- @field Selectable boolean
 --- @field Icon string
 
+--- @class OSEAmmoDefinition
+--- @field Name string The name to display for the ammo
+--- @field DisplayModel string The model to display in the spawn menu
+--- @field Price integer How much the players have to pay
+--- @field Quantity integer How much ammo the player gets when they buy it
+--- @field Class string The actual ammo name eg "SMG1_Grenade"
+
 --- @class EntityOutputDefiniton
 --- @field entities string
 --- @field input string
