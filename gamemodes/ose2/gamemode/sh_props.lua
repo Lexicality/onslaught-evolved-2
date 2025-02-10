@@ -258,10 +258,17 @@ function GM:SetupProps()
 	entities["ose_health_charger"] = {
 		Name = "#ose_health_charger",
 		DisplayModel = "models/props_combine/health_charger001.mdl",
-		DisplaySkin = 0,
 		AllowInBattle = true,
 		ModelGroup = GROUP_SPECIAL,
 		Price = 600,
+	}
+	entities["ose_ammo_crate"] = {
+		Name = "#ose_ammo_crate",
+		DisplayModel = "models/items/ammocrate_smg1.mdl",
+		AllowInBattle = true,
+		ModelGroup = GROUP_SPECIAL,
+		Price = 400,
+
 	}
 
 	for mdl, _ in pairs(props) do

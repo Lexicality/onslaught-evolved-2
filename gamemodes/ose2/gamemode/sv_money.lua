@@ -23,6 +23,23 @@ function GM:GetStartingMoney(player)
 	return startingMoneyCvar:GetInt()
 end
 
+--- Checks if a player is allowed to use a particular ammo crate
+--- @param ply GPlayer
+--- @param crate SENT_OSEAmmoCrate
+--- @return boolean
+function GM:PlayerOpenAmmoCrate(ply, crate)
+	-- Do we care about prop protection? Probably not
+	return true
+end
+
+--- Called when a player successfully opens an ammo crate
+--- @param ply GPlayer
+--- @param crate SENT_OSEAmmoCrate
+function GM:PlayerOpenedAmmoCrate(ply, crate)
+	-- TODO: Ammo pannel mechanics go here!
+	crate:OnPlayerFinished(ply)
+end
+
 --- Find a player by name, entindex or steamID
 --- @param text string
 --- @return GPlayer?

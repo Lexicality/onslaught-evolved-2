@@ -100,6 +100,16 @@
 			"singleplayer" "1"
 		}
 
+		24 {
+			"name" "ose_maxammocrates"
+			"text" "ose.convar.maxammocrates"
+			"help" "Max ammo crates a player can spawn"
+			"type" "Numeric"
+			"default" "1"
+			"replicate" "1"
+			"singleplayer" "1"
+		}
+
 		7 {
 			"name" "ose_cleanup_props"
 			"text" "ose.convar.cleanup_props"
