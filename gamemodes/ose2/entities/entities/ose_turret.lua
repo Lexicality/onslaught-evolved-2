@@ -84,6 +84,7 @@ function ENT:_OnPrepPhase(roundNum)
 	self:SetParent(turret)
 	self:DeleteOnRemove(turret)
 	turret:SetCreator(self:GetCreator())
+	turret._oseCreatorSID = self._oseCreatorSID
 	turret._oseSpawner = self
 
 	turret:Spawn()

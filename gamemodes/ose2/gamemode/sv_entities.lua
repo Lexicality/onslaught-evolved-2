@@ -180,3 +180,20 @@ function GM:EntityTakeDamage(target, dmg)
 		dmg:ScaleDamage(self.m_DamageScale)
 	end
 end
+
+--- @param ent GEntity
+--- @param name string
+--- @param old GEntity
+--- @param new GEntity
+local function onCreatorChanged(ent, name, old, new)
+	if IsValid(new) and new:IsPlayer() then
+		ent._oseCreatorSID = (new --[[@as GPlayer]]):SteamID64()
+	end
+end
+
+function GM:OnEntityCreated(ent)
+	if ent.NetworkVarNotify then
+		ent:NetworkVarNotify("Creator", onCreatorChanged)
+	end
+	ent:SetNW2VarProxy("Creator", onCreatorChanged)
+end

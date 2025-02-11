@@ -77,6 +77,15 @@ function GM:PlayerInitialSpawn(ply, isTransiton)
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
+
+	-- restore all created entities
+	local sid = ply:SteamID64()
+	for _, ent in ents.Iterator() do
+		--- @cast ent  GEntity
+		if ent._oseCreatorSID == sid then
+			ent:SetCreator(ply)
+		end
+	end
 end
 
 ---@param ply GPlayer
