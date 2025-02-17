@@ -18,6 +18,7 @@
 AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_effects.lua")
 AddCSLuaFile("cl_deathnotice.lua")
+AddCSLuaFile("cl_notifications.lua")
 AddCSLuaFile("ui/cl_classquickmenu.lua")
 AddCSLuaFile("ui/cl_entityicon.lua")
 AddCSLuaFile("ui/cl_propicon.lua")
