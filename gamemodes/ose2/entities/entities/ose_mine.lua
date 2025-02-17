@@ -62,6 +62,7 @@ function ENT:_OnPrepPhase(roundNum)
 	self:SetParent(mine)
 	self:DeleteOnRemove(mine)
 	mine:SetCreator(self:GetCreator())
+	mine._oseCreatorSID = self._oseCreatorSID
 	mine._oseSpawner = self
 
 	mine:Spawn()
