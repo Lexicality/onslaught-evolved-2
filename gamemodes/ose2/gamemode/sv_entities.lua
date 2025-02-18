@@ -1,5 +1,4 @@
 local function setupNPCManager()
-	print("OSE2 Debug: Creating NPC manager")
 	local npcManager = ents.Create("ose_npc_manager")
 	npcManager:SetName("npc_manager")
 	npcManager:Spawn()
@@ -75,7 +74,6 @@ local function setupNPCManager()
 end
 
 local function setupGameRules()
-	print("OSE2 Debug: Creating gamerules")
 	local gamerules = ents.Create("ose_gamerules")
 	gamerules:SetName("gamerules")
 	gamerules:Spawn()

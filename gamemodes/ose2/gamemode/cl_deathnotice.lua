@@ -38,6 +38,4 @@ function GM:SetupKillIcons()
 	killicon.Add("npc_manhack", "lambda/killicons/npc_manhack_killicon", sandboxIconColour)
 	killicon.Add("fall", "lambda/killicons/worldspawn_killicon", sandboxIconColour)
 	killicon.Add("combine_mine", "lambda/killicons/combine_mine_killicon", sandboxIconColour)
-
-	print("meow?!")
 end
