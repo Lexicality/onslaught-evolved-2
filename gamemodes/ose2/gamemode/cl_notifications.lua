@@ -92,6 +92,18 @@ local function maybeFormatText(text, args)
 	return string.format(text, unpack(args))
 end
 
+local function onNotification()
+	local text = net.ReadString()
+	local type = net.ReadUInt(1)
+	local length = net.ReadUInt(7)
+	local args = net.ReadTable(true)
+
+	text = maybeFormatText(text, args)
+
+	notification.AddLegacy(text, type, length)
+end
+net.Receive("OSE Notification", onNotification)
+
 local function onMoneyNotification()
 	local reason = net.ReadString()
 	local amount = net.ReadInt(32)

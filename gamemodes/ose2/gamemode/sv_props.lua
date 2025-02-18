@@ -147,8 +147,7 @@ local function ccOSESpawn(ply, cmd, args)
 	end
 	local model = args[1]
 	if not list.HasEntry("OSEProps", model) then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong")
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.invalid_prop", 10, model)
 		return
 	elseif not hook.Run("PlayerSpawnProp", ply, model) then
 		-- no need to notify the player, the hook will do that

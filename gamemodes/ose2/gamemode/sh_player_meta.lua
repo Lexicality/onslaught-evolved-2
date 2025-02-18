@@ -151,3 +151,27 @@ end
 function plyMeta:SetTargetClass(targetClass)
 	self:SetTargetClassID(util.NetworkStringToID(targetClass))
 end
+
+if SERVER then
+	util.AddNetworkString("OSE Notification")
+
+	NOTIFY_GENERIC = 0
+	--- Error notification
+	NOTIFY_ERROR = 1
+	--- Sends the user a notification
+	--- @param type `NOTIFY_GENERIC` | `NOTIFY_ERROR` # The type of notification to display
+	--- @param text string # Text to display in the notification
+	--- @param length integer # How long to display the notification for
+	--- @param ... any # Format args for text
+	function plyMeta:SendNotification(type, text, length, ...)
+		if type < 0 or type > 1 then
+			error("Unknown notification type " .. type)
+		end
+		net.Start("OSE Notification")
+		net.WriteString(text)
+		net.WriteUInt(type, 1)
+		net.WriteUInt(math.Clamp(length, 0, 127), 7)
+		net.WriteTable({ ... }, true)
+		net.Send(self)
+	end
+end
