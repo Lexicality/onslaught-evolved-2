@@ -141,7 +141,7 @@ end
 ---@param raw_value string
 ---@return {[string]: string} | nil
 local function handleKeyValues(raw_value)
-	local split = string.Explode(" ", raw_value, false)
+	local split = string.Explode(" +", raw_value, true)
 	local splitlen = #split
 	if splitlen % 2 ~= 0 then
 		return nil
@@ -166,7 +166,7 @@ end
 ---@param raw_value string
 ---@return string[] | nil
 local function handleNPCs(raw_value)
-	local split = string.Explode(" ", raw_value, false)
+	local split = string.Explode(" +", raw_value, true)
 	local ret = {}
 	for i, v in ipairs(split) do
 		v = string.Trim(v)
