@@ -72,4 +72,18 @@ if CLIENT then
 			extended = true
 		})
 	end
+
+	--- Formats money nicely
+	--- @param amount integer
+	--- @param formatStr? string
+	function string.FormatMoney(amount, formatStr)
+		if not formatStr then
+			formatStr = "ose.hud.money"
+		end
+		local sepr = language.GetPhrase("ose.hud.money_sepr")
+		return string.format(
+			language.GetPhrase(formatStr),
+			string.Comma(amount, sepr)
+		)
+	end
 end
