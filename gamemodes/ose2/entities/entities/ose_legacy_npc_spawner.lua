@@ -297,8 +297,6 @@ function ENT:SpawnNPC(classname)
 		classname = COMBINE_TYPES[math.random(#COMBINE_TYPES)]
 	end
 
-	-- Hack - getting using .Get() is very slow because it deep copies the
-	-- table, so technically this will cause trouble if we mutate the data
 	--- @type NPCListDefinition | nil
 	local npcData = list.GetEntry("OSENPC", classname)
 

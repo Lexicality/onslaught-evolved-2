@@ -248,7 +248,6 @@ function GM:OnNPCKilled(npc, attacker, inflictor)
 	--- @type string
 	local npcClass = hook.Call("GetNPCType", self, npc)
 	local reward = DEFAULT_NPC_REWARD
-	-- I really don't like the deepcopy cost of `list.Get` so I'm going to live dangerously
 	local npcData = list.GetEntry("OSENPC", npcClass)
 	if npcData and npcData.Reward then
 		reward = npcData.Reward
