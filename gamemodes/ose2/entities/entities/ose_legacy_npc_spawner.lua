@@ -351,6 +351,7 @@ function ENT:SpawnNPC(classname)
 
 		-- Since we have this on hand, let's save time later
 		npc._oseReward = npcData.Reward
+		npc._oseName = npcData.Name
 	end
 
 	npc:SetKeyValue("spawnflags", tostring(spawnflags))

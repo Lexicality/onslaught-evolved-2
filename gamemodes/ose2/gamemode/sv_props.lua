@@ -172,8 +172,7 @@ local function ccOSESpawn(ply, cmd, args)
 	end
 
 	ent._osePropValue = price
-	-- TODO: money notification?
-	ply:AddMoney(-price)
+	ply:AddMoney(-price, "ose.money.reason.bought_x", propData.Name)
 
 	hook.Run("PlayerSpawnedProp", ply, model, ent)
 
@@ -220,8 +219,7 @@ local function ccOSESpawnEnt(ply, cmd, args)
 	end
 
 	ent._osePropValue = price
-	-- TODO: money notification?
-	ply:AddMoney(-price)
+	ply:AddMoney(-price, "ose.money.reason.bought_x", entData.Name)
 
 	hook.Run("PlayerSpawnedEntity", ply, class, ent, entData)
 
@@ -317,7 +315,6 @@ function GM:EntityRemoved(ent, fullUpdate)
 	local owner = ent:GetCreator()
 	local amount = ent._osePropValue
 	if IsValid(owner) and isnumber(amount) then
-		-- TODO: money notification?
-		owner:AddMoney(amount * refundM)
+		owner:AddMoney(amount * refundM, "ose.money.reason.refund")
 	end
 end

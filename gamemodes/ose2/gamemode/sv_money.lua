@@ -134,7 +134,6 @@ local function ccOSESetMoney(ply, cmd, args)
 	if not target then
 		return
 	end
-	-- TODO: money notification?
 	target:SetMoney(amount)
 end
 
@@ -173,8 +172,7 @@ local function ccOSEAddMoney(ply, cmd, args)
 	if not target then
 		return
 	end
-	-- TODO: money notification?
-	target:AddMoney(amount)
+	target:AddMoney(amount, "ose.money.reason.admin")
 end
 
 ---@param cmd string

@@ -239,8 +239,7 @@ function GM:OnNPCKilled(npc, attacker, inflictor)
 
 	-- Has the spawner helped us out?
 	if isnumber(npc._oseReward) then
-		-- TODO: money notification?
-		attacker:AddMoney(npc._oseReward)
+		attacker:AddMoney(npc._oseReward, "ose.money.reason.npc_killed", npc._oseName or "FUCK")
 		return
 	end
 
@@ -248,10 +247,17 @@ function GM:OnNPCKilled(npc, attacker, inflictor)
 	--- @type string
 	local npcClass = hook.Call("GetNPCType", self, npc)
 	local reward = DEFAULT_NPC_REWARD
+	--- @type NPCListDefinition
 	local npcData = list.GetEntry("OSENPC", npcClass)
-	if npcData and npcData.Reward then
-		reward = npcData.Reward
+
+	local name
+	if npcData then
+		name = npcData.Name
+		if npcData.Reward then
+			reward = npcData.Reward
+		end
+	else
+		name = "#" .. npcClass
 	end
-	-- TODO: money notification?
-	attacker:AddMoney(reward)
+	attacker:AddMoney(reward, "ose.money.reason.npc_killed", name)
 end

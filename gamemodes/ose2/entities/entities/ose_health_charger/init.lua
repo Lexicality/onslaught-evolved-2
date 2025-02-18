@@ -113,8 +113,7 @@ function ENT:Use(activator, caller, useType, value)
 	if self.m_TotalHealthRestored % 50 == 0 then
 		local owner = self:GetCreator()
 		if IsValid(owner) then
-			-- TODO: money notification?
-			owner:AddMoney(HEALING_REWARD)
+			owner:AddMoney(HEALING_REWARD, "ose.money.reason.health_charger")
 		end
 	end
 end

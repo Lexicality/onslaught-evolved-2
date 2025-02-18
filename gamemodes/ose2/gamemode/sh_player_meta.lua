@@ -96,23 +96,36 @@ function plyMeta:SetMoney(amount)
 end
 
 local INT32_MAX = 2147483647
+if SERVER then
+	util.AddNetworkString("OSE Money Notification")
+end
 
 --- Adds an arbitrary amount of money to the player.
 --- The amount may be negative.
 --- @param amount integer
+--- @param reason? string # Reason to display to the player in a notification
+--- @param ... any # Format args for reason
 --- @return integer # The amount of money the user now has
-function plyMeta:AddMoney(amount)
-	local money = self:GetMoney(true)
-	money = money + amount
-	if money < 0 then
-		money = 0
-	elseif money > INT32_MAX then
+function plyMeta:AddMoney(amount, reason, ...)
+	local prevMoney = self:GetMoney(true)
+	local newMoney = prevMoney + amount
+	if newMoney < 0 then
+		newMoney = 0
+	elseif newMoney > INT32_MAX then
 		-- shouldn't happen, potentially could if some server admin does
 		-- something very silly though
-		money = INT32_MAX
+		newMoney = INT32_MAX
 	end
-	self:SetMoney(money)
-	return money
+	self:SetMoney(newMoney)
+
+	if SERVER and reason then
+		net.Start("OSE Money Notification")
+		net.WriteString(reason)
+		net.WriteInt(newMoney - prevMoney, 32)
+		net.WriteTable({ ... }, true)
+		net.Send(self)
+	end
+	return newMoney
 end
 
 --- Checks if the player can afford to buy something

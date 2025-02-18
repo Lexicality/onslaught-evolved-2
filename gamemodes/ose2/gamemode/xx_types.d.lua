@@ -132,6 +132,7 @@ function ENT:SetNetworkKeyValue(key, value) end
 
 --- @class GNPC
 --- @field _oseReward? integer @If we've got a pre-calculated reward for this NPC
+--- @field _oseName? string @If we've got a pre-specified name for this NPC
 
 --- @class GPlayer
 --- @field NextSpawnTime integer @When the base gamemode should next allow the player to spawn

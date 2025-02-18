@@ -74,6 +74,53 @@ function GM:OnCleanup(name)
 	surface.PlaySound("buttons/button15.wav")
 end
 
+--- Does some mildly annoying formatting
+--- @param text string
+--- @param args any[]
+--- @return string
+local function maybeFormatText(text, args)
+	text = language.GetPhrase(text)
+	if #args == 0 then
+		return text
+	end
+	-- Ensure any strings in the arguments are also correctly translated
+	for i, v in ipairs(args) do
+		if isstring(v) and v[1] == "#" then
+			args[i] = language.GetPhrase(v)
+		end
+	end
+	return string.format(text, unpack(args))
+end
+
+local function onMoneyNotification()
+	local reason = net.ReadString()
+	local amount = net.ReadInt(32)
+	local args = net.ReadTable(true)
+
+	reason = maybeFormatText(reason, args)
+
+	--- @type string?
+	local moneystr
+	if amount > 0 then
+		moneystr = "ose.hud.add_money"
+	elseif amount < 0 then
+		moneystr = "ose.hud.sub_money"
+		-- Re-positivitate the amount so the formatter can add the -
+		amount = amount * -1
+	end
+	local formattedAmount = string.FormatMoney(amount, moneystr)
+
+	-- TODO: Much better money notification
+	local text = string.format(
+		language.GetPhrase("ose.notification.moneytemp"),
+		formattedAmount,
+		reason
+	)
+	notification.AddLegacy(text, NOTIFY_GENERIC, 10)
+end
+net.Receive("OSE Money Notification", onMoneyNotification)
+
+
 -- A list of hints we've already done so we don't repeat ourselves
 local ProcessedHints = {}
 
