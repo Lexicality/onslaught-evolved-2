@@ -6,16 +6,6 @@
 
 ]
 
-@SolidClass base(Targetname) = trigger_forcelose :
-	"Legacy - A trigger volume that causes the round to end if a NPC gets in it"
-[
-
-	npcfilter(string)
-		: "NPC Filter"
-		: "npc_combine_s npc_hunter"
-		: "Space separated list of NPC types that can trigger the loss"
-]
-
 @PointClass base(Targetname) = sent_spawner :
 	"Legacy - The old NPC spawner"
 [
