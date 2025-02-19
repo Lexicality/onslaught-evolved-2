@@ -17,7 +17,10 @@
 AddCSLuaFile()
 
 cleanup.Register("props")
+cleanup.Register("ose_ammo_crates")
+cleanup.Register("ose_health_chargers")
 cleanup.Register("ose_mines")
+cleanup.Register("ose_turrets")
 
 function GM:SetupProps()
 	--- @type OSEPropGroupDefinition[]
