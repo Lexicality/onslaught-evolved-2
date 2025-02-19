@@ -269,6 +269,10 @@ end
 ---@param entData OSEEntityDefinition
 function GM:PlayerSpawnedEntity(ply, class, ent, entData)
 	ply:AddCount(class, ent)
+	if self.m_RoundPhase ~= ROUND_PHASE_BUILD then
+		-- Note to self: Just calling ent._onPrepPhase() won't be enough! The bullseye needs to be hated!
+		ErrorNoHalt("TODO: Need to set this entity up correctly for battle!")
+	end
 end
 
 function GM:PhysgunPickup(ply, ent)
