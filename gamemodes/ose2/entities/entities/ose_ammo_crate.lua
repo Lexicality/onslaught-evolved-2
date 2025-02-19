@@ -49,6 +49,26 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Int", 0, "OpenState")
 end
 
+-- From mucking about, it seems like the eyetrace used for the use hook is about
+-- 97 units which is a weirdly specific number (maybe it means something in
+-- inches?) but that uses vphysics traces which are expensive to calculate.
+-- The furthest pos-to-pos distance I've been able to get is 114 units, so slap
+-- a bit of padding on there and hope for the best
+local CLOSE_RADIUS = math.pow(120, 2)
+
+
+--- @param ply GPlayer # The player to check
+--- @param strict? boolean # If we should enforce strict line-of-sight
+--- @param _pos? GVector # INTERNAL
+--- @return boolean
+function ENT:CanPlayerUseMe(ply, strict, _pos)
+	local here = _pos or self:GetPos()
+	return IsValid(ply)
+		and ply:Alive()
+		and (not strict or ply:GetEyeTrace().Entity == self)
+		and ply:GetPos():DistToSqr(here) <= CLOSE_RADIUS
+end
+
 if CLIENT then return end
 
 function ENT:Initialize()
@@ -92,13 +112,6 @@ function ENT:Use(activator)
 	self:EmitSound(OPEN_SOUND)
 end
 
--- From mucking about, it seems like the eyetrace used for the use hook is about
--- 97 units which is a weirdly specific number (maybe it means something in
--- inches?) but that uses vphysics traces which are expensive to calculate.
--- The furthest pos-to-pos distance I've been able to get is 114 units, so slap
--- a bit of padding on there and hope for the best
-local CLOSE_RADIUS = math.pow(120, 2)
-
 --- Ensures everyone we think is still using us is actually still using us
 --- @param strict? boolean
 --- @param plyToRemove? GPlayer
@@ -106,13 +119,7 @@ function ENT:PruneUsers(strict, plyToRemove)
 	local remaining = {}
 	local here = self:GetPos()
 	for _, ply in ipairs(self.m_Users) do
-		if
-			IsValid(ply)
-			and ply:Alive()
-			and (not strict or ply:GetEyeTrace().Entity == self)
-			and ply ~= plyToRemove
-			and ply:GetPos():DistToSqr(here) <= CLOSE_RADIUS
-		then
+		if ply ~= plyToRemove and self:CanPlayerUseMe(ply, strict, here) then
 			remaining[#remaining + 1] = ply
 		end
 	end
@@ -165,6 +172,16 @@ function ENT:Think()
 		self:SetOpenState(STATE_CLOSING)
 		self:ResetSequence(self.m_CloseSequence)
 	end
+end
+
+--- Checks if a player is a valid user of this entity
+--- @param ply GPlayer
+--- @return boolean
+function ENT:IsPlayerUsingMe(ply)
+	return (
+		self:GetOpenState() == STATE_OPEN
+		and table.Find(self.m_Users, ply) ~= nil
+	)
 end
 
 --- @param ply GPlayer

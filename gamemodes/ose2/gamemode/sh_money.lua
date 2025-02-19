@@ -24,63 +24,64 @@ function GM:SetupBuyables()
 	local ammo = list.GetForEdit("OSEAmmo")
 	ammo["ammo_357"] = {
 		Name = "#ose.ammo.357",
-		Class = "357",
+		EngineName = "357",
 		DisplayModel = "models/Items/357ammo.mdl",
 		Quantity = 18,
 		Price = 200,
 	}
 	ammo["ammo_ar2"] = {
 		Name = "#ose.ammo.ar2",
-		Class = "AR2",
+		EngineName = "AR2",
 		DisplayModel = "models/Items/combine_rifle_cartridge01.mdl",
 		Price = 150,
 		Quantity = 120,
 	}
 	ammo["ammo_ar2alt"] = {
 		Name = "#ose.ammo.ar2alt",
-		Class = "AR2AltFire",
+		EngineName = "AR2AltFire",
 		DisplayModel = "models/Items/combine_rifle_ammo01.mdl",
 		Quantity = 1,
 		Price = 400,
 	}
 	ammo["ammo_buckshot"] = {
 		Name = "#ose.ammo.buckshot",
-		Class = "BuckShot",
+		EngineName = "BuckShot",
 		DisplayModel = "models/Items/BoxBuckshot.mdl",
 		Quantity = 32,
 		Price = 200,
 	}
 	ammo["ammo_crossbow"] = {
 		Name = "#ose.ammo.crossbow",
-		Class = "xbowbolt",
+		EngineName = "xbowbolt",
 		DisplayModel = "models/Items/CrossbowRounds.mdl",
 		Quantity = 10,
 		Price = 500,
 	}
 	ammo["ammo_grenade"] = {
 		Name = "#ose.ammo.grenade",
-		Class = "grenade",
+		EngineName = "grenade",
 		DisplayModel = "models/Items/grenadeAmmo.mdl",
 		Quantity = 1,
 		Price = 300,
+		GiveWeapon = "weapon_frag",
 	}
 	ammo["ammo_pistol"] = {
 		Name = "#ose.ammo.pistol",
-		Class = "Pistol",
+		EngineName = "Pistol",
 		DisplayModel = "models/Items/BoxSRounds.mdl",
 		Quantity = 72,
 		Price = 100,
 	}
 	ammo["ammo_smg1"] = {
 		Name = "#ose.ammo.smg1",
-		Class = "SMG1",
+		EngineName = "SMG1",
 		DisplayModel = "models/Items/BoxMRounds.mdl",
 		Quantity = 90,
 		Price = 150,
 	}
 	ammo["ammo_smg1_grenade"] = {
 		Name = "#ose.ammo.smg1_grenade",
-		Class = "SMG1_Grenade",
+		EngineName = "SMG1_Grenade",
 		DisplayModel = "models/Items/AR2_Grenade.mdl",
 		Quantity = 1,
 		Price = 250,
@@ -199,6 +200,18 @@ function GM:CalculateEntityPrice(player, round, entity, basePrice)
 	return basePrice
 end
 
+--- Calculates the price a player should pay for ammo this round
+--- This value should *NOT* change inside a round
+--- @param player GPlayer
+--- @param round integer
+--- @param ammoName string
+--- @param basePrice integer
+--- @return integer
+function GM:CalculateAmmoPrice(player, round, ammoName, basePrice)
+	-- No tweaks by default
+	return basePrice
+end
+
 --- INTERNAL: Does the work to calculate a prop's health
 --- @param player GPlayer
 --- @param model string
@@ -229,20 +242,22 @@ function GM:LookupEntityPrice(player, entity, entData)
 	return hook.Call("CalculateEntityPrice", self, player, self.m_Round, entity, basePrice)
 end
 
+--- INTERNAL: Does the work to calculate an ammo's price
+--- @param player GPlayer
+--- @param ammoName string
+--- @param ammoData OSEAmmoDefinition
+--- @return integer
+function GM:LookupAmmoPrice(player, ammoName, ammoData)
+	local basePrice = math.floor(ammoData.Price * priceMultiplierCvar:GetFloat())
+	return hook.Call("CalculateAmmoPrice", self, player, self.m_Round, ammoName, basePrice)
+end
+
 --- Checks if a particular ammo is valid for a player
 --- This is run speculatively and should not notify the player
---- @param ply GPlayer
+--- @param player GPlayer
 --- @param ammoName string
 --- @param ammoData OSEAmmoDefinition
 --- @return boolean
-function GM:PlayerCanBuyAmmo(ply, ammoName, ammoData)
-	return player_manager.RunClass(ply, "CanBuyAmmo", ammoName, ammoData)
-end
-
-function GM:LookupPlayerAmmo(ply, ammoName)
-	local ammoData = list.GetEntry("OSEAmmo", ammoName)
-	if not ammoData then
-		return false
-	end
-	return hook.Call("PlayerCanBuyAmmo", self, ply, ammoName, ammoData)
+function GM:PlayerCanBuyAmmo(player, ammoName, ammoData)
+	return player_manager.RunClass(player, "CanBuyAmmo", ammoName, ammoData)
 end

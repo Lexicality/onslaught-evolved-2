@@ -21,6 +21,7 @@ include("cl_deathnotice.lua")
 include("cl_effects.lua")
 include("cl_hud.lua")
 include("cl_notifications.lua")
+include("ui/cl_ammomenu.lua")
 include("ui/cl_spawnmenu.lua")
 
 function GM:OnGamemodeLoaded()
@@ -30,6 +31,7 @@ function GM:OnGamemodeLoaded()
 	self:SetupHUD()
 	self:SetupKillIcons()
 	self:SetupClasses()
+	self:SetupBuyables()
 end
 
 function GM:InitPostEntity()

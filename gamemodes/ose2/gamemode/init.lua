@@ -35,4 +35,5 @@ function GM:OnGamemodeLoaded()
 	self:SetupRounds()
 	self:SetupProps()
 	self:SetupClasses()
+	self:SetupBuyables()
 end
