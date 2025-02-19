@@ -70,7 +70,7 @@
 			"singleplayer" "1"
 		}
 
-		19 {
+		7 {
 			"name" "ose_maxmines"
 			"text" "ose.convar.maxmines"
 			"help" "Max mines a player can spawn"
@@ -80,7 +80,7 @@
 			"singleplayer" "1"
 		}
 
-		22 {
+		8 {
 			"name" "ose_maxturrets"
 			"text" "ose.convar.maxturrets"
 			"help" "Max turrets a player can spawn"
@@ -90,7 +90,7 @@
 			"singleplayer" "1"
 		}
 
-		23 {
+		9 {
 			"name" "ose_maxhealthchargers"
 			"text" "ose.convar.maxhealthchargers"
 			"help" "Max health dispensers a player can spawn"
@@ -100,7 +100,7 @@
 			"singleplayer" "1"
 		}
 
-		24 {
+		10 {
 			"name" "ose_maxammocrates"
 			"text" "ose.convar.maxammocrates"
 			"help" "Max ammo crates a player can spawn"
@@ -110,7 +110,7 @@
 			"singleplayer" "1"
 		}
 
-		7 {
+		11 {
 			"name" "ose_cleanup_props"
 			"text" "ose.convar.cleanup_props"
 			"help" "If a player's props should be cleaned up after they disconnect"
@@ -119,7 +119,7 @@
 			"replicate" "1"
 		}
 
-		8 {
+		12 {
 			"name" "ose_cleanup_props_after"
 			"text" "ose.convar.cleanup_props_after"
 			"help" "How long to wait before cleaning up disconnected player's props"
@@ -128,7 +128,7 @@
 			"replicate" "0"
 		}
 
-		9 {
+		13 {
 			"name" "ose_build_noclip"
 			"text" "allow_noclip"
 			"help" "If players can noclip during build"
@@ -138,7 +138,7 @@
 			"singleplayer" "1"
 		}
 
-		10 {
+		14 {
 			"name" "ose_flammable_props"
 			"text" "ose.convar.flammable_props"
 			"help" "If props should ignite when damaged"
@@ -148,7 +148,7 @@
 			"singleplayer" "1"
 		}
 
-		11 {
+		15 {
 			"name" "ose_starting_money"
 			"text" "ose.convar.starting_money"
 			"help" "How much money players start with"
@@ -158,7 +158,7 @@
 			"singleplayer" "1"
 		}
 
-		12 {
+		16 {
 			"name" "ose_reward_money"
 			"text" "ose.convar.reward_money"
 			"help" "The base reward for surviving a round"
@@ -168,7 +168,7 @@
 			"singleplayer" "1"
 		}
 
-		13 {
+		17 {
 			"name" "ose_death_penalty"
 			"text" "ose.convar.death_penalty"
 			"help" "How much to knock off the round reward per death"
@@ -178,7 +178,7 @@
 			"singleplayer" "1"
 		}
 
-		14 {
+		18 {
 			"name" "ose_build_time"
 			"text" "ose.convar.build_time"
 			"help" "Number of seconds for each build period"
@@ -188,7 +188,7 @@
 			"singleplayer" "1"
 		}
 
-		15 {
+		19 {
 			"name" "ose_battle_time_base"
 			"text" "ose.convar.battle_time_base"
 			"help" "Number of seconds round 1 of the battle phase takes"
@@ -198,7 +198,7 @@
 			"singleplayer" "1"
 		}
 
-		16 {
+		20 {
 			"name" "ose_battle_time_add"
 			"text" "ose.convar.battle_time_add"
 			"help" "Number of seconds to add to the battle time per win"
@@ -208,7 +208,7 @@
 			"singleplayer" "1"
 		}
 
-		17 {
+		21 {
 			"name" "ose_spawn_time_base"
 			"text" "ose.convar.spawn_time_base"
 			"help" "Number of seconds players must wait to respawn"
@@ -218,7 +218,7 @@
 			"singleplayer" "1"
 		}
 
-		18 {
+		22 {
 			"name" "ose_spawn_time_add"
 			"text" "ose.convar.spawn_time_add"
 			"help" "Number of seconds to add per player ot the spawn timer"
@@ -227,9 +227,7 @@
 			"replicate" "1"
 		}
 
-		// 19 is higher up. TODO: Rebalance the numbers x_x
-
-		20 {
+		23 {
 			"name" "ose_price_multiplier"
 			"text" "ose.convar.price_multiplier"
 			"help" "How much to multiply all prices by"
@@ -239,7 +237,7 @@
 			"singleplayer" "1"
 		}
 
-		21 {
+		24 {
 			"name" "ose_refund_multiplier"
 			"text" "ose.convar.refund_multiplier"
 			"help" "How much to multiply refund values by"
