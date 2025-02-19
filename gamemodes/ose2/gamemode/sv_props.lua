@@ -157,8 +157,7 @@ local function ccOSESpawn(ply, cmd, args)
 	--- @type number
 	local price = hook.Run("LookupPropPrice", ply, model)
 	if not ply:CanAfford(price) then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "You don't have enough money!")
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.cant_afford", 10)
 		return
 	end
 
@@ -196,8 +195,7 @@ local function ccOSESpawnEnt(ply, cmd, args)
 	--- @type OSEEntityDefinition
 	local entData = list.GetEntry("OSEEntities", class)
 	if not entData then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong (" .. class .. ")")
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.invalid_ent", 10, class)
 		return
 	elseif not hook.Run("PlayerSpawnEntity", ply, class, entData) then
 		-- no need to notify the player, the hook will do that
@@ -207,8 +205,7 @@ local function ccOSESpawnEnt(ply, cmd, args)
 	--- @type number
 	local price = hook.Run("LookupEntityPrice", ply, class, entData)
 	if not ply:CanAfford(price) then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "You don't have enough money!")
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.cant_afford", 10)
 		return
 	end
 
@@ -235,7 +232,11 @@ concommand.Add("ose_spawnent", ccOSESpawnEnt)
 ---@param model string
 ---@return boolean
 function GM:PlayerSpawnProp(ply, model)
-	return self.m_RoundPhase == ROUND_PHASE_BUILD and ply:CheckLimit("props")
+	if self.m_RoundPhase ~= ROUND_PHASE_BUILD then
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.only_build_mode", 10)
+		return false
+	end
+	return ply:CheckLimit("props")
 end
 
 ---@param ply GPlayer
@@ -250,8 +251,12 @@ end
 ---@param entData OSEEntityDefinition
 ---@return boolean
 function GM:PlayerSpawnEntity(ply, class, entData)
+	if not entData.AllowInBattle and self.m_RoundPhase ~= ROUND_PHASE_BUILD then
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.only_build_mode", 10)
+		return false
+	end
 	-- TODO: Class-restricted ents
-	return (self.m_RoundPhase == ROUND_PHASE_BUILD or entData.AllowInBattle) and ply:CheckLimit(class)
+	return ply:CheckLimit(class)
 end
 
 ---@param ply GPlayer

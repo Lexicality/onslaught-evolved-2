@@ -100,21 +100,22 @@ local function ccOSEChooseClass(ply, cmd, args)
 	--- @type OSEClassDefinition
 	local classData = list.GetEntry("OSEClasses", class)
 	if not classData or not classData.Selectable then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "bzzzt wrong (" .. class .. ")")
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.invalid_class", 10, class)
 		return
 	elseif class == ply:GetTargetClass() then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "You're already a " .. class .. "!")
+		ply:SendNotification(NOTIFY_ERROR, "ose.notification.same_class", 10, classData.Name)
 		return
 	elseif not hook.Run("PlayerCanChooseClass", ply, class, classData) then
-		-- TODO: sensible notification
-		ply:PrintMessage(HUD_PRINTTALK, "You can't choose that class!")
+		-- Notifying the player is the hook's problem
 		return
 	end
 
 	ply:SetTargetClass(class)
-	-- TODO: sensible notification
-	ply:PrintMessage(HUD_PRINTTALK, "You will spawn as a " .. class .. " next time!")
+	local name = classData.Name
+	if GAMEMODE.m_RoundPhase == ROUND_PHASE_BUILD then
+		ply:SendNotification(NOTIFY_GENERIC, "ose.notification.new_class_build", 10, name)
+	else
+		ply:SendNotification(NOTIFY_GENERIC, "ose.notification.new_class_battle", 10, name)
+	end
 end
 concommand.Add("ose_chooseclass", ccOSEChooseClass, nil, "Picks what class to spawn as in the battle phase")
