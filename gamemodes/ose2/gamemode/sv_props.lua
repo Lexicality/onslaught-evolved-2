@@ -67,7 +67,11 @@ end
 --- @param undo SUndo
 --- @param ent SENT_OSEProp
 local function fancyUndo(undo, ent)
+	if not IsValid(ent) then
+		return false
+	end
 	ent:RemovePretty()
+	return true
 end
 
 --- Generic(ish) entity spawning code
