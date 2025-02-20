@@ -159,6 +159,31 @@ function ENT:_OnBuildPhase(roundNum)
 	end
 end
 
+--- Called to make the prop do the right thing if it's spawned mid-battle rather than during the build phase
+--- @param roundPhase  `ROUND_PHASE_PREP` | `ROUND_PHASE_BATTLE`
+--- @param roundNum integer
+function ENT:SpawnInBattle(roundPhase, roundNum)
+	self:_OnPrepPhase(roundNum)
+	if roundPhase ~= ROUND_PHASE_BATTLE or not IsValid(self.m_BullsEye) then
+		return
+	end
+	-- Get all the spawned NPCs to correctly hate us
+	local bull = self.m_BullsEye
+	local sky = bull:GetName() == "ose_be_sky"
+	for _, npc in ipairs(ents.FindByClass("npc_*")) do
+		--- @cast npc GNPC
+		-- I have to do all this bullshit since the lua luangage server refuses
+		-- to understand the concept of `continue` because Lua added goto
+		-- instead of supporting it which is just a clownshow
+		local should = npc._oseNPC == true
+		if should and sky then
+			should = not list.HasEntry("OSEMelee", npc:GetClass())
+		end
+		if should then
+			npc:AddEntityRelationship(bull, D_HT, 50)
+		end
+	end
+end
 
 ENT.m_CachedPlayerBonus = 1
 ENT.m_NextPlayerCountUpdate = 0

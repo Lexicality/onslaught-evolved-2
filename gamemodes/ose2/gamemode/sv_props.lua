@@ -269,9 +269,9 @@ end
 ---@param entData OSEEntityDefinition
 function GM:PlayerSpawnedEntity(ply, class, ent, entData)
 	ply:AddCount(class, ent)
-	if self.m_RoundPhase ~= ROUND_PHASE_BUILD then
-		-- Note to self: Just calling ent._onPrepPhase() won't be enough! The bullseye needs to be hated!
-		ErrorNoHalt("TODO: Need to set this entity up correctly for battle!")
+	if self.m_RoundPhase ~= ROUND_PHASE_BUILD and ent["OSEProp"] then
+		--- @cast ent SENT_OSEProp
+		ent:SpawnInBattle(self.m_RoundPhase, self.m_Round)
 	end
 end
 

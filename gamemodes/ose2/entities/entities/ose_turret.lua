@@ -105,6 +105,13 @@ function ENT:_OnBattlePhase(roundNum)
 	end
 end
 
+function ENT:SpawnInBattle(roundPhase, roundNum)
+	BaseClass.SpawnInBattle(self, roundPhase, roundNum)
+	if roundPhase == ROUND_PHASE_BATTLE then
+		self:_OnBattlePhase(roundNum)
+	end
+end
+
 function ENT:RemoveTurret()
 	if IsValid(self.m_Turret) then
 		-- Prevent some weird snapback behaviours when de-parented
