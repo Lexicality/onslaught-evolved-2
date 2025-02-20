@@ -123,6 +123,7 @@ function ENT:_OnPrepPhase(roundNum)
 	local bull = ents.Create("npc_bullseye")
 	bull:SetPos(self:LocalToWorld(bullPos))
 	bull:SetParent(self)
+	self:DeleteOnRemove(bull)
 	bull:SetKeyValue(
 		"spawnflags",
 		tostring(
@@ -158,11 +159,6 @@ function ENT:_OnBuildPhase(roundNum)
 	end
 end
 
-function ENT:OnRemove()
-	if IsValid(self.m_BullsEye) then
-		self.m_BullsEye:Remove()
-	end
-end
 
 ENT.m_CachedPlayerBonus = 1
 ENT.m_NextPlayerCountUpdate = 0
