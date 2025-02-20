@@ -47,16 +47,11 @@ surface.CreateFont("OSEHudTimerColon", oseHudTimerColonData)
 
 local HUD_BACKGROUND_COLOUR = Color(0, 0, 0, 76)
 local HUD_TEXT_COLOUR = Color(255, 235, 20, 255)
-local HUD_TEXT_BRIGHT_COLOUR = Color(255, 220, 0, 255)
 local HUD_DAMAGE_BACKGROUND_COLOUR = Color(180, 0, 0, 200)
 local HUD_DAMAGE_TEXT_COLOUR = Color(180, 0, 0, 230)
 local HUD_TEXT_FONT = "OSEHudText"
 local HUD_TIMER_FONT = "OSEHudTimer"
 local HUD_TIMER_COLON_FONT = "OSEHudTimerColon"
--- HudDefault
--- HudNumbers
--- HudNumbersGlow
--- HudNumbersSmall
 
 
 function GM:SetupHUD()

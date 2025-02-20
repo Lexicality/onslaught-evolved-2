@@ -23,4 +23,4 @@ DEFINE_BASECLASS("base_brush")
 
 ENT.Type = "brush"
 
--- TODO
+-- TODO Nocollide players when they're in me

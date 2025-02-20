@@ -35,11 +35,6 @@ SF_FLOOR_TURRET_FASTRETIRE = 128
 function ENT:Initialize()
 	self:SetModel(TURRET_MODEL)
 
-	-- TODO: Probs don't need to reset the pitch/yaw pose parameters?
-	-- The c++ does this:
-	-- SetPoseParameter( m_poseAim_Yaw, 0 );
-	-- SetPoseParameter( m_poseAim_Pitch, 0 );
-
 	if CLIENT then
 		-- 	self:InvalidateBoneCache()
 		return

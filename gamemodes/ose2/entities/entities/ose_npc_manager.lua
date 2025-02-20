@@ -131,8 +131,6 @@ function ENT:_OnNPCSpawned(npc)
 	self.m_NPCCount = self.m_NPCCount + 1
 	self:CheckNPCCount()
 
-	-- TODO: Other things go here
-
 	if self.m_DontSetRelationships then
 		return
 	end

@@ -48,8 +48,6 @@ function GM:StartBuildPhase()
 		end
 	end
 
-	-- TODO
-
 	net.Start("BuildPhaseStarted")
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
@@ -91,8 +89,6 @@ function GM:StartBattlePhase()
 		+ ((self.m_Round - 1) * battleTimeaddCvar:GetInt())
 	)
 
-	-- TODO
-
 	net.Start("BattlePhaseStarted")
 	net.WriteUInt(self.m_Round, 8)
 	net.WriteFloat(self.m_PhaseEnd)
@@ -105,7 +101,6 @@ end
 function GM:BattlePhaseStarted(roundNum) end
 
 function GM:WinRound()
-	-- TODO
 	self.m_Round = self.m_Round + 1
 	net.Start("RoundWon")
 	net.Broadcast()
@@ -116,7 +111,6 @@ end
 function GM:RoundWon() end
 
 function GM:LoseRound()
-	-- TODO
 	if self.m_Round > 1 then
 		self.m_Round = self.m_Round - 1
 	end

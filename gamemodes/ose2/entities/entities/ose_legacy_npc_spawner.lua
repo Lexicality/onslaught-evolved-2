@@ -75,10 +75,6 @@ ENT.m_CurrentLiveChildren = 0
 ENT.m_TimeLeft = 0
 
 
--- TODO this should probs be in a utilities file somewhere
----
-
-
 function ENT:Initialize()
 	if self.m_NPCs == nil then
 		self.m_NPCs = { "npc_combine_s", "npc_manhack", "npc_hunter" }

@@ -62,8 +62,6 @@ function PANEL:Init()
 	divider:SetRight(sideMenu)
 	local propMenu = vgui.Create("OSEPropMenu", divider)
 	divider:SetLeft(propMenu)
-	-- TODO: Do we actually need to save these? We're not doing the same
-	-- shenanigans as sandbox does
 	--- @cast propMenu OSEPropMenu
 	--- @cast sideMenu OSESideMenu
 	self.m_SideMenu = sideMenu
@@ -165,9 +163,6 @@ function PANEL:Open()
 
 	self:MakePopup()
 	self:SetVisible(true)
-	-- TODO: I'm pretty sure we do not need these because MakePopup should do it for us
-	-- self:SetMouseInputEnabled( true )
-	-- self:SetAlpha(255)
 
 	-- MakePopup makes us automatically steal keyboard focus but we want the
 	-- player to be able to move around with the spawn menu open, so return
