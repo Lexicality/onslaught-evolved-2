@@ -117,6 +117,29 @@ local function setupDissolvers()
 	end
 end
 
+local function setupBullseye()
+	-- We need to always have a bullseye to avoid relationship errors, but we
+	-- don't want to have one that'll actually be visible to the npcs
+	-- This should be "close enough".
+	local ent = ents.Create("npc_bullseye")
+	ent:SetName("ose_be_gnd")
+	ent:SetKeyValue(
+		"spawnflags",
+		tostring(
+		-- "Not Solid"
+			65536
+			-- "Take No Damage"
+			+ 131072
+		)
+	)
+	ent:SetKeyValue("minangle", "1")
+	ent:SetKeyValue("mindist", "1")
+	local spawns = ents.FindByClass("info_player_start")
+	local spawn = spawns[math.random(#spawns)]
+	ent:SetPos(spawn:GetPos())
+	ent:Spawn()
+end
+
 function GM:SetupEntities()
 	if #ents.FindByClass("ose_npc_manager") == 0 then
 		setupNPCManager()
@@ -125,6 +148,7 @@ function GM:SetupEntities()
 		setupGameRules()
 	end
 	setupDissolvers()
+	setupBullseye()
 end
 
 function GM:InitPostEntity()
