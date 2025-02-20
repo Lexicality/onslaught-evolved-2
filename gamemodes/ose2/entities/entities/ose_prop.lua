@@ -130,8 +130,6 @@ function ENT:_OnPrepPhase(roundNum)
 			65536
 			-- "Take No Damage"
 			+ 131072
-			-- "Perfect Accuracy "
-			+ 1048576
 		)
 	)
 	if isInSky then
