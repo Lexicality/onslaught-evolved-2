@@ -32,7 +32,8 @@ SWEP.PrintName = "#weapon_ose_super_shotgun"
 SWEP.DrawWeaponInfoBox = false -- TODO!
 
 -- TODO: Icon
-SWEP.ViewModel = "models/weapons/v_shotgun.mdl"
+SWEP.UseHands = true
+SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
 SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
 SWEP.Slot = 3
 
