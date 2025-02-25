@@ -87,3 +87,14 @@ if CLIENT then
 		)
 	end
 end
+
+-- Reject object orentated sillyness
+-- (hopefully luaJIT will inline this!)
+--- Lerps one colour to another
+--- @param from GColor
+--- @param to GColor
+--- @param fraction number
+--- @return GColor
+function LerpColour(from, to, fraction)
+	return from:Lerp(to, fraction)
+end

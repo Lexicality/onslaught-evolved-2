@@ -35,16 +35,16 @@ SF_FLOOR_TURRET_FASTRETIRE = 128
 function ENT:Initialize()
 	self:SetModel(TURRET_MODEL)
 
-	if CLIENT then
-		-- 	self:InvalidateBoneCache()
-		return
+	if SERVER then
+		-- Look citizen-ey
+		self:SetSkin(math.random(TURRET_CITIZEN_SKIN_MIN, TURRET_CITIZEN_SKIN_MAX))
 	end
-
-	-- Look citizen-ey
-	self:SetSkin(math.random(TURRET_CITIZEN_SKIN_MIN, TURRET_CITIZEN_SKIN_MAX))
 
 	BaseClass.Initialize(self)
 
+	if CLIENT then
+		return
+	end
 	-- We're not going to be using any of the dynamic health stuff here
 	-- TODO: Do we want a hook? Probably want a hook.
 	self.m_BaseHealth = TURRET_HEALTH

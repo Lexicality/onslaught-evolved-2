@@ -29,6 +29,7 @@ function ENT:Initialize()
 	self:SetModel(self._model)
 	self.m_CAngle = 0
 	self.m_COffset = 0
+	BaseClass.Initialize(self)
 end
 
 local BONE = 2

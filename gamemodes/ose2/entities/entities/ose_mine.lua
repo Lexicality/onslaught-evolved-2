@@ -37,10 +37,10 @@ function ENT:Initialize()
 	self:SetPoseParameter("blendstates", BOUNCEBOMB_HOOK_RANGE)
 	if CLIENT then
 		self:InvalidateBoneCache()
-		return
+	else
+		-- Look citizen-ey
+		self:SetSkin(math.random(MINE_CITIZEN_SKIN_MIN, MINE_CITIZEN_SKIN_MAX))
 	end
-	-- Look citizen-ey
-	self:SetSkin(math.random(MINE_CITIZEN_SKIN_MIN, MINE_CITIZEN_SKIN_MAX))
 	BaseClass.Initialize(self)
 end
 

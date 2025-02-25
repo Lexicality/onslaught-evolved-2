@@ -19,6 +19,7 @@ local cvarFlammible = GetConVar("ose_flammable_props")
 AddCSLuaFile()
 
 --- @class SENT_OSEProp : SENT_OSEBaseAnim
+--- @field m_RoundPhase OSERoundPhase
 local ENT = ENT --[[@as SENT_OSEProp]]
 --- @type SENT_OSEBaseAnim
 local BaseClass
@@ -27,7 +28,68 @@ DEFINE_BASECLASS("base_oseanim")
 --- If this is a prop or prop-derived entity
 ENT.OSEProp = true
 
-if CLIENT then return end
+function ENT:SetupHooks()
+	hook.Add("PrepPhaseStarted", self, self._OnPrepPhase)
+	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
+end
+
+if CLIENT then
+	ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
+	ENT.m_LastHealth = 0
+
+	local HEALTHY_COLOUR = color_white
+	local UNHEALTHY_COLOUR = Color(0, 0, 0, 100)
+
+	function ENT:Initialize()
+		self:SetRenderMode(RENDERMODE_TRANSCOLOR)
+		local _, phase = hook.Run("GetCurrentRound")
+		self.m_RoundPhase = phase
+		self:SetupHooks()
+	end
+
+	function ENT:Think()
+		if self.m_RoundPhase == ROUND_PHASE_BUILD then
+			-- zzz
+			self:NextThink(CurTime() + 10)
+			return true
+		end
+		-- Still don't need to think particularly often during the fight
+		self:NextThink(CurTime() + 0.1)
+
+		local health = self:Health()
+		if health ~= self.m_LastHealth then
+			self.m_LastHealth = health
+			self:SetColor(
+				LerpColour(
+				-- Reversed because 1 is healthy and 0 is dead
+					UNHEALTHY_COLOUR,
+					HEALTHY_COLOUR,
+					self:Health() / self:GetMaxHealth()
+				)
+			)
+		end
+
+		return true
+	end
+
+	function ENT:_OnBuildPhase(roundNum)
+		self.m_RoundPhase = ROUND_PHASE_BUILD
+		self:SetColor(color_white)
+		-- Massively slow down thinking, we don't have anything to think about
+		self:NextThink(CurTime() + 10)
+	end
+
+	function ENT:_OnPrepPhase(roundNum)
+		self.m_RoundPhase = ROUND_PHASE_PREP
+		-- Force recalculation
+		self.m_LastHealth = -1
+		-- Wake up!
+		self:NextThink(CurTime())
+	end
+
+	--- Server only from here on out
+	return
+end
 
 --- @type GEntity
 ENT.m_BullsEye = NULL
@@ -63,11 +125,6 @@ function ENT:Initialize()
 	if phase ~= ROUND_PHASE_BUILD then
 		self:SpawnInBattle(phase, round)
 	end
-end
-
-function ENT:SetupHooks()
-	hook.Add("PrepPhaseStarted", self, self._OnPrepPhase)
-	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
 end
 
 function ENT:OnReloaded()
