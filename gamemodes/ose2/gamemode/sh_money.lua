@@ -45,7 +45,7 @@ function GM:SetupBuyables()
 	}
 	ammo["ammo_buckshot"] = {
 		Name = "#ose.ammo.buckshot",
-		EngineName = "BuckShot",
+		EngineName = "Buckshot",
 		DisplayModel = "models/Items/BoxBuckshot.mdl",
 		Quantity = 32,
 		Price = 200,
@@ -85,6 +85,18 @@ function GM:SetupBuyables()
 		DisplayModel = "models/Items/AR2_Grenade.mdl",
 		Quantity = 1,
 		Price = 250,
+	}
+	--- @type SAmmoData
+	local heavyBuckshot = game.GetAmmoData(game.GetAmmoID("Buckshot"))
+	heavyBuckshot.name = "HeavyBuckshot"
+	heavyBuckshot.force = heavyBuckshot.force * 1.5
+	game.AddAmmoType(heavyBuckshot)
+	ammo["ammo_heavy_buckshot"] = {
+		Name = "#ose.ammo.heavy_buckshot",
+		EngineName = "HeavyBuckshot",
+		DisplayModel = "models/Items/BoxFlares.mdl",
+		Quantity = 32,
+		Price = 200,
 	}
 end
 

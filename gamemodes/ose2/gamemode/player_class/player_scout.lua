@@ -32,7 +32,7 @@ PLAYER.JumpPower = 260
 
 PLAYER.ValidAmmo = {
 	"ammo_pistol",
-	-- "ammo_heavy_buckshot",
+	"ammo_heavy_buckshot",
 }
 
 
@@ -41,7 +41,8 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_crowbar")
 	self.Player:Give("weapon_pistol")
 	self.Player:GiveAmmo(144, "Pistol")
-	-- TODO Scattergun goes here
+	self.Player:Give("weapon_ose_super_shotgun")
+	self.Player:GiveAmmo(64, "HeavyBuckshot")
 	self.Player:SwitchToDefaultWeapon()
 end
 

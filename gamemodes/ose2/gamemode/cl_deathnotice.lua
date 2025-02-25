@@ -38,4 +38,7 @@ function GM:SetupKillIcons()
 	killicon.Add("npc_manhack", "lambda/killicons/npc_manhack_killicon", sandboxIconColour)
 	killicon.Add("fall", "lambda/killicons/worldspawn_killicon", sandboxIconColour)
 	killicon.Add("combine_mine", "lambda/killicons/combine_mine_killicon", sandboxIconColour)
+
+	-- OSE killicons
+	killicon.AddFont("weapon_ose_super_shotgun", "HL2MPTypeDeath", "0", sandboxIconColour, 0.45)
 end
