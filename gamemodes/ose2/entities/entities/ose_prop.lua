@@ -57,6 +57,12 @@ function ENT:Initialize()
 	if self:GetName() == "" then
 		self:SetName("ose_prop_" .. self:EntIndex())
 	end
+
+	local round, phase = hook.Run("GetCurrentRound")
+
+	if phase ~= ROUND_PHASE_BUILD then
+		self:SpawnInBattle(phase, round)
+	end
 end
 
 function ENT:SetupHooks()

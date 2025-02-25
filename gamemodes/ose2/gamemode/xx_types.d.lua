@@ -29,7 +29,9 @@ error("Don't include me!")
 -- Conveniently, the Lua Language Server will execute this file even though it's
 -- never referenced by any files in the workspace so we can define them here
 
---- @type `ROUND_PHASE_BUILD` | `ROUND_PHASE_PREP` | `ROUND_PHASE_BATTLE`
+--- @alias OSERoundPhase `ROUND_PHASE_BATTLE`|`ROUND_PHASE_BUILD`|`ROUND_PHASE_PREP`
+
+--- @type OSERoundPhase
 GM.m_RoundPhase = ROUND_PHASE_BATTLE
 --- @type integer
 GM.m_Round = 0

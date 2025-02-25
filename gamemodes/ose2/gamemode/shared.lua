@@ -49,3 +49,10 @@ include("sh_props.lua")
 ROUND_PHASE_BUILD = 0
 ROUND_PHASE_PREP = 1
 ROUND_PHASE_BATTLE = 2
+
+--- Returns the current round and phase
+--- @return integer round
+--- @return OSERoundPhase phase
+function GM:GetCurrentRound()
+	return self.m_Round, self.m_RoundPhase
+end
