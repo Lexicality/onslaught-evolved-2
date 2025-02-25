@@ -47,6 +47,7 @@ if CLIENT then
 	local HEALTHY_COLOUR = color_white
 	local UNHEALTHY_COLOUR = Color(0, 0, 0, 100)
 	local INVALID_COLOUR = Color(255, 0, 0, 100)
+	local NOCOLLIDE_COLOUR = Color(255, 255, 255, 220)
 
 	function ENT:Initialize()
 		self:SetRenderMode(RENDERMODE_TRANSCOLOR)
@@ -56,21 +57,20 @@ if CLIENT then
 	end
 
 	function ENT:Think()
+		self:NextThink(CurTime() + 0.1)
 		if self.m_RoundPhase == ROUND_PHASE_BUILD then
-			if self:_IsInValidPosition() then
-				self:SetColor(color_white)
-			else
+			if not self:_IsInValidPosition() then
 				-- Give the user visual feedback that their prop is going to be
 				-- deleted when the battle starts to let them fix the problem.
 				self:SetColor(INVALID_COLOUR)
+			elseif self:GetCollisionGroup() == COLLISION_GROUP_WORLD then
+				self:SetColor(NOCOLLIDE_COLOUR)
+			else
+				self:SetColor(color_white)
 			end
-			-- We really don't need to run this check often because it's very unlikely to be a problem
-			self:NextThink(CurTime() + 0.5)
 
 			return true
 		end
-		-- Still don't need to think particularly often during the fight
-		self:NextThink(CurTime() + 0.1)
 
 		local health = self:Health()
 		if health ~= self.m_LastHealth then
