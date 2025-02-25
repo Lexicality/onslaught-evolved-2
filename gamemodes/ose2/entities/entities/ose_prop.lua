@@ -33,12 +33,20 @@ function ENT:SetupHooks()
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
 end
 
+--- Figures out if the prop is in a dodgy position and should be deleted to
+--- avoid exploits
+--- @return boolean
+function ENT:_IsInValidPosition()
+	return util.IsInWorld(self:WorldSpaceCenter())
+end
+
 if CLIENT then
 	ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 	ENT.m_LastHealth = 0
 
 	local HEALTHY_COLOUR = color_white
 	local UNHEALTHY_COLOUR = Color(0, 0, 0, 100)
+	local INVALID_COLOUR = Color(255, 0, 0, 100)
 
 	function ENT:Initialize()
 		self:SetRenderMode(RENDERMODE_TRANSCOLOR)
@@ -49,8 +57,16 @@ if CLIENT then
 
 	function ENT:Think()
 		if self.m_RoundPhase == ROUND_PHASE_BUILD then
-			-- zzz
-			self:NextThink(CurTime() + 10)
+			if self:_IsInValidPosition() then
+				self:SetColor(color_white)
+			else
+				-- Give the user visual feedback that their prop is going to be
+				-- deleted when the battle starts to let them fix the problem.
+				self:SetColor(INVALID_COLOUR)
+			end
+			-- We really don't need to run this check often because it's very unlikely to be a problem
+			self:NextThink(CurTime() + 0.5)
+
 			return true
 		end
 		-- Still don't need to think particularly often during the fight
@@ -74,9 +90,7 @@ if CLIENT then
 
 	function ENT:_OnBuildPhase(roundNum)
 		self.m_RoundPhase = ROUND_PHASE_BUILD
-		self:SetColor(color_white)
-		-- Massively slow down thinking, we don't have anything to think about
-		self:NextThink(CurTime() + 10)
+		self:NextThink(CurTime())
 	end
 
 	function ENT:_OnPrepPhase(roundNum)
@@ -132,12 +146,8 @@ function ENT:OnReloaded()
 end
 
 function ENT:_OnPrepPhase(roundNum)
-	--- @type GVector
-	local pos = self:GetPos()
 	-- Ensure no one's done anything weird
-	--- @type STraceResult
-	local tr = util.QuickTrace(pos, vector_origin, self)
-	if tr.HitWorld or not self:IsInWorld() then
+	if not self:_IsInValidPosition() then
 		self:Remove()
 	end
 
@@ -146,8 +156,8 @@ function ENT:_OnPrepPhase(roundNum)
 
 	-- Figure out how floaty we are
 	--- @type STraceResult
-	tr = util.QuickTrace(
-		pos,
+	local tr = util.QuickTrace(
+		self:GetPos(),
 		Vector(0, 0, -1000),
 		--
 		ents.FindByClass("ose_*")

@@ -86,6 +86,16 @@ if CLIENT then
 			string.Comma(amount, sepr)
 		)
 	end
+
+	-- https://wiki.facepunch.com/gmod/util.IsInWorld#example
+	--- @type STrace
+	local worldTrace = { collisiongroup = COLLISION_GROUP_WORLD, output = {} }
+
+	function util.IsInWorld(pos)
+		worldTrace.start = pos
+		worldTrace.endpos = pos
+		return not util.TraceLine(worldTrace).HitWorld
+	end
 end
 
 -- Reject object orentated sillyness
