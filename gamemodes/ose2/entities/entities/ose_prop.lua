@@ -286,7 +286,6 @@ end
 
 function ENT:OnTakeDamage(dmginfo)
 	local attacker = dmginfo:GetAttacker()
-	-- TODO: Turrets, mines
 	if IsValid(attacker) and attacker:IsPlayer() then
 		return 0
 	end
@@ -295,12 +294,12 @@ function ENT:OnTakeDamage(dmginfo)
 	local weapon = NULL
 	local inflictor = dmginfo:GetInflictor()
 	if IsValid(inflictor) then
-		-- The infilctor seems to always be the attacker, even when it should be
-		-- the attacker's weapon:
-		-- https://github.com/Facepunch/garrysmod-issues/issues/6150
 		if inflictor:IsWeapon() then
 			weapon = inflictor
 		elseif inflictor:IsNPC() then
+			-- FIXME: This workaround should be unnecessary after the next
+			-- update (current update: december 2024)
+			-- https://github.com/Facepunch/garrysmod-issues/issues/6150
 			--- @cast inflictor GNPC
 			weapon = inflictor:GetActiveWeapon()
 		end
