@@ -56,6 +56,11 @@ end
 local STUNSTICK_MINS = Vector(-16, -16, -16)
 local STUNSTICK_MAXS = Vector(16, 16, 16)
 
+local DEBUG_COLOUR_RED = Color(255, 0, 0)
+local DEBUG_COLOUR_GREEN = Color(0, 255, 0)
+local DEBUG_COLOUR_BLUE = Color(0, 0, 255)
+local DEBUG_LIFETIME = 4
+
 function SWEP:PrimaryAttack()
 	self:SetNextPrimaryFire(CurTime() + 0.3)
 	local owner = self:GetOwner()
@@ -71,19 +76,47 @@ function SWEP:PrimaryAttack()
 		maxs = STUNSTICK_MAXS,
 		filter = owner,
 	}
-	debugoverlay.SweptBox(hullTrace.start, hullTrace.endpos, hullTrace.mins, hullTrace.maxs, aimvec:Angle())
 	local tr = util.TraceHull(hullTrace) --[[@as STraceResult]]
 	if not tr.Hit then
 		self:SendWeaponAnim(ACT_VM_MISSCENTER)
 		self:EmitSound(SOUND_MISS)
+		debugoverlay.SweptBox(
+			hullTrace.start,
+			hullTrace.endpos,
+			hullTrace.mins,
+			hullTrace.maxs,
+			aimvec:Angle(),
+			-- short lifetime for misses
+			0.5,
+			DEBUG_COLOUR_RED
+		)
 		return
 	end
 	self:SendWeaponAnim(ACT_VM_HITCENTER)
+	debugoverlay.SweptBox(
+		hullTrace.start,
+		hullTrace.endpos,
+		hullTrace.mins,
+		hullTrace.maxs,
+		aimvec:Angle(),
+		DEBUG_LIFETIME
+	)
 
 	local hitEnt = tr.Entity
 	if not IsValid(hitEnt) then
 		hitEnt = nil
+	else
+		assert(hitEnt)
+		debugoverlay.BoxAngles(
+			hitEnt:GetPos(),
+			hitEnt:OBBMins(),
+			hitEnt:OBBMaxs(),
+			hitEnt:GetAngles(),
+			DEBUG_LIFETIME
+		)
 	end
+
+	debugoverlay.Line(tr.StartPos, tr.HitPos, DEBUG_LIFETIME)
 
 	-- NOTE: tr.HitPos is *NOT* the point where the hull trace collided!!
 	-- See if we can relaibly do hit effects
@@ -112,10 +145,19 @@ function SWEP:PrimaryAttack()
 	then
 		hitpos = tr2.HitPos
 		hitnormal = tr2.HitNormal
+		assert(hitnormal)
+		debugoverlay.Line(tr.HitPos, hitpos, DEBUG_LIFETIME, DEBUG_COLOUR_GREEN)
+		debugoverlay.Axis(hitpos, hitnormal:Angle(), 0.5, DEBUG_LIFETIME)
+		debugoverlay.Line(hitpos, hitpos + hitnormal * 2, DEBUG_LIFETIME)
 	elseif hitEnt then
 		hitpos = hitEnt:NearestPoint(tr.HitPos)
 		-- TODO: CHECK DIRECTION!! MIGHT BE INVERTED!!
 		hitnormal = (hitpos - tr.HitPos):Normal()
+		debugoverlay.Line(tr.HitPos, hitpos, DEBUG_LIFETIME, DEBUG_COLOUR_BLUE)
+		debugoverlay.Axis(hitpos, hitnormal:Angle(), 0.5, DEBUG_LIFETIME)
+		debugoverlay.Line(hitpos, hitpos + hitnormal * 2, DEBUG_LIFETIME)
+	else
+		debugoverlay.Cross(tr.HitPos, 1, DEBUG_LIFETIME, DEBUG_COLOUR_RED)
 	end
 
 
