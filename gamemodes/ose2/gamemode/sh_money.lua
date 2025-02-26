@@ -98,6 +98,10 @@ function GM:SetupBuyables()
 		Quantity = 32,
 		Price = 200,
 	}
+
+	for _, ammo in pairs(ammo) do
+		util.PrecacheModel(ammo.DisplayModel)
+	end
 end
 
 --- Calculated cache of health/price for props
