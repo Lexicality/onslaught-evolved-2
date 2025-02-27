@@ -80,7 +80,7 @@ end
 --- @param ply GPlayer
 --- @param class string
 --- @param model? string
---- @param spawnAngle? GAngle
+--- @param spawnAngle? SpawnAngle
 --- @return GEntity
 local function doSpawn(ply, class, model, spawnAngle)
 	local start = ply:GetShootPos()
@@ -106,7 +106,11 @@ local function doSpawn(ply, class, model, spawnAngle)
 
 	local ang = Angle(0, ply:EyeAngles().yaw + 180, 0)
 	if spawnAngle then
-		ang = ang + spawnAngle
+		if isfunction(spawnAngle) then
+			ang = spawnAngle(tr)
+		else
+			ang = ang + spawnAngle
+		end
 	end
 
 	local ent = ents.Create(class)

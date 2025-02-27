@@ -60,11 +60,13 @@ _G.g_AmmoMenu = nil
 --- @field Icon? string
 --- @field Tooltip? string
 
+--- @alias SpawnAngle GAngle | fun(tr: STraceResult): GAngle
+
 --- @class OSEEntityDefinition
 --- @field Name string The name to display to clients (should probably be #class)
 --- @field DisplayModel string The model to display in the spawn menu
 --- @field DisplaySkin? number The skin to apply to that model (if any)
---- @field SpawnAngle? GAngle Spawn angles override
+--- @field SpawnAngle? SpawnAngle Spawn angles override
 --- @field AllowInBattle boolean If players can spawn this mid-combat
 --- @field ModelGroup number What tab to diplay under
 --- @field Price integer How much the players have to pay to spawn this

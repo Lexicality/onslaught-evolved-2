@@ -264,6 +264,9 @@ function GM:SetupProps()
 		AllowInBattle = true,
 		ModelGroup = GROUP_SPECIAL,
 		Price = 600,
+		SpawnAngle = function(tr)
+			return tr.HitNormal:Angle()
+		end,
 	}
 	entities["ose_ammo_crate"] = {
 		Name = "#ose_ammo_crate",
