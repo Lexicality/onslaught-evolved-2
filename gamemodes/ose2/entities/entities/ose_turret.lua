@@ -125,6 +125,11 @@ function ENT:_OnBuildPhase(roundNum)
 	BaseClass._OnBuildPhase(self, roundNum)
 end
 
+-- Prevent ose_flammible_props setting turrets on fire
+function ENT:Ignite()
+	-- do nothing
+end
+
 function ENT:Die()
 	-- If we've got a turret spawned, have it go out in a blaze of glory
 	local turret = self.m_Turret
