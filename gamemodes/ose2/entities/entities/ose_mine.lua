@@ -64,6 +64,7 @@ function ENT:_OnPrepPhase(roundNum)
 	mine:SetCreator(self:GetCreator())
 	mine._oseCreatorSID = self._oseCreatorSID
 	mine._oseSpawner = self
+	mine:SetNW2Entity("OSESpawner", self)
 
 	mine:Spawn()
 	mine:Activate()

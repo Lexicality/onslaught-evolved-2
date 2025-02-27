@@ -81,6 +81,7 @@ function ENT:_OnPrepPhase(roundNum)
 	turret:SetCreator(self:GetCreator())
 	turret._oseCreatorSID = self._oseCreatorSID
 	turret._oseSpawner = self
+	turret:SetNW2Entity("OSESpawner", self)
 
 	turret:Spawn()
 	turret:Activate()
