@@ -158,3 +158,27 @@ function GM:PostPlayerDeath(ply)
 		hook.Call("CheckForLoss", self)
 	end
 end
+
+---@param ply GPlayer
+---@param cmd string
+---@param args string[]
+local function ccOSEStartBuild(ply, cmd, args)
+	if IsValid(ply) and not ply:IsListenServerHost() then
+		ply:PrintMessage(HUD_PRINTCONSOLE, "You do not have permission to use this command")
+	end
+	GAMEMODE:StartBuildPhase()
+end
+
+concommand.Add("ose_debug_start_build", ccOSEStartBuild, nil, "Force start the build phase")
+
+---@param ply GPlayer
+---@param cmd string
+---@param args string[]
+local function ccOSEStartBattle(ply, cmd, args)
+	if IsValid(ply) and not ply:IsListenServerHost() then
+		ply:PrintMessage(HUD_PRINTCONSOLE, "You do not have permission to use this command")
+	end
+	GAMEMODE:StartPrepPhase()
+end
+
+concommand.Add("ose_debug_start_battle", ccOSEStartBattle, nil, "Force start the build phase")
