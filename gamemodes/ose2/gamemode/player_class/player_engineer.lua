@@ -45,6 +45,7 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_shotgun")
 	self.Player:GiveAmmo(64, "Buckshot")
 	self.Player:Give("weapon_physcannon")
+	self.Player:Give("weapon_ose_repair_stick")
 	-- TODO: Engineering tools go here
 	self.Player:SwitchToDefaultWeapon()
 end
