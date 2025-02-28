@@ -42,7 +42,7 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_crowbar")
 	self.Player:Give("weapon_pistol")
 	self.Player:GiveAmmo(144, "Pistol")
-	-- TODO: Healthcharge
+	self.Player:Give("weapon_medkit")
 	-- "repair grenade"??
 	-- self.Player:Give("weapon_frag")
 	-- self.Player:GiveAmmo(4, "grenade")
