@@ -52,10 +52,11 @@ function GM:StartBuildPhase()
 
 	net.Start("BuildPhaseStarted")
 	net.WriteUInt(self.m_Round, 8)
+	net.WriteFloat(self.m_PhaseStart)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
 	hook.Call("BuildPhaseStarted", self, self.m_Round)
-	hook.Call("PhaseStarted", self, self.m_PhaseEnd)
+	hook.Call("PhaseStarted", self, self.m_PhaseStart, self.m_PhaseEnd)
 	MsgAll("Starting the build phase!")
 end
 
@@ -76,10 +77,11 @@ function GM:StartPrepPhase()
 
 	net.Start("PrepPhaseStarted")
 	net.WriteUInt(self.m_Round, 8)
+	net.WriteFloat(self.m_PhaseStart)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
 	hook.Call("PrepPhaseStarted", self, self.m_Round)
-	hook.Call("PhaseStarted", self, self.m_PhaseEnd)
+	hook.Call("PhaseStarted", self, self.m_PhaseStart, self.m_PhaseEnd)
 	MsgAll("Starting the prep phase!")
 end
 
@@ -97,10 +99,11 @@ function GM:StartBattlePhase()
 
 	net.Start("BattlePhaseStarted")
 	net.WriteUInt(self.m_Round, 8)
+	net.WriteFloat(self.m_PhaseStart)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
 	hook.Call("BattlePhaseStarted", self, self.m_Round)
-	hook.Call("PhaseStarted", self, self.m_PhaseEnd)
+	hook.Call("PhaseStarted", self, self.m_PhaseStart, self.m_PhaseEnd)
 	MsgAll("Starting the battle phase!")
 end
 
@@ -145,7 +148,7 @@ function GM:Tick()
 	end
 end
 
-function GM:PhaseStarted(endsAt) end
+function GM:PhaseStarted(startedAt, endsAt) end
 
 function GM:PhaseSecond(timeLeft) end
 

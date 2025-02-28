@@ -75,6 +75,7 @@ function GM:PlayerInitialSpawn(ply, isTransiton)
 		net.Start("BattlePhaseStarted")
 	end
 	net.WriteUInt(self.m_Round, 8)
+	net.WriteFloat(self.m_PhaseStart)
 	net.WriteFloat(self.m_PhaseEnd)
 	net.Broadcast()
 

@@ -84,27 +84,31 @@ function GM:BattlePhaseStarted(roundNum)
 	self.m_Round = roundNum
 end
 
-function GM:PhaseStarted(endsAt)
+function GM:PhaseStarted(startedAt, endsAt)
+	self.m_PhaseStart = startedAt
 	self.m_PhaseEnd = endsAt
 end
 
 net.Receive("BuildPhaseStarted", function()
 	local roundNum = net.ReadUInt(8)
+	local phaseStart = net.ReadFloat()
 	local phaseEnd = net.ReadFloat()
 	hook.Run("BuildPhaseStarted", roundNum)
-	hook.Run("PhaseStarted", phaseEnd)
+	hook.Run("PhaseStarted", phaseStart, phaseEnd)
 end)
 
 net.Receive("PrepPhaseStarted", function()
 	local roundNum = net.ReadUInt(8)
+	local phaseStart = net.ReadFloat()
 	local phaseEnd = net.ReadFloat()
 	hook.Run("PrepPhaseStarted", roundNum)
-	hook.Run("PhaseStarted", phaseEnd)
+	hook.Run("PhaseStarted", phaseStart, phaseEnd)
 end)
 
 net.Receive("BattlePhaseStarted", function()
 	local roundNum = net.ReadUInt(8)
+	local phaseStart = net.ReadFloat()
 	local phaseEnd = net.ReadFloat()
 	hook.Run("BattlePhaseStarted", roundNum)
-	hook.Run("PhaseStarted", phaseEnd)
+	hook.Run("PhaseStarted", phaseStart, phaseEnd)
 end)
