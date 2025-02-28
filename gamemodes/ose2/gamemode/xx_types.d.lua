@@ -36,6 +36,8 @@ GM.m_RoundPhase = ROUND_PHASE_BATTLE
 --- @type integer
 GM.m_Round = 0
 --- @type number
+GM.m_PhaseStart = 0
+--- @type number
 GM.m_PhaseEnd = 0
 --- @type number
 GM.m_LastSecond = 0

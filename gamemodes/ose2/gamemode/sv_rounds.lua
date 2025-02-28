@@ -35,7 +35,9 @@ end
 
 function GM:StartBuildPhase()
 	self.m_RoundPhase = ROUND_PHASE_BUILD
-	self.m_PhaseEnd = CurTime() + buildTimeCvar:GetInt()
+	local now = CurTime()
+	self.m_PhaseStart = now
+	self.m_PhaseEnd = now + buildTimeCvar:GetInt()
 
 	for _, ply in ipairs(player.GetAll()) do
 		--- @cast ply GPlayer
@@ -61,7 +63,9 @@ function GM:BuildPhaseStarted(roundNum) end
 
 function GM:StartPrepPhase()
 	self.m_RoundPhase = ROUND_PHASE_PREP
-	self.m_PhaseEnd = CurTime() + 10
+	local now = CurTime()
+	self.m_PhaseStart = now
+	self.m_PhaseEnd = now + 10
 
 	for _, ply in ipairs(player.GetAll()) do
 		--- @cast ply GPlayer
@@ -83,8 +87,10 @@ function GM:PrepPhaseStarted(roundNum) end
 
 function GM:StartBattlePhase()
 	self.m_RoundPhase = ROUND_PHASE_BATTLE
+	local now = CurTime()
+	self.m_PhaseStart = now
 	self.m_PhaseEnd = (
-		CurTime()
+		now
 		+ battleTimeBaseCvar:GetInt()
 		+ ((self.m_Round - 1) * battleTimeaddCvar:GetInt())
 	)
