@@ -73,6 +73,9 @@ function GM:StartPrepPhase()
 		ply:KillSilent()
 		-- Spawning the player will change them to the correct class
 		ply:Spawn()
+		-- Reset the various battle flags.
+		ply._joinedBattleLate = nil
+		ply._deathCount = 0
 	end
 
 	net.Start("PrepPhaseStarted")
@@ -117,7 +120,35 @@ function GM:WinRound()
 	self:StartBuildPhase()
 end
 
-function GM:RoundWon() end
+function GM:RoundWon()
+	for _, ply in player.Iterator() do
+		--- @cast ply GPlayer
+
+		--- @type number
+		local reward = hook.Call(
+			"CalculateRoundReward",
+			self,
+			ply,
+			hook.Call("CalculateBaseRoundReward", self, ply, ply._deathCount)
+		)
+		if ply._joinedBattleLate then
+			--- @type number
+			local modifier = hook.Call(
+				"CalculatePartialRoundModifier",
+				self,
+				ply,
+				self.m_PhaseStart,
+				ply._joinedBattleLate,
+				self.m_PhaseEnd,
+				true
+			)
+			reward = math.floor(reward * modifier)
+		end
+		if reward > 0 then
+			ply:AddMoney(reward, "#ose.money.reason.round_won")
+		end
+	end
+end
 
 function GM:LoseRound()
 	if self.m_Round > 1 then
@@ -129,7 +160,50 @@ function GM:LoseRound()
 	self:StartBuildPhase()
 end
 
-function GM:RoundLost() end
+function GM:RoundLost()
+	local now = CurTime()
+	for _, ply in player.Iterator() do
+		--- @cast ply GPlayer
+
+		--- @type number
+		local reward = hook.Call(
+			"CalculateRoundReward",
+			self,
+			ply,
+			hook.Call("CalculateBaseRoundReward", self, ply, ply._deathCount)
+		)
+		--- @type number
+		local lossModifier = hook.Call(
+			"CalculateLostRoundModifier",
+			self,
+			ply,
+			self.m_PhaseStart,
+			now,
+			self.m_PhaseEnd
+		)
+		-- Set a floor and ceiling on the percentage of the reward players get,
+		-- otherwise there would be barely any penalty for losing right at the
+		-- end of the round and it's important to punish players.
+		lossModifier = math.Clamp(lossModifier, 0.25, 0.75)
+		if ply._joinedBattleLate then
+			--- @type number
+			local modifier = hook.Call(
+				"CalculatePartialRoundModifier",
+				self,
+				ply,
+				self.m_PhaseStart,
+				ply._joinedBattleLate,
+				self.m_PhaseEnd,
+				true
+			)
+			lossModifier = lossModifier * modifier
+		end
+		reward = math.floor(reward * lossModifier)
+		if reward > 0 then
+			ply:AddMoney(reward, "#ose.money.reason.round_lost")
+		end
+	end
+end
 
 function GM:Tick()
 	local now = CurTime()

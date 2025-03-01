@@ -146,6 +146,8 @@ function ENT:SetNetworkKeyValue(key, value) end
 
 --- @class GPlayer
 --- @field NextSpawnTime integer @When the base gamemode should next allow the player to spawn
+--- @field _joinedBattleLate number | nil @If the player spawned mid-battle, when they spawned
+--- @field _deathCount number @How many times the player has died this battle phase
 
 --- @class GPlayer
 local ply = {}

@@ -16,11 +16,65 @@
 --]]
 
 local startingMoneyCvar = GetConVar("ose_starting_money")
+local rewardMoneyCvar = GetConVar("ose_reward_money")
+local deathPenaltyCvar = GetConVar("ose_death_penalty")
 
 ---@param player GPlayer
 ---@return integer
 function GM:GetStartingMoney(player)
 	return startingMoneyCvar:GetInt()
+end
+
+--- How much money excluding modifiers the player should get for this round
+--- @param ply GPlayer
+--- @param deaths integer
+function GM:CalculateBaseRoundReward(ply, deaths)
+	return rewardMoneyCvar:GetInt() - deathPenaltyCvar:GetInt() * deaths
+end
+
+--- How much money excluding round time / loss modifiers the player should get
+--- If you're writing a "premium donation" extension or whatever, this is where
+--- you give your pay piggies 2x reward
+--- @param ply GPlayer
+--- @param baseReward integer
+function GM:CalculateRoundReward(ply, baseReward)
+	return baseReward
+end
+
+--- Calculates how much to modify the player's reward by for a loss
+--- @param ply GPlayer
+--- @param roundStart number
+--- @param lostAt number
+--- @param roundEnd number
+--- @return number
+function GM:CalculateLostRoundModifier(
+	ply,
+	roundStart,
+	lostAt,
+	roundEnd
+)
+	-- For the authentic onslaught behaviour, you only get 50%
+	-- return 0.5
+	return (lostAt - roundStart) / (roundEnd - roundStart)
+end
+
+--- Calculates how much to modify the player's reward by for a partial round
+--- @param ply GPlayer
+--- @param roundStart number
+--- @param joinedAt number
+--- @param roundEnd number
+--- @param roundWon boolean
+--- @return number
+function GM:CalculatePartialRoundModifier(
+	ply,
+	roundStart,
+	joinedAt,
+	roundEnd,
+	roundWon
+)
+	-- For the authentic onslaught behaviour, late joiners get nothing!
+	-- return 0
+	return 1 - (joinedAt - roundStart) / (roundEnd - roundStart)
 end
 
 --- Checks if a player is allowed to use a particular ammo crate

@@ -42,6 +42,7 @@ function GM:PlayerDeath(ply, attacker, dmg)
 	if self.m_RoundPhase == ROUND_PHASE_BATTLE then
 		ply.NextSpawnTime = CurTime() + spawnBaseCvar:GetInt() +
 			(spawnAddCvar:GetInt() * player.GetCount())
+		ply._deathCount = ply._deathCount + 1
 	end
 end
 
@@ -67,11 +68,14 @@ function GM:PlayerInitialSpawn(ply, isTransiton)
 	-- cvar? Much to ponder.
 	ply:SetTargetClass("player_soldier")
 
+	ply._deathCount = 0
+
 	if self.m_RoundPhase == ROUND_PHASE_BUILD then
 		net.Start("BuildPhaseStarted")
 	elseif self.m_RoundPhase == ROUND_PHASE_PREP then
 		net.Start("PrepPhaseStarted")
 	else
+		ply._joinedBattleLate = CurTime()
 		net.Start("BattlePhaseStarted")
 	end
 	net.WriteUInt(self.m_Round, 8)
