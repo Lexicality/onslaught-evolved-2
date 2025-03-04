@@ -99,7 +99,7 @@ local function doSpawn(ply, class, model, spawnAngle)
 	for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 10)) do
 		--- @cast ent GEntity
 		if ent:GetClass() == "func_nobuild" then
-			ply:PrintMessage(HUD_PRINTTALK, "Can't park there mate")
+			ply:SendNotification(NOTIFY_ERROR, "ose.notification.invalid_pos", 10)
 			return NULL
 		end
 	end
