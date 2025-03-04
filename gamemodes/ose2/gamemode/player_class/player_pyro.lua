@@ -45,6 +45,7 @@ function PLAYER:Loadout()
 	self.Player:GiveAmmo(144, "Pistol")
 	self.Player:Give("weapon_frag")
 	self.Player:GiveAmmo(4, "grenade")
+	self.Player:Give("weapon_ose_mine_spawner")
 	self.Player:SwitchToDefaultWeapon()
 end
 

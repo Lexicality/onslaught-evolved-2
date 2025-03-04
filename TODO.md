@@ -4,12 +4,12 @@
 
 ### Engineer
 
-- [ ] SWEP: Spawners (dispenser etc)
+- [x] SWEP: Spawners (dispenser etc)
 
 ### Pyro
 
 - [ ] SWEP: flamethrower
-- [ ] SWEP: Mine layer (custom model would be fancy)
+- [x] SWEP: Mine layer (custom model would be fancy)
 
 ### Support
 

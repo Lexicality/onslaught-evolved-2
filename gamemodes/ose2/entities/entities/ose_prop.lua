@@ -137,7 +137,13 @@ function ENT:Initialize()
 	local round, phase = hook.Run("GetCurrentRound")
 
 	if phase ~= ROUND_PHASE_BUILD then
-		self:SpawnInBattle(phase, round)
+		-- There seems to be some extremely weird behaviour if we call this on
+		-- the same frame as the prop spawns, so defer it by one frame
+		timer.Simple(0, function()
+			if IsValid(self) then
+				self:SpawnInBattle(phase, round)
+			end
+		end)
 	end
 end
 
@@ -350,6 +356,7 @@ end
 
 function ENT:Touch(ent)
 	if ent:GetClass() == "func_nobuild" then
+		print("ye wat", ent, self, ent:GetCollisionBounds())
 		self:OnHitNobuild()
 	end
 end

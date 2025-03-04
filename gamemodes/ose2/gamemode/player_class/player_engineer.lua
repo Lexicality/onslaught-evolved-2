@@ -46,7 +46,8 @@ function PLAYER:Loadout()
 	self.Player:GiveAmmo(64, "Buckshot")
 	self.Player:Give("weapon_physcannon")
 	self.Player:Give("weapon_ose_repair_stick")
-	-- TODO: Engineering tools go here
+	self.Player:Give("weapon_ose_health_charger_spawner")
+	self.Player:Give("weapon_ose_turret_spawner")
 	self.Player:SwitchToDefaultWeapon()
 end
 

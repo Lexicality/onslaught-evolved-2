@@ -24,7 +24,7 @@ function GM:SetupClasses()
 	classes["player_engineer"] = {
 		Name = "#ose.player.engineer",
 		Description = "#ose.player.engineer_desc",
-		Selectable = false, -- TODO: All the SWEPs!
+		Selectable = true,
 		Icon = "ose/classes/icon_engineer",
 	}
 	classes["player_pyro"] = {

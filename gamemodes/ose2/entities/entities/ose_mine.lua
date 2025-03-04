@@ -97,7 +97,9 @@ function ENT:OnTakeDamage(dmginfo)
 end
 
 function ENT:OnHitNobuild()
+	print("wat", self, self:GetPos())
 	if IsValid(self.m_Mine) then
+		print("wat???", self.m_Mine:GetPos())
 		local vel = self.m_Mine:GetVelocity()
 		self:RemoveMine()
 		self:SetNoDraw(false)
