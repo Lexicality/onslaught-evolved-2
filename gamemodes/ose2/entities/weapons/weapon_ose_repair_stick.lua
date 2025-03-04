@@ -34,7 +34,7 @@ SWEP.DrawWeaponInfoBox = false -- TODO!
 SWEP.UseHands = true
 SWEP.ViewModel = Model("models/weapons/c_stunstick.mdl")
 SWEP.WorldModel = Model("models/weapons/w_stunbaton.mdl")
-SWEP.Slot = 1
+SWEP.Slot = 0
 
 SWEP.DrawAmmo = false
 SWEP.Primary.Automatic = true
