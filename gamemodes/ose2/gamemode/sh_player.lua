@@ -30,7 +30,7 @@ function GM:SetupClasses()
 	classes["player_pyro"] = {
 		Name = "#ose.player.pyro",
 		Description = "#ose.player.pyro_desc",
-		Selectable = false, -- TODO: Flamethrower
+		Selectable = true,
 		Icon = "ose/classes/icon_pyro",
 	}
 	classes["player_scout"] = {

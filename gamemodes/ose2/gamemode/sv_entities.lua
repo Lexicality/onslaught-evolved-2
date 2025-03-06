@@ -215,8 +215,25 @@ local function onCreatorChanged(ent, name, old, new)
 	end
 end
 
+--- Ensures players get credit for their flame based kills
+--- @param entFlame GEntity
+local function flambe(entFlame)
+	if not IsValid(entFlame) then return end
+	--- @type GEntity
+	local victim = entFlame:GetInternalVariable("m_hEntAttached")
+	if not IsValid(victim) then return end
+	local inflictor = victim._oseIgniter
+	if IsValid(inflictor) then
+		entFlame:SetCreator(inflictor)
+	end
+end
+
 function GM:OnEntityCreated(ent)
-	if ent.NetworkVarNotify then
+	if ent:GetClass() == "entityflame" then
+		-- `pFlame->AttachToEntity` gets called *after* the flame exists
+		timer.Simple(0, function() flambe(ent) end)
+	end
+	if ent.NetworkVarNotify and not ent:IsWeapon() then
 		ent:NetworkVarNotify("Creator", onCreatorChanged)
 	end
 	ent:SetNW2VarProxy("Creator", onCreatorChanged)

@@ -34,7 +34,7 @@ PLAYER.StartHealth = 150
 PLAYER.ValidAmmo = {
 	"ammo_pistol",
 	"ammo_grenade",
-	-- "ammo_flamer",
+	"ammo_flamer_fuel",
 }
 
 
@@ -43,6 +43,8 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_crowbar")
 	self.Player:Give("weapon_pistol")
 	self.Player:GiveAmmo(144, "Pistol")
+	self.Player:Give("weapon_ose_flamethrower")
+	self.Player:GiveAmmo(200, "FlamerFuel")
 	self.Player:Give("weapon_frag")
 	self.Player:GiveAmmo(4, "grenade")
 	self.Player:Give("weapon_ose_mine_spawner")

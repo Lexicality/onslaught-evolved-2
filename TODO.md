@@ -8,7 +8,7 @@
 
 ### Pyro
 
-- [ ] SWEP: flamethrower
+- [x] SWEP: flamethrower
 - [x] SWEP: Mine layer (custom model would be fancy)
 
 ### Support
