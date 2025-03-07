@@ -98,6 +98,19 @@ function GM:SetupBuyables()
 		Quantity = 32,
 		Price = 200,
 	}
+	--- @type SAmmoData
+	local flamerFuel = {
+		name = "FlamerFuel",
+		dmgtype = DMG_BURN,
+	}
+	game.AddAmmoType(flamerFuel)
+	ammo["ammo_flamer_fuel"] = {
+		Name = "#ose.ammo.flamer_fuel",
+		EngineName = "FlamerFuel",
+		DisplayModel = "models/props_junk/gascan001a.mdl",
+		Quantity = 100,
+		Price = 500,
+	}
 
 	for _, ammo in pairs(ammo) do
 		util.PrecacheModel(ammo.DisplayModel)

@@ -214,7 +214,7 @@ local function onCreatorChanged(ent, name, old, new)
 end
 
 function GM:OnEntityCreated(ent)
-	if ent.NetworkVarNotify then
+	if ent.NetworkVarNotify and not ent:IsWeapon() then
 		ent:NetworkVarNotify("Creator", onCreatorChanged)
 	end
 	ent:SetNW2VarProxy("Creator", onCreatorChanged)

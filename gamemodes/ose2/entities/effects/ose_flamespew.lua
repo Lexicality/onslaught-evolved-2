@@ -26,6 +26,7 @@ local EFFECT = EFFECT --[[@as EFF_OSEFlameSpew]]
 local FRAME_RATE = 1 / 30
 
 function EFFECT:Init(data)
+	print("DEBUG | Effect created!", CurTime())
 	self.m_Attachment = data:GetAttachment()
 	local ent = data:GetEntity()
 	if not (IsValid(ent) and ent:IsWeapon()) then
@@ -51,6 +52,7 @@ function EFFECT:Init(data)
 	-- TODO: Is this secretly an option?
 	-- self.m_Emitter:SetParent(ent)
 	self:CallOnRemove("Parti-be-gone", function()
+		print("DEBUG | Effect killed!", CurTime())
 		emitter:Finish()
 	end)
 end
@@ -65,6 +67,7 @@ function EFFECT:Think()
 			and wep:IsActive()
 		)
 	then
+		print("DEBUG | Invalid!", wep, owner, owner:GetActiveWeapon(), wep:IsActive())
 		return false
 	end
 	-- local now = CurTime()
@@ -140,4 +143,7 @@ function EFFECT:Think()
 		p:SetColor(50, 50, 50)
 	end
 	return true
+end
+
+function EFFECT:Render()
 end

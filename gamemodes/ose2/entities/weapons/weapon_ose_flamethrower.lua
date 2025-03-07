@@ -25,20 +25,113 @@ local SWEP = SWEP --[[@as SWEP_OSEFlamethrower]]
 local BaseClass
 DEFINE_BASECLASS("weapon_base")
 
+SWEP.PrintName = "#weapon_ose_flamethrower"
+SWEP.DrawWeaponInfoBox = false -- TODO!
+SWEP.DrawAmmo = true
+
+-- TODO: Icon
+SWEP.UseHands = true
+SWEP.ViewModel = Model("models/weapons/c_smg1.mdl")
+SWEP.WorldModel = Model("models/weapons/w_smg1.mdl")
+SWEP.Slot = 3
+
+SWEP.Primary.ClipSize = 50
+SWEP.Primary.DefaultClip = 50
+SWEP.Primary.Automatic = true
+SWEP.Primary.Ammo = "FlamerFuel"
+
+SWEP.Secondary.Ammo = "none"
+
+do
+	--- @type SSoundData
+	local fire_data = {
+		sound = "ambient/fire/fire_big_loop1.wav",
+		name = "OSEFlamethrower.Fire",
+		channel = CHAN_WEAPON,
+		volume = 0.5,
+		level = SNDLVL_GUNFIRE,
+	}
+end
+-- sound.Add()
+
+local SOUND_FIRE = Sound("fire_large")
+local SOUND_STOP = Sound("k_lab.eyescanner_click")
+
 local ACTIVE_SPEED = 450 / 2
+local FIRE_FREQUENCY = 0.25
+
+function SWEP:SetupDataTables()
+	self:NetworkVar("Bool", 0, "Active")
+end
 
 function SWEP:PrimaryAttack()
+	if not self:CanPrimaryAttack() then
+		return
+	end
+
+	self:SetNextPrimaryFire(CurTime() + FIRE_FREQUENCY)
+
+	if not IsFirstTimePredicted() then
+		return
+	elseif not self:IsActive() then
+		print("DEBUG | Bazinga")
+		self:SetActive(true)
+		self:StartLoopingSound(SOUND_FIRE)
+		local ed = EffectData()
+		ed:SetAttachment(1)
+		ed:SetEntity(self)
+		util.Effect("ose_flamespew", ed)
+	end
+	self:TakePrimaryAmmo(1)
+
+	if not SERVER then
+		return
+	end
+
+	-- print("whoosh")
 	-- TODO
+end
+
+function SWEP:CanPrimaryAttack()
+	if self:Clip1() > 0 then
+		return true
+	end
+
+	if self:IsActive() then
+		self:Stop()
+	else
+		self:EmitSound(SOUND_STOP)
+		self:SetNextPrimaryFire(CurTime() + 0.2)
+	end
+
+	-- TODO: dryfire animation if there's no ammo
+	self:Reload()
 end
 
 function SWEP:Think()
 	if not self:IsActive() then
 		return
-	end
-	local owner = self:GetOwner() --[[@as GPlayer]]
-	if not IsValid(owner) then
+	elseif not self:CanPrimaryAttack() then
+		print("DEBUG | No more shooting for you")
+		-- That method handles everything
 		return
 	end
+	-- "This hook only runs while the weapon is in players hands.
+	-- It does not run while it is carried by an NPC."
+	local owner = self:GetOwner() --[[@as GPlayer]]
+	if owner:KeyDown(IN_ATTACK) then
+		return
+	end
+	print("DEBUG | You let go of fire!")
+	self:Stop()
+end
+
+function SWEP:Stop()
+	self:StopSound(SOUND_FIRE)
+	self:EmitSound(SOUND_STOP)
+	self:SetActive(false)
+	-- Don't let the player start firing again for half a second
+	self:SetNextPrimaryFire(CurTime() + 0.5)
 end
 
 --- Returns if the flamer is flaming
@@ -49,8 +142,19 @@ end
 
 function SWEP:CanBePickedUpByNPCs() return false end
 
-function SWEP:Holster()
+function SWEP:Deploy()
 	self:SetActive(false)
+	return true
+end
+
+function SWEP:Holster()
+	self:StopSound(SOUND_FIRE)
+	self:SetActive(false)
+	return true
+end
+
+function SWEP:OnRemove()
+	self:StopSound(SOUND_FIRE)
 end
 
 function SWEP:SecondaryAttack() end
