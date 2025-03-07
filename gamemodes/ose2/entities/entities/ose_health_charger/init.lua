@@ -104,10 +104,12 @@ function ENT:Use(activator, caller, useType, value)
 	-- successfully using the entity
 	self:NextThink(now + DEACTIVATE_THINK_TIME)
 
-	if self.m_NextHealth <= now then
-		ply:SetHealth(health + 1)
-		self.m_NextHealth = now + HEALING_RATE
+	if self.m_NextHealth > now then
+		return
 	end
+
+	ply:SetHealth(health + 1)
+	self.m_NextHealth = now + HEALING_RATE
 
 	self.m_TotalHealthRestored = self.m_TotalHealthRestored + 1
 	if self.m_TotalHealthRestored % 50 == 0 then
