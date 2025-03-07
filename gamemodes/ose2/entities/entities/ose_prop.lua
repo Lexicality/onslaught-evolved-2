@@ -356,7 +356,6 @@ end
 
 function ENT:Touch(ent)
 	if ent:GetClass() == "func_nobuild" then
-		print("ye wat", ent, self, ent:GetCollisionBounds())
 		self:OnHitNobuild()
 	end
 end
