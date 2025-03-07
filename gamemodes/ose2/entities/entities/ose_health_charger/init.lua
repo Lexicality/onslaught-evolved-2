@@ -136,7 +136,6 @@ function ENT:Think()
 	return true
 end
 
-function ENT:Remove()
-	-- TODO: Why doesn't this actually stop the looping sound on remove????
+function ENT:OnRemove()
 	self:StopSound(self._chargeSound)
 end
