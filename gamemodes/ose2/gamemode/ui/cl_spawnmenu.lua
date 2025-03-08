@@ -264,22 +264,23 @@ function GM:PopulateToolMenu()
 	--- @cast tools ToolTabDefinition[]
 	for _, tab in ipairs(tools) do
 		-- Make sure the settings tab doesn't include the sandbox settings
-		if tab.Name == SETTINGS_TAB then
-			local categories = {}
-			for i, category in ipairs(tab.Items) do
-				--- @type ToolTabCategoryDefinition
-				local items = {
-					ItemName = category.ItemName,
-					Text = category.Text,
-				}
-				for _, item in ipairs(category) do
-					if not item.ItemName:StartsWith("Sandbox") then
-						items[#items + 1] = item
-					end
-				end
-				categories[i] = items
-			end
-			tab.Items = categories
+		if tab.Name ~= SETTINGS_TAB then
+			continue
 		end
+		local categories = {}
+		for i, category in ipairs(tab.Items) do
+			--- @type ToolTabCategoryDefinition
+			local items = {
+				ItemName = category.ItemName,
+				Text = category.Text,
+			}
+			for _, item in ipairs(category) do
+				if not item.ItemName:StartsWith("Sandbox") then
+					items[#items + 1] = item
+				end
+			end
+			categories[i] = items
+		end
+		tab.Items = categories
 	end
 end

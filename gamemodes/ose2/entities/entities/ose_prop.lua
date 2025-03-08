@@ -251,16 +251,12 @@ function ENT:SpawnInBattle(roundPhase, roundNum)
 	local sky = bull:GetName() == "ose_be_sky"
 	for _, npc in ipairs(ents.FindByClass("npc_*")) do
 		--- @cast npc GNPC
-		-- I have to do all this bullshit since the lua luangage server refuses
-		-- to understand the concept of `continue` because Lua added goto
-		-- instead of supporting it which is just a clownshow
-		local should = npc._oseNPC == true
-		if should and sky then
-			should = not list.HasEntry("OSEMelee", npc:GetClass())
+		if not npc._oseNPC then
+			continue
+		elseif sky and list.HasEntry("OSEMelee", npc:GetClass()) then
+			continue
 		end
-		if should then
-			npc:AddEntityRelationship(bull, D_HT, 50)
-		end
+		npc:AddEntityRelationship(bull, D_HT, 50)
 	end
 end
 
