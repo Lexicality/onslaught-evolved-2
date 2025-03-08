@@ -20,14 +20,18 @@
 --- @field m_Owner GPlayer | GNPC
 --- @field m_Weapon SWEP_OSEFlamethrower
 --- @field m_Attachment integer
+--- @field m_DieTime number
 local EFFECT = EFFECT --[[@as EFF_OSEFlameSpew]]
 
 -- How often to fire new flame particles
 local FRAME_RATE = 1 / 30
+-- Must match FIRE_FREQUENCY in the flamethrower!
+local ALIVE_TIME = 0.25
 
 function EFFECT:Init(data)
 	print("DEBUG | Effect created!", CurTime())
 	self.m_Attachment = data:GetAttachment()
+	self.m_DieTime = CurTime() + ALIVE_TIME
 	local ent = data:GetEntity()
 	if not (IsValid(ent) and ent:IsWeapon()) then
 		ErrorNoHalt("ose_flamespew not given a weapon??? " .. ent)
@@ -46,11 +50,8 @@ function EFFECT:Init(data)
 	-- Put us somewhere sensible and stick us to the gun in case the player moves about while shooting
 	self:SetPos(ent:GetPos())
 	self:SetParent(ent, self.m_Attachment)
-	-- TODO: What is a 3d particle emitter? Do we want that?
 	local emitter = ParticleEmitter(self:GetPos(), false)
 	self.m_Emitter = emitter
-	-- TODO: Is this secretly an option?
-	-- self.m_Emitter:SetParent(ent)
 	self:CallOnRemove("Parti-be-gone", function()
 		print("DEBUG | Effect killed!", CurTime())
 		emitter:Finish()
@@ -58,13 +59,16 @@ function EFFECT:Init(data)
 end
 
 function EFFECT:Think()
+	local now = CurTime()
+	if self.m_DieTime < now then
+		return false
+	end
 	local wep = self.m_Weapon
 	local owner = self.m_Owner
 	if not (
 			IsValid(wep)
 			and IsValid(owner)
 			and owner:GetActiveWeapon() == wep
-			and wep:IsActive()
 		)
 	then
 		print("DEBUG | Invalid!", wep, owner, owner:GetActiveWeapon(), wep:IsActive())
@@ -76,9 +80,23 @@ function EFFECT:Think()
 
 	local pos = self:GetTracerShootPos(owner:GetShootPos(), wep, self.m_Attachment)
 	local aim = owner:GetAimVector()
+
+	if wep:IsActive() then
+		self:_LiveParticles(owner, pos, aim)
+	else
+		self:_DyingParticles(owner, pos, aim)
+	end
+
+	return true
+end
+
+--- Fires an active stream of deadly particles
+--- @param owner GNPC|GPlayer
+--- @param pos GVector
+--- @param aim GVector
+function EFFECT:_LiveParticles(owner, pos, aim)
 	local emitter = self.m_Emitter
 	local plyVelocity = owner:GetVelocity()
-
 	-- TODO: Copied directly from the orignial onslaught flamer and I'm not a huge fan
 	for i = 0, 20 do
 		local p = emitter:Add("particles/flamelet" .. math.random(1, 5),
@@ -142,7 +160,48 @@ function EFFECT:Think()
 		p:SetEndAlpha(0)
 		p:SetColor(50, 50, 50)
 	end
-	return true
+end
+
+--- Dribbles particles as the flamer turns off
+--- @param owner GNPC|GPlayer
+--- @param pos GVector
+--- @param aim GVector
+function EFFECT:_DyingParticles(owner, pos, aim)
+	local emitter = self.m_Emitter
+	local plyVelocity = owner:GetVelocity()
+	-- Low velocity high gravity flame dribbles
+	for _ = 0, 10 do
+		local p = emitter:Add("particles/flamelet" .. math.random(1, 5), pos)
+		local vel = (
+			aim * math.random(5, 6)
+			+ plyVelocity
+			-- spread it out a bit
+			+ VectorRand(-5, 5)
+		)
+		p:SetVelocity(vel)
+		p:SetDieTime(math.Rand(.5, .8))
+		p:SetGravity(Vector(0, 0, -5))
+		p:SetStartSize(math.Rand(0.5, 1))
+		p:SetEndSize(4)
+		p:SetStartAlpha(math.Rand(200, 255))
+		p:SetAirResistance(10)
+		p:SetEndAlpha(0)
+	end
+	-- Unhappy smoke particles
+	for _ = 0, 3 do
+		local p = emitter:Add("particle/smokesprites_000" .. math.random(1, 6),
+			pos + aim)
+		local vel = aim * 5 + plyVelocity + VectorRand(-5, 5)
+		p:SetVelocity(vel)
+		p:SetDieTime(math.Rand(.5, .8))
+		p:SetGravity(Vector(0, 0, 2))
+		p:SetStartSize(math.Rand(0.8, 1.2))
+		p:SetEndSize(3)
+		p:SetStartAlpha(math.Rand(150, 200))
+		p:SetAirResistance(10)
+		p:SetEndAlpha(0)
+		p:SetColor(50, 50, 50)
+	end
 end
 
 function EFFECT:Render()

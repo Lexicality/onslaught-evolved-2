@@ -20,6 +20,7 @@ AddCSLuaFile()
 --- @class SWEP_OSEFlamethrower : SSWEP
 --- @field SetActive fun(self, active: boolean)
 --- @field GetActive fun(self): boolean
+--- @field m_LoopingSound number|nil
 local SWEP = SWEP --[[@as SWEP_OSEFlamethrower]]
 --- @type SSWEP
 local BaseClass
@@ -59,6 +60,9 @@ local SOUND_STOP = Sound("k_lab.eyescanner_click")
 
 local ACTIVE_SPEED = 450 / 2
 local FIRE_FREQUENCY = 0.25
+local IGNITE_THRESHHOLD = 1 / 3
+local IGNITE_LENGTH = 10
+local IGNITE_RADIUS = 40
 
 function SWEP:SetupDataTables()
 	self:NetworkVar("Bool", 0, "Active")
@@ -70,26 +74,47 @@ function SWEP:PrimaryAttack()
 	end
 
 	self:SetNextPrimaryFire(CurTime() + FIRE_FREQUENCY)
+	self:SetActive(true)
 
 	if not IsFirstTimePredicted() then
 		return
-	elseif not self:IsActive() then
-		print("DEBUG | Bazinga")
-		self:SetActive(true)
-		self:StartLoopingSound(SOUND_FIRE)
-		local ed = EffectData()
-		ed:SetAttachment(1)
-		ed:SetEntity(self)
-		util.Effect("ose_flamespew", ed)
 	end
+
 	self:TakePrimaryAmmo(1)
+	if self.m_LoopingSound == nil then
+		self.m_LoopingSound = self:StartLoopingSound(SOUND_FIRE)
+	end
+	local ed = EffectData()
+	ed:SetAttachment(1)
+	ed:SetEntity(self)
+	util.Effect("ose_flamespew", ed)
 
 	if not SERVER then
 		return
 	end
 
-	-- print("whoosh")
-	-- TODO
+
+	local owner = self:GetOwner() --[[@as GPlayer]]
+	local start = owner:GetShootPos()
+	local dir = owner:GetAimVector()
+	local fireDamage = DamageInfo()
+	fireDamage:SetInflictor(self)
+	fireDamage:SetAttacker(owner)
+	fireDamage:SetDamage(5)
+	fireDamage:SetDamageType(DMG_BURN)
+	fireDamage:SetReportedPosition(start)
+	for _, ent in ipairs(ents.FindInCone(start, dir, 400, 10)) do
+		if ent:IsNPC() and not IsValid(ent._oseSpawner) then
+			if not ent:IsOnFire() then
+				ent:TakeDamageInfo(fireDamage)
+
+				if (ent:Health() / ent:GetMaxHealth()) < IGNITE_THRESHHOLD then
+					ent._oseIgniter = owner
+					ent:Ignite(IGNITE_LENGTH, IGNITE_RADIUS)
+				end
+			end
+		end
+	end
 end
 
 function SWEP:CanPrimaryAttack()
@@ -104,7 +129,6 @@ function SWEP:CanPrimaryAttack()
 		self:SetNextPrimaryFire(CurTime() + 0.2)
 	end
 
-	-- TODO: dryfire animation if there's no ammo
 	self:Reload()
 end
 
@@ -127,7 +151,10 @@ function SWEP:Think()
 end
 
 function SWEP:Stop()
-	self:StopSound(SOUND_FIRE)
+	if self.m_LoopingSound ~= nil then
+		self:StopLoopingSound(self.m_LoopingSound)
+		self.m_LoopingSound = nil
+	end
 	self:EmitSound(SOUND_STOP)
 	self:SetActive(false)
 	-- Don't let the player start firing again for half a second
@@ -148,13 +175,14 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	self:StopSound(SOUND_FIRE)
-	self:SetActive(false)
+	self:Stop()
 	return true
 end
 
 function SWEP:OnRemove()
-	self:StopSound(SOUND_FIRE)
+	if self.m_LoopingSound ~= nil then
+		self:StopLoopingSound(self.m_LoopingSound)
+	end
 end
 
 function SWEP:SecondaryAttack() end

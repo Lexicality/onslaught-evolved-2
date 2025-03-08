@@ -139,6 +139,7 @@ function ENT:SetNetworkKeyValue(key, value) end
 --- @field _osePropValue? integer @How much the player paid for this prop (if it's a prop)
 --- @field _oseSpawner? GEntity @If this entity was spawned by something else eg ose_mine
 --- @field _oseCreatorSID? string @The entity creator's steam ID 64, if applicable
+--- @field _oseIgniter? GPlayer @If we've been set on fire, this player did it
 
 --- @class GNPC
 --- @field _oseReward? integer @If we've got a pre-calculated reward for this NPC
