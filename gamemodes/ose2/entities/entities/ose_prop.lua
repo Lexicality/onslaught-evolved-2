@@ -161,11 +161,9 @@ function ENT:_OnPrepPhase(roundNum)
 	self:SetCollisionGroup(COLLISION_GROUP_NONE)
 
 	-- Figure out how floaty we are
-	--- @type STraceResult
 	local tr = util.QuickTrace(
 		self:GetPos(),
 		Vector(0, 0, -1000),
-		--
 		ents.FindByClass("ose_*")
 	)
 	local isInSky = tr.Fraction > 0.075

@@ -54,7 +54,7 @@ function SWEP:ShootEffects()
 	owner:SetAnimation(PLAYER_ATTACK1)     -- 3rd Person Animation
 
 	if IsFirstTimePredicted() then
-		local tr = owner:GetEyeTrace() --[[@as STraceResult]]
+		local tr = owner:GetEyeTrace()
 		local effect_tr = EffectData()
 		effect_tr:SetOrigin(tr.HitPos)
 		effect_tr:SetStart(tr.StartPos)

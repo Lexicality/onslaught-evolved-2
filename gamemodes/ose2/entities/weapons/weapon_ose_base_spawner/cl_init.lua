@@ -129,14 +129,11 @@ function SWEP:Think()
 	local start = owner:GetShootPos()
 	local aim = owner:GetAimVector()
 
-	--- @type STrace
-	local trace = {}
-	trace.start = start
-	trace.endpos = start + (aim * 1000)
-	trace.filter = owner
-
-	local tr = util.TraceLine(trace)
-	--- @cast tr STraceResult
+	local tr = util.TraceLine({
+		start = start,
+		endpos = start + (aim * 1000),
+		filter = owner
+	})
 
 	local valid = tr.Hit
 	if valid then

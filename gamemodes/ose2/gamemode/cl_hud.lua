@@ -20,30 +20,24 @@ local BaseClass
 DEFINE_BASECLASS("gamemode_base")
 
 
---- @type SFontData
-local oseHudTextData = {
+surface.CreateFont("OSEHudText", {
 	font = "Verdana",
 	size = 42,
 	weight = 900,
-}
-surface.CreateFont("OSEHudText", oseHudTextData)
---- @type SFontData
-local oseHudTimerData = {
+})
+surface.CreateFont("OSEHudTimer", {
 	font = "HalfLife2",
 	-- font = "Verdana",
 	size = 52,
 	weight = 0,
 	additive = true
-}
-surface.CreateFont("OSEHudTimer", oseHudTimerData)
---- @type SFontData
-local oseHudTimerColonData = {
+})
+surface.CreateFont("OSEHudTimerColon", {
 	font = "Verdana",
 	size = 64,
 	weight = 0,
 	additive = true
-}
-surface.CreateFont("OSEHudTimerColon", oseHudTimerColonData)
+})
 
 local HUD_BACKGROUND_COLOUR = Color(0, 0, 0, 76)
 local HUD_TEXT_COLOUR = Color(255, 235, 20, 255)

@@ -79,33 +79,29 @@ function SWEP:PrimaryAttack()
 	local forward = owner:GetAimVector()
 	local endPos = startPos + (forward * STUNSTICK_RANGE)
 
-	--- @type STrace
-	local trc = {
+	-- First do a direct trace as to what the player's looking at, to avoid
+	-- surprises like the hull trace hitting something at the side of the screen
+	-- that's technically closer than what the player's aiming at
+	local tr = util.TraceLine({
 		start = startPos,
 		endpos = endPos,
 		mask = MASK_SHOT_HULL,
 		filter = owner,
-	}
-	-- First do a direct trace as to what the player's looking at, to avoid
-	-- surprises like the hull trace hitting something at the side of the screen
-	-- that's technically closer than what the player's aiming at
-	local tr = util.TraceLine(trc) --[[@as STraceResult]]
+	})
 
 	-- debugoverlay.Line(startPos, endPos, DEBUG_LIFETIME)
 
 	if not tr.Hit then
 		-- If they're not looking directly at anything, do a hull trace to see
 		-- if they're close enough to something to hit that anyway
-		--- @type SHullTrace
-		local hullTrace = {
+		local hullTraceResult = util.TraceHull({
 			start = startPos,
 			endpos = endPos - forward * HULL_REACH,
 			mins = STUNSTICK_MINS,
 			maxs = STUNSTICK_MAXS,
 			mask = MASK_SHOT_HULL,
 			filter = owner,
-		}
-		local hullTraceResult = util.TraceHull(hullTrace) --[[@as STraceResult]]
+		})
 		-- debugoverlay.SweptBox(
 		-- 	hullTrace.start,
 		-- 	hullTrace.endpos,
@@ -183,8 +179,8 @@ function SWEP:PrimaryAttack()
 		util.Effect("BloodImpact", effectData)
 	end
 
-	--- @type SBullet
-	local boolet = {
+	-- Generate impact effects
+	owner:FireBullets({
 		Src = startPos,
 		Dir = tr.HitPos - startPos,
 		Num = 1,
@@ -192,9 +188,7 @@ function SWEP:PrimaryAttack()
 		Spread = vector_origin,
 		Tracer = 0,
 		Force = 10,
-	}
-	-- Generate impact effects
-	owner:FireBullets(boolet)
+	})
 end
 
 --- Creates a new attack trace that actually hits the hull traced entity
@@ -231,7 +225,7 @@ function SWEP:_ReconstructTrace(tr)
 		mask = MASK_SHOT_HULL,
 		filter = owner,
 	}
-	-- local tempTR = util.TraceLine(trConf) --[[@as STraceResult]]
+	-- local tempTR = util.TraceLine(trConf)
 
 	-- if tempTR.Hit then
 	-- 	-- debugoverlay.Line(startPos, endPos, DEBUG_LIFETIME, DEBUG_COLOUR_GREEN, true)
@@ -254,7 +248,7 @@ function SWEP:_ReconstructTrace(tr)
 					endPos.y + minmax[j].y,
 					endPos.z + minmax[k].z
 				)
-				local tempTR = util.TraceLine(trConf) --[[@as STraceResult]]
+				local tempTR = util.TraceLine(trConf)
 				if tempTR.Hit then
 					-- debugoverlay.Line(trConf.start, tempTR.HitPos, DEBUG_LIFETIME, DEBUG_COLOUR_GREEN, true)
 					-- debugoverlay.Cross(tempTR.HitPos, 1, DEBUG_LIFETIME, DEBUG_COLOUR_GREEN, true)

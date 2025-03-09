@@ -86,14 +86,11 @@ local function doSpawn(ply, class, model, spawnAngle)
 	local start = ply:GetShootPos()
 	local aim = ply:GetAimVector()
 
-	--- @type STrace
-	local trace = {}
-	trace.start = start
-	trace.endpos = start + (aim * 1000)
-	trace.filter = ply
-
-	local tr = util.TraceLine(trace)
-	--- @cast tr STraceResult
+	local tr = util.TraceLine({
+		start = start,
+		endpos = start + (aim * 1000),
+		filter = ply,
+	})
 	if not tr.Hit then return NULL end
 
 	for _, ent in ipairs(ents.FindInSphere(tr.HitPos, 10)) do
@@ -299,7 +296,6 @@ end
 function GM:OnPhysgunReload(physgun, ply)
 	-- TODO: teams? prop protection?
 	local tr = ply:GetEyeTrace()
-	--- @cast tr STraceResult
 	local target = tr.Entity
 	if not target or not IsValid(target) or not target["OSEProp"] then
 		return

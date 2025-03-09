@@ -86,7 +86,6 @@ function GM:SetupBuyables()
 		Quantity = 1,
 		Price = 250,
 	}
-	--- @type SAmmoData
 	local heavyBuckshot = game.GetAmmoData(game.GetAmmoID("Buckshot"))
 	heavyBuckshot.name = "HeavyBuckshot"
 	heavyBuckshot.force = heavyBuckshot.force * 1.5
