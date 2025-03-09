@@ -112,7 +112,7 @@ end)
 
 --- Find a player by name, entindex or steamID
 --- @param text string
---- @return GPlayer?
+--- @return GPlayer|false
 function FindPlayerConsole(text)
 	local ply = player.GetBySteamID(text)
 	if IsValid(ply) then
@@ -168,7 +168,7 @@ function FindPlayerConsole(text)
 			)
 		end
 	end
-	return nil
+	return false
 end
 
 --- comment
@@ -282,8 +282,7 @@ local function ccOSEBuyAmmo(ply, cmd, args)
 	-- Pass through everything that's not an ammo crate
 	trace.filter = { "ose_ammo_crate" } --[[@as any]]
 	trace.whitelist = true
-	--- @type SENT_OSEAmmoCrate
-	local ent = util.TraceLine(trace).Entity
+	local ent = util.TraceLine(trace).Entity --[[@as SENT_OSEAmmoCrate]]
 	if not (
 			IsValid(ent)
 			and ent:GetClass() == "ose_ammo_crate"

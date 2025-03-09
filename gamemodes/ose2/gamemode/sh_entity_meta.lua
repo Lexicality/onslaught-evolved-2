@@ -17,7 +17,7 @@
 
 AddCSLuaFile()
 
---- @type GEntity
+--- @class GEntity
 local entMeta = FindMetaTable("Entity")
 
 function entMeta:SetCreator(ply)

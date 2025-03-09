@@ -6,6 +6,7 @@ local function setupNPCManager()
 	--- @type GEntity[], GEntity[], GEntity[]
 	local hunterSpawners, manhackSpawners, npcSpawners = {}, {}, {}
 	for _, ent in ipairs(ents.FindByClass("ose_legacy_npc_spawner")) do
+		--- @cast ent SENT_OSESpawner
 		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
 		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
 		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
@@ -21,6 +22,7 @@ local function setupNPCManager()
 	end
 	-- TODO: Can I do something about the alisas so I don't have to do this?
 	for _, ent in ipairs(ents.FindByClass("sent_spawner")) do
+		--- @cast ent SENT_OSESpawner
 		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
 		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
 		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
