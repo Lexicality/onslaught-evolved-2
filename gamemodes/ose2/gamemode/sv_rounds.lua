@@ -39,7 +39,7 @@ function GM:StartBuildPhase()
 	self.m_PhaseStart = now
 	self.m_PhaseEnd = now + buildTimeCvar:GetInt()
 
-	for _, ply in ipairs(player.GetAll()) do
+	for _, ply in player.Iterator() do
 		--- @cast ply GPlayer
 		player_manager.SetPlayerClass(ply, "player_builder")
 		if ply:Alive() then
@@ -68,7 +68,7 @@ function GM:StartPrepPhase()
 	self.m_PhaseStart = now
 	self.m_PhaseEnd = now + 10
 
-	for _, ply in ipairs(player.GetAll()) do
+	for _, ply in player.Iterator() do
 		--- @cast ply GPlayer
 		ply:KillSilent()
 		-- Spawning the player will change them to the correct class
@@ -227,7 +227,7 @@ function GM:PhaseStarted(startedAt, endsAt) end
 function GM:PhaseSecond(timeLeft) end
 
 function GM:CheckForLoss()
-	for _, ply in ipairs(player.GetAll()) do
+	for _, ply in player.Iterator() do
 		--- @cast ply GPlayer
 		if ply:Alive() then
 			return

@@ -127,7 +127,7 @@ function FindPlayerConsole(text)
 
 	--- @type GPlayer[]
 	local matches = {}
-	for _, ply in ipairs(player.GetAll()) do
+	for _, ply in player.Iterator() do
 		--- @cast ply GPlayer
 		local name = string.lower(ply:Name())
 		if name == text then
@@ -176,7 +176,7 @@ end
 --- @return string[]
 function PlayerNameAutoComplete(lookup)
 	local ret = {}
-	for _, ply in ipairs(player.GetAll()) do
+	for _, ply in player.Iterator() do
 		--- @cast ply GPlayer
 		local name = ply:Name()
 		if not lookup or name:StartsWith(lookup) then
