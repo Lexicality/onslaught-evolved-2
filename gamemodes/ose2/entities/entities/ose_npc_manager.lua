@@ -41,6 +41,8 @@ ENT.m_NPCCount = 0
 --- @type boolean
 ENT.m_NPCsEnabled = false
 --- @type integer
+ENT.m_NPCLimit = 28
+--- @type integer
 ENT.m_HunterLimit = 2
 --- @type boolean
 ENT.m_DontSetRelationships = false
@@ -55,10 +57,12 @@ function ENT:Initialize()
 	end
 
 	self:SetupHooks()
+	self:TriggerAllLimitChanges()
 end
 
 function ENT:OnReloaded()
 	self:SetupHooks()
+	self:TriggerAllLimitChanges()
 end
 
 function ENT:SetupHooks()
@@ -70,7 +74,7 @@ function ENT:SetupHooks()
 
 	cvars.AddChangeCallback(npcCvar:GetName(), function(name, old, new)
 		if IsValid(self) then
-			self:_OnNPCCvarChanged(new)
+			self:CalculateHunterLimit()
 		end
 	end, "ose_npc_manager")
 	cvars.AddChangeCallback(manhackCvar:GetName(), function(name, old, new)
@@ -85,12 +89,16 @@ function ENT:SetupHooks()
 	end, "ose_npc_manager")
 end
 
-function ENT:_OnBattlePhase(roundNum)
-	self.m_BattlePhase = true
-	self:TriggerOutput("OnNPCLimitChanged", self, tostring(npcCvar:GetInt()))
+function ENT:TriggerAllLimitChanges()
+	self:CalculateHunterLimit(true)
+	self:TriggerOutput("OnNPCLimitChanged", self, tostring(self.m_NPCLimit))
 	self:TriggerOutput("OnManhackLimitChanged", self, tostring(manhackCvar:GetInt()))
 	self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
-	self:CheckNPCCount()
+end
+
+function ENT:_OnBattlePhase(roundNum)
+	self.m_BattlePhase = true
+	self:TriggerAllLimitChanges()
 end
 
 function ENT:_OnBuildPhase(roundNum)
@@ -110,11 +118,6 @@ function ENT:_OnBuildPhase(roundNum)
 		end
 	end
 	self.m_NPCCount = 0
-end
-
-function ENT:_OnNPCCvarChanged(newValue)
-	self:TriggerOutput("OnNPCLimitChanged", self, newValue)
-	self:CheckNPCCount()
 end
 
 function ENT:_OnManhackCvarChanged(newValue)
@@ -213,15 +216,24 @@ function ENT:CheckNPCCount()
 	end
 end
 
-function ENT:CalculateHunterLimit()
+---comment
+--- @param noEmit? boolean Prevents the output being triggered
+function ENT:CalculateHunterLimit(noEmit)
 	local newLimit = hunterCvar:GetInt()
 
 	if hunterScaleCvar:GetBool() then
 		newLimit = newLimit + math.floor(player.GetCount() / 4)
 	end
 
-	if newLimit ~= self.m_HunterLimit then
-		self.m_HunterLimit = newLimit
+	if newLimit ~= self.m_HunterLimit and not noEmit then
 		self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
 	end
+	self.m_HunterLimit = newLimit
+
+	local newNPCLimit = npcCvar:GetInt() - newLimit
+	if newNPCLimit ~= self.m_NPCLimit and not noEmit then
+		self:TriggerOutput("OnNPCLimitChanged", self, tostring(self.m_NPCLimit))
+	end
+	self.m_NPCLimit = newNPCLimit
+	self:CheckNPCCount()
 end
