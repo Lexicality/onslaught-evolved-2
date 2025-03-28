@@ -94,74 +94,52 @@ vgui.Register("OSEClassQuickMenu", PANEL, "DScrollPanel")
 --- @diagnostic disable-next-line: redefined-local
 local PANEL = {}
 
+local ICON_SIZE = 128 / 2
+local INFO_PANEL_MARGIN = 5
+
 --- @param classData OSEClassDefinition2
 --- @param currentClassID integer
 function PANEL:SetupClass(classData, currentClassID)
 	self.m_ClassID = classData.ClassID
 	self.m_Name = classData.Name
 
-	local heading = self:Add("DLabel")
-	--- @cast heading DLabel
+	local button = self:Add("DButton") --[[@as DButton]]
+	button:SetConsoleCommand("ose_chooseclass", classData.Class)
+	button:Dock(BOTTOM)
+
+	local imageHolder = self:Add("DPanel") --[[@as DPanel]]
+	local image = imageHolder:Add("DImage") --[[@as DImage]]
+	image:SetImage(classData.Icon)
+	image:SetSize(ICON_SIZE, ICON_SIZE)
+	imageHolder:SetPaintBackground(false)
+	imageHolder:Dock(LEFT)
+	imageHolder:DockMargin(0, 0, INFO_PANEL_MARGIN, 0)
+
+	local heading = self:Add("DLabel") --[[@as DLabel]]
 	heading:SetFont("DermaHeading")
 	heading:SetText(classData.Name)
 	heading:SetDark(true)
-	self.m_Heading = heading
+	heading:Dock(TOP)
 
-	local image = self:Add("DImage")
-	--- @cast image DImage
-	image:SetImage(classData.Icon)
-	self.m_Image = image
 
-	local desc = self:Add("DLabel")
-	--- @cast desc DLabel
+	local desc = self:Add("DLabel") --[[@as DLabel]]
 	desc:SetText(classData.Description)
 	desc:SetWrap(true)
 	desc:SetDark(true)
 	desc:SetAutoStretchVertical(true)
-	self.m_Desc = desc
+	desc:Dock(TOP)
+	desc:DockMargin(0, INFO_PANEL_MARGIN, 0, INFO_PANEL_MARGIN)
 
-	local button = self:Add("DButton")
-	--- @cast button DButton
+	local button = self:Add("DButton") --[[@as DButton]]
 	button:SetConsoleCommand("ose_chooseclass", classData.Class)
+
 	self.m_Button = button
 	self:CheckButton(currentClassID)
 	self:InvalidateLayout(true)
 end
 
-local ICON_SIZE = 128 / 2
-local INFO_PANEL_MARGIN = 5
 function PANEL:PerformLayout()
-	-- I'm not sure why this needs to called *before* doing things that adjust
-	-- the size of the children, but it does, so call it.
 	self:SizeToChildren(false, true)
-
-	local lp, tp, rp, bp = self:GetDockPadding()
-
-	local availableWidth = self:GetWide()
-	local textLeft = lp + ICON_SIZE + INFO_PANEL_MARGIN
-
-	local heading = self.m_Heading
-	heading:SizeToContents()
-	heading:SetPos(textLeft, tp)
-
-	local image = self.m_Image
-	image:SetSize(ICON_SIZE, ICON_SIZE)
-	image:SetPos(lp, tp)
-
-	local desc = self.m_Desc
-	local descTop = tp + heading:GetTall() + INFO_PANEL_MARGIN
-
-	desc:SetPos(textLeft, descTop)
-	desc:SetWidth(availableWidth - textLeft - rp)
-
-	local button = self.m_Button
-	local buttonMinTop = tp + ICON_SIZE
-	-- The description might end up being taller than the icon, so make sure the
-	-- button accounts for that
-	local buttonTop = math.max(buttonMinTop, descTop + desc:GetTall())
-
-	button:SetPos(lp, buttonTop + INFO_PANEL_MARGIN)
-	button:SetWide(availableWidth - rp - lp)
 end
 
 --- @param currentClassID integer
