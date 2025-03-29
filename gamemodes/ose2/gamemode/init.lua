@@ -31,4 +31,5 @@ function GM:OnGamemodeLoaded()
 	self:SetupProps()
 	self:SetupClasses()
 	self:SetupBuyables()
+	self:SetupDamageOverrides()
 end

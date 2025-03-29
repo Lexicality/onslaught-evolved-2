@@ -64,3 +64,41 @@ function GM:ScaleNPCDamage(npc, hitgroup, dmginfo)
 		dmginfo:ScaleDamage(2)
 	end
 end
+
+-- These values were copied from the original gamemode, I have no idea how they
+-- were chosen - probably just vibes.
+local WEAPON_DAMAGE_OVERRIDES = {
+	["357"] = 50,
+	["ar2"] = 11 * 1.4,
+	["crowbar"] = 25,
+	["pistol"] = 12,
+	["buckshot"] = 9,
+	["smg1"] = 12,
+}
+
+local function overrideDamageCvars()
+	for name, damage in pairs(WEAPON_DAMAGE_OVERRIDES) do
+		RunConsoleCommand("sk_plr_dmg_" .. name, tostring(damage))
+	end
+end
+
+-- This protects us from someone doing something that causes the skill config
+-- file being re-executed mid-game, for example by changing the `skill` cvar
+cvars.AddChangeCallback("sk_plr_dmg_crowbar", function(_, __, value)
+	-- If gmod ever changes the default value from 10 (or the server owner
+	-- changes the value in their `skill.cfg` file) then this if statement will
+	-- break, but given it's a safety net I think we're fine to rely on this and
+	-- fix it should it become a problem.
+	if value == "10" then
+		-- Wait for the rest of the config file to finish executing before
+		-- re-overriding the values
+		timer.Simple(0, overrideDamageCvars)
+	end
+end, "the skill system makes me sad")
+
+function GM:SetupDamageOverrides()
+	-- Unfortunately the skill config files get executed *after* InitPostEntity,
+	-- but thankfully still in the same frame as startup, so we need to wait for
+	-- the first frame after starting before overriding the weapon values
+	timer.Simple(0, overrideDamageCvars)
+end
