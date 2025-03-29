@@ -102,3 +102,29 @@ end
 function LerpColour(from, to, fraction)
 	return from:Lerp(to, fraction)
 end
+
+local cvarScaleEasy   = GetConVar("sk_dmg_inflict_scale1")
+local cvarScaleNormal = GetConVar("sk_dmg_inflict_scale2")
+local cvarScaleHard   = GetConVar("sk_dmg_inflict_scale3")
+--- @class GCTakeDamageInfo
+local dmgMeta         = FindMetaTable("CTakeDamageInfo")
+
+if dmgMeta.AdjustPlayerDamageInflictedForSkillLevel == nil then
+	--- Adjusts the damage based on the current `skill` cvar value
+	function dmgMeta:AdjustPlayerDamageInflictedForSkillLevel()
+		-- Unclear but the c++ version of this function does this even though you
+		-- could easily scale the damage correctly on the client
+		if CLIENT then return end
+		local damage = self:GetDamage()
+		self:SetBaseDamage(damage)
+		local skill = game.GetSkillLevel()
+		if skill == 1 then
+			damage = damage * cvarScaleEasy:GetFloat()
+		elseif skill == 2 then
+			damage = damage * cvarScaleNormal:GetFloat()
+		elseif skill == 3 then
+			damage = damage * cvarScaleHard:GetFloat()
+		end
+		self:SetDamage(damage)
+	end
+end

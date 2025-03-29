@@ -112,6 +112,7 @@ function SWEP:PrimaryAttack()
 	fireDamage:SetDamage(5)
 	fireDamage:SetDamageType(DMG_BURN)
 	fireDamage:SetReportedPosition(start)
+	fireDamage:AdjustPlayerDamageInflictedForSkillLevel()
 	for _, ent in ipairs(ents.FindInCone(start, dir, 400, CONE_ANGLE)) do
 		if ent:IsNPC() and not IsValid(ent._oseSpawner) then
 			if not ent:IsOnFire() then

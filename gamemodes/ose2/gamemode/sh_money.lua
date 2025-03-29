@@ -82,6 +82,7 @@ function GM:SetupBuyables()
 	}
 	local heavyBuckshot = game.GetAmmoData(game.GetAmmoID("Buckshot"))
 	heavyBuckshot.name = "HeavyBuckshot"
+	heavyBuckshot.plydmg = 10
 	heavyBuckshot.force = heavyBuckshot.force * 1.5
 	game.AddAmmoType(heavyBuckshot)
 	ammo["ammo_heavy_buckshot"] = {

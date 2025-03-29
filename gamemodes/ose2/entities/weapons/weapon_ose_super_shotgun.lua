@@ -75,7 +75,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 
-	self:ShootBullet(10, 10, 0.015)
+	self:ShootBullet(0, 10, 0.015)
 	self:EmitSound(self.Primary.FireSound)
 	self:TakePrimaryAmmo(1)
 	self:_SetNextFire()
@@ -92,7 +92,7 @@ function SWEP:SecondaryAttack()
 		return
 	end
 
-	self:ShootBullet(10, 30, 0.03)
+	self:ShootBullet(0, 30, 0.03)
 	self:EmitSound(self.Secondary.FireSound)
 	self:TakePrimaryAmmo(4)
 	self:_SetNextFire()

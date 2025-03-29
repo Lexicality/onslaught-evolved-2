@@ -31,6 +31,10 @@ function GM:EntityTakeDamage(target, dmg)
 				dmg:SetInflictor(attacker)
 			end
 			dmg:SetAttacker(ply)
+			-- Ensure mine/turret damage scales too!
+			if target:IsNPC() then
+				dmg:AdjustPlayerDamageInflictedForSkillLevel()
+			end
 		end
 	end
 

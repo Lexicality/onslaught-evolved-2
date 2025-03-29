@@ -136,6 +136,7 @@ function SWEP:PrimaryAttack()
 			end
 		elseif SERVER and hitEnt:IsNPC() and --[[@cast hitEnt GNPC]] hitEnt:Disposition(owner) ~= D_LI then
 			dmginfo:SetDamage(NPC_DAMAGE_AMOUNT)
+			dmginfo:AdjustPlayerDamageInflictedForSkillLevel()
 			didOwnBloodEffect = true
 		end
 
