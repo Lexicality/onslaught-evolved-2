@@ -65,6 +65,21 @@ function GM:ScaleNPCDamage(npc, hitgroup, dmginfo)
 	end
 end
 
+-- Value from the original gamemode - double the default value (3)
+local TURRET_DAMAGE = 6
+
+function GM:EntityFireBullets(ent, bullet)
+	-- Unfortunately the turret uses the `Pistol` ammo type and I can't make it
+	-- more powerful without also giving the metrocops all a boost which I don't
+	-- want to do, so the easiest solution is to just override the bullet before
+	-- it's fired which disables the ammo lookup.
+	if ent:GetClass() == "npc_turret_floor" and IsValid(ent:GetCreator()) then
+		bullet.Damage = TURRET_DAMAGE
+	end
+
+	return true
+end
+
 -- These values were copied from the original gamemode, I have no idea how they
 -- were chosen - probably just vibes.
 local WEAPON_DAMAGE_OVERRIDES = {
