@@ -261,3 +261,11 @@ function GM:OnNPCKilled(npc, attacker, inflictor)
 	end
 	attacker:AddMoney(reward, "ose.money.reason.npc_killed", name)
 end
+
+function GM:ScaleNPCDamage(npc, hitgroup, dmginfo)
+	-- The base gamemode applies a 3/4 damage penalty for limb damage, which
+	-- we're overriding here to make it remotely possible to survive
+	if hitgroup == HITGROUP_HEAD then
+		dmginfo:ScaleDamage(2)
+	end
+end
