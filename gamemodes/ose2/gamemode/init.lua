@@ -11,6 +11,7 @@
 
 include("shared.lua")
 
+include("sv_damage.lua")
 include("sv_entities.lua")
 include("sv_money.lua")
 include("sv_npcs.lua")
