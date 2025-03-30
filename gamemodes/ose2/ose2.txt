@@ -8,7 +8,7 @@
 	"category"   "pve"
 
 	"copyright"  "2025 Lexi Robinson"
-	"license"    "AGPLv3"
+	"license"    "EUPL-1.2"
 
 	"settings" {
 		1 {
