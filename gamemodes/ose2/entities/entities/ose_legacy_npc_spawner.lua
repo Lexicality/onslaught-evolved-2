@@ -420,3 +420,15 @@ function ENT:Think()
 	self:NextThink(now + self.m_SpawnFrequency)
 	return true
 end
+
+--- Checks to see if the spawner exclusively spawns "Zombies"
+--- (Antlions are included for legacy reasons)
+--- @return boolean
+function ENT:IsZombieSpawner()
+	for _, npcClass in ipairs(self.m_NPCs) do
+		if not list.HasEntry("OSEMelee", npcClass) then
+			return false
+		end
+	end
+	return true
+end

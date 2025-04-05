@@ -95,6 +95,11 @@
 		: 0
 		: "If the default AI relationship code should be disabled"
 
+	zombiemode(boolean)
+		: "Set map to Zombie Mode(tm)"
+		: 0
+		: "If your map only spawns zombies, this will make zombies much stronger and spawn more of them"
+
 	input NPCSpawned(string) : "Must be called when a fresh NPC is spawned so the game can manage it"
 	input PointTemplateSpawned(void) : "It's NPCSpawned, but handles point_template complications"
 

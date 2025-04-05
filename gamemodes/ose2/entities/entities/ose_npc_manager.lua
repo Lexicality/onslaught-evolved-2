@@ -13,6 +13,7 @@ local npcCvar = GetConVar("ose_max_npcs")
 local hunterCvar = GetConVar("ose_max_hunters")
 local hunterScaleCvar = GetConVar("ose_hunters_scale")
 local manhackCvar = GetConVar("ose_max_manhacks")
+local zombieCvar = GetConVar("ose_zombie_max_npcs")
 
 --- @class SENT_OSENPCManager : SENT_OSEBasePoint
 local ENT = ENT --[[@as SENT_OSENPCManager]]
@@ -30,6 +31,8 @@ local NPC_BUDDIES = {
 	"npc_zombine",
 }
 
+--- @type boolean
+ENT.m_ZombieMode = false
 --- @type integer
 ENT.m_NPCCount = 0
 --- @type boolean
@@ -194,13 +197,15 @@ function ENT:KeyValue(key, value)
 
 	if key == "disablerelationships" then
 		self.m_DontSetRelationships = tobool(value)
+	elseif key == "zombiemode" then
+		self.m_ZombieMode = tobool(value)
 	end
 end
 
 function ENT:CheckNPCCount()
 	if not self.m_BattlePhase then return end
 
-	local maxNPCs = npcCvar:GetInt()
+	local maxNPCs = self.m_NPCLimit + self.m_HunterLimit
 	if self.m_NPCsEnabled then
 		if self.m_NPCCount > maxNPCs then
 			self.m_NPCsEnabled = false

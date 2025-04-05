@@ -9,6 +9,8 @@
  See the Licence for the specific language governing permissions and limitations under the Licence.
 --]]
 
+local zombieAutoCvar = GetConVar("ose_zombie_auto")
+
 local function setupNPCManager()
 	local npcManager = ents.Create("ose_npc_manager")
 	npcManager:SetName("npc_manager")
@@ -21,6 +23,7 @@ local function setupNPCManager()
 	for _, ent in ipairs(ents.FindByClass("ose_legacy_npc_spawner")) do
 		allSpawners[#allSpawners + 1] = ent
 	end
+	local zombieCheck = zombieAutoCvar:GetBool()
 	--- @type GEntity[], GEntity[], GEntity[]
 	local hunterSpawners, manhackSpawners, npcSpawners = {}, {}, {}
 	for _, ent in ipairs(allSpawners) do
@@ -32,10 +35,15 @@ local function setupNPCManager()
 
 		if ent.m_SpawnMode == SPAWNER_SPAWN_MODE_HUNTER then
 			hunterSpawners[#hunterSpawners + 1] = ent
+			zombieCheck = false
 		elseif ent.m_SpawnMode == SPAWNER_SPAWN_MODE_MANHACK then
 			manhackSpawners[#manhackSpawners + 1] = ent
+			zombieCheck = false
 		elseif ent.m_SpawnMode == SPAWNER_SPAWN_MODE_NORMAL then
 			npcSpawners[#npcSpawners + 1] = ent
+			if zombieCheck then
+				zombieCheck = ent:IsZombieSpawner()
+			end
 		end
 	end
 	for _, ent in ipairs(ents.FindByClass("sent_spawnonce")) do
@@ -44,6 +52,8 @@ local function setupNPCManager()
 		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
 		ent:SetKeyValue("OnSpawnNPC", "npc_manager,NPCSpawned")
 	end
+
+	npcManager:SetKeyValue("zombiemode", tostring(zombieCheck))
 
 	if #hunterSpawners ~= 0 then
 		local helper = ents.Create("ose_spawner_helper")

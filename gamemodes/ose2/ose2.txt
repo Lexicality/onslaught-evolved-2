@@ -247,5 +247,22 @@
 			"singleplayer" "1"
 		}
 
+		25 {
+			"name" "ose_zombie_auto"
+			"text" "ose.convar.zombie_auto"
+			"help" "If automatic zombie mode detection should be enabled"
+			"type" "CheckBox"
+			"default" "1"
+			"singleplayer" "1"
+		}
+
+		26 {
+			"name" "ose_zombie_max_npcs"
+			"text" "ose.convar.zombie_max_npcs"
+			"help" "How many zombies to spawn in zombie mode"
+			"type" "Numeric"
+			"default" "40"
+			"singleplayer" "1"
+		}
 	}
 }
