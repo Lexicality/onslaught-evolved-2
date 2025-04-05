@@ -68,6 +68,8 @@ end
 function ENT:KeyValue(key, value)
 	BaseClass.KeyValue(self, key, value)
 
+	key = string.lower(key)
+
 	if key == "credits" then
 		SetGlobal2String("MapCredits", value)
 	end

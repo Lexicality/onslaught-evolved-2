@@ -165,7 +165,9 @@ function ENT:AcceptInput(name, activator, caller, value)
 		return true
 	end
 
-	if name == "NPCSpawned" then
+	name = string.lower(name)
+
+	if name == "npcspawned" then
 		if IsValid(activator) and activator:IsNPC() then
 			--- @cast activator GNPC
 			self:_OnNPCSpawned(activator)
@@ -178,7 +180,7 @@ function ENT:AcceptInput(name, activator, caller, value)
 			end
 		end
 		return true
-	elseif name == "PointTemplateSpawned" then
+	elseif name == "pointtemplatespawned" then
 		ErrorNoHalt("TODO: PointTemplateSpawned!!\n")
 		return false
 	end
@@ -187,6 +189,8 @@ end
 
 function ENT:KeyValue(key, value)
 	BaseClass.KeyValue(self, key, value)
+
+	key = string.lower(key)
 
 	if key == "disablerelationships" then
 		self.m_DontSetRelationships = tobool(value)

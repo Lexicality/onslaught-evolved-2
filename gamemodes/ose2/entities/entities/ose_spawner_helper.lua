@@ -57,7 +57,9 @@ function ENT:AcceptInput(name, activator, caller, value)
 		return true
 	end
 
-	if name == "NPCLimitChanged" then
+	name = string.lower(name)
+
+	if name == "npclimitchanged" then
 		local spawners = self:GetSpawnerCount()
 		if spawners == 0 then
 			return true
@@ -79,6 +81,8 @@ end
 
 function ENT:KeyValue(key, value)
 	BaseClass.KeyValue(self, key, value)
+
+	key = string.lower(key)
 
 	if key == "lua" and value ~= nil then
 		local input = "local input, spawners = ...; return " .. value

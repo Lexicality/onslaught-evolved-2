@@ -173,6 +173,8 @@ end
 function ENT:KeyValue(key, value)
 	BaseClass.KeyValue(self, key, value)
 
+	key = string.lower(key)
+
 	if key == "copykeys" then
 		local parsed_value = handleKeyValues(value)
 		if parsed_value == nil then
@@ -230,14 +232,16 @@ function ENT:AcceptInput(name, activator, caller, value)
 		return true
 	end
 
-	if name == "Enable" then
+	name = string.lower(name)
+
+	if name == "enable" then
 		self.m_Enabled = true
 		self:NextThink(CurTime())
 		return true
-	elseif name == "Disable" then
+	elseif name == "disable" then
 		self.m_Enabled = false
 		return true
-	elseif name == "SetMaxLiveChildren" and self.m_SpawnMode ~= SPAWNER_SPAWN_MODE_ONCE then
+	elseif name == "setmaxlivechildren" and self.m_SpawnMode ~= SPAWNER_SPAWN_MODE_ONCE then
 		local parsed_value = tonumber(value)
 		if parsed_value == nil or parsed_value < 0 then
 			ErrorNoHalt("ose_legacy_npc_spawner got invalid `SetMaxLiveChildren` value '", value, "'!\n")
@@ -246,7 +250,7 @@ function ENT:AcceptInput(name, activator, caller, value)
 
 		self.m_MaxLiveChildren = math.floor(parsed_value)
 		return true
-	elseif name == "SetSpawnFrequency" then
+	elseif name == "setspawnfrequency" then
 		local parsed_value = tonumber(value)
 		if parsed_value == nil or parsed_value < 0 then
 			ErrorNoHalt("ose_legacy_npc_spawner got invalid `SetSpawnFrequency` value '", value, "'!\n")
