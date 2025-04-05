@@ -14,25 +14,16 @@ local function setupNPCManager()
 	npcManager:SetName("npc_manager")
 	npcManager:Spawn()
 	npcManager:Activate()
+	local allSpawners = ents.FindByClass("sent_spawner")
+	-- TODO: This loop should never actually iterate since I'm reasonably
+	-- certain that due to the alias system, there will never actually be any
+	-- entities called ose_legacy_npc_spawner, but I can't yet prove that.
+	for _, ent in ipairs(ents.FindByClass("ose_legacy_npc_spawner")) do
+		allSpawners[#allSpawners + 1] = ent
+	end
 	--- @type GEntity[], GEntity[], GEntity[]
 	local hunterSpawners, manhackSpawners, npcSpawners = {}, {}, {}
-	for _, ent in ipairs(ents.FindByClass("ose_legacy_npc_spawner")) do
-		--- @cast ent SENT_OSESpawner
-		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
-		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
-		npcManager:SetKeyValue("OnNPCSpawnFrequencyChanged", ent:GetName() .. ",SetSpawnFrequency")
-		ent:SetKeyValue("OnSpawnNPC", "npc_manager,NPCSpawned")
-
-		if ent.m_SpawnMode == SPAWNER_SPAWN_MODE_HUNTER then
-			hunterSpawners[#hunterSpawners + 1] = ent
-		elseif ent.m_SpawnMode == SPAWNER_SPAWN_MODE_MANHACK then
-			manhackSpawners[#manhackSpawners + 1] = ent
-		elseif ent.m_SpawnMode == SPAWNER_SPAWN_MODE_NORMAL then
-			npcSpawners[#npcSpawners + 1] = ent
-		end
-	end
-	-- TODO: Can I do something about the alisas so I don't have to do this?
-	for _, ent in ipairs(ents.FindByClass("sent_spawner")) do
+	for _, ent in ipairs(allSpawners) do
 		--- @cast ent SENT_OSESpawner
 		npcManager:SetKeyValue("OnNPCSpawnEnabled", ent:GetName() .. ",Enable")
 		npcManager:SetKeyValue("OnNPCSpawnDisabled", ent:GetName() .. ",Disable")
