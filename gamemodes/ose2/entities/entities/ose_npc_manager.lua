@@ -66,12 +66,13 @@ function ENT:SetupHooks()
 	hook.Add("BattlePhaseStarted", self, self._OnBattlePhase)
 	hook.Add("BuildPhaseStarted", self, self._OnBuildPhase)
 	hook.Add("OnNPCKilled", self, self._OnNPCKilled)
-	hook.Add("PlayerInitialSpawn", self, self.CalculateHunterLimit)
-	hook.Add("PlayerDisconnected", self, self.CalculateHunterLimit)
+	hook.Add("PlayerInitialSpawn", self, self.CalculateNPCLimits)
+	hook.Add("PlayerDisconnected", self, self.CalculateNPCLimits)
+	hook.Add("EntityTakeDamage", self, self._OnEntityTakeDamage)
 
 	cvars.AddChangeCallback(npcCvar:GetName(), function(name, old, new)
 		if IsValid(self) then
-			self:CalculateHunterLimit()
+			self:CalculateNPCLimits()
 		end
 	end, "ose_npc_manager")
 	cvars.AddChangeCallback(manhackCvar:GetName(), function(name, old, new)
@@ -81,13 +82,13 @@ function ENT:SetupHooks()
 	end, "ose_npc_manager")
 	cvars.AddChangeCallback(hunterCvar:GetName(), function(name, old, new)
 		if IsValid(self) then
-			self:CalculateHunterLimit()
+			self:CalculateNPCLimits()
 		end
 	end, "ose_npc_manager")
 end
 
 function ENT:TriggerAllLimitChanges()
-	self:CalculateHunterLimit(true)
+	self:CalculateNPCLimits(true)
 	self:TriggerOutput("OnNPCLimitChanged", self, tostring(self.m_NPCLimit))
 	self:TriggerOutput("OnManhackLimitChanged", self, tostring(manhackCvar:GetInt()))
 	self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
@@ -163,6 +164,24 @@ function ENT:_OnNPCKilled(npc, attacker, inflictor)
 	end
 end
 
+--- Ramps up the difficulty in zombie mode
+--- @param target GEntity
+--- @param dmginfo GCTakeDamageInfo
+function ENT:_OnEntityTakeDamage(target, dmginfo)
+	if not self.m_ZombieMode then
+		return
+	end
+
+	if target:IsPlayer() or target["OSEProp"] then
+		-- Players and their stuff takes twice as much damage
+		dmginfo:ScaleDamage(2)
+	elseif target:IsNPC() then
+		-- The zombies take half
+		dmginfo:ScaleDamage(0.5)
+	end
+	--
+end
+
 function ENT:AcceptInput(name, activator, caller, value)
 	if BaseClass.AddOutputFromAcceptInput(self, name, value) then
 		return true
@@ -221,22 +240,31 @@ end
 
 ---comment
 --- @param noEmit? boolean Prevents the output being triggered
-function ENT:CalculateHunterLimit(noEmit)
-	local newLimit = hunterCvar:GetInt()
+function ENT:CalculateNPCLimits(noEmit)
+	if self.m_ZombieMode then
+		self.m_HunterLimit = 0
+		local newNPCLimit = zombieCvar:GetInt()
+		if newNPCLimit ~= self.m_NPCLimit and not noEmit then
+			self:TriggerOutput("OnNPCLimitChanged", self, tostring(self.m_NPCLimit))
+		end
+		self.m_NPCLimit = newNPCLimit
+	else
+		local hunterLimit = hunterCvar:GetInt()
 
-	if hunterScaleCvar:GetBool() then
-		newLimit = newLimit + math.floor(player.GetCount() / 4)
-	end
+		if hunterScaleCvar:GetBool() then
+			hunterLimit = hunterLimit + math.floor(player.GetCount() / 4)
+		end
 
-	if newLimit ~= self.m_HunterLimit and not noEmit then
-		self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
-	end
-	self.m_HunterLimit = newLimit
+		if hunterLimit ~= self.m_HunterLimit and not noEmit then
+			self:TriggerOutput("OnHunterLimitChanged", self, tostring(self.m_HunterLimit))
+		end
+		self.m_HunterLimit = hunterLimit
 
-	local newNPCLimit = npcCvar:GetInt() - newLimit
-	if newNPCLimit ~= self.m_NPCLimit and not noEmit then
-		self:TriggerOutput("OnNPCLimitChanged", self, tostring(self.m_NPCLimit))
+		local newNPCLimit = npcCvar:GetInt() - hunterLimit
+		if newNPCLimit ~= self.m_NPCLimit and not noEmit then
+			self:TriggerOutput("OnNPCLimitChanged", self, tostring(self.m_NPCLimit))
+		end
+		self.m_NPCLimit = newNPCLimit
 	end
-	self.m_NPCLimit = newNPCLimit
 	self:CheckNPCCount()
 end
