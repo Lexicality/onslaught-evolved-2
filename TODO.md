@@ -47,4 +47,4 @@
 - [ ] Spawn effects
 - [ ] Nice HUD
 - [ ] Missing death notices (contract an artist?)
-- [ ] "Zombie Mode"
+- [x] "Zombie Mode"
